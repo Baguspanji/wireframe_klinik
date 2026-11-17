@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Pendaftaran Antrean Pasien - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub active" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> <b>Form Daftar Antrean</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">A</span>
+      <span>Loket 1</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="pendaftaran.html">Pendaftaran</a> <span>/</span> Form Antrean</div>
+        <h1>Form Pendaftaran Antrean Pasien</h1>
+        <p>Input nomor antrean kunjungan dan otomatis daftarkan pasien baru jika belum terdata di klinik.</p>
+      </div>
+      <div>
+        <a class="btn" href="pendaftaran.html">Kembali ke Antrean</a>
+      </div>
+    </div>
+
+    <!-- MAIN FORM -->
+    <form id="formAntrean" onsubmit="event.preventDefault(); submitQueue();">
+      <div class="grid grid-2">
+        <!-- LEFT: DATA KUNJUNGAN & ANTREAN -->
+        <div class="card">
+          <div class="card-title">
+            <h2>1. Detail Kunjungan &amp; Layanan</h2>
+            <span class="status dark">Loket 1</span>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Tanggal Kunjungan <span class="req">*</span></label>
+              <input type="date" class="field" value="2026-11-17" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jenis Kedatangan <span class="req">*</span></label>
+              <select class="field" required>
+                <option value="walkin">Datang Langsung (Walk-in)</option>
+                <option value="booking">Perjanjian / Booking</option>
+                <option value="rujukan">Rujukan Faskes Luar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Unit / Poli Tujuan <span class="req">*</span></label>
+              <select class="field" id="unitTujuan" required onchange="updatePrefixAntrean()">
+                <option value="umum">Poli Umum (Kode U)</option>
+                <option value="gigi">Poli Gigi (Kode G)</option>
+                <option value="kia">KIA &amp; Kebidanan (Kode K)</option>
+                <option value="igd">IGD (Kode E)</option>
+                <option value="lab">Laboratorium (Kode L)</option>
+                <option value="farmasi">Farmasi Langsung (Kode F)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dokter / Petugas Jaga <span class="req">*</span></label>
+              <select class="field" id="dokterJaga" required>
+                <option value="budi">dr. Budi Santoso (Poli Umum 1)</option>
+                <option value="ani">dr. Ani Kusuma (Poli Umum 2)</option>
+                <option value="rina">drg. Rina (Poli Gigi)</option>
+                <option value="sari">Bdn. Sari (KIA)</option>
+                <option value="dimas">dr. Dimas (IGD)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Jenis Penjamin / Bayar <span class="req">*</span></label>
+              <select class="field" id="penjamin" required>
+                <option value="umum">Umum / Tunai</option>
+                <option value="bpjs">BPJS Kesehatan</option>
+                <option value="asuransi">Asuransi Swasta</option>
+                <option value="perusahaan">Kerjasama Perusahaan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimasi No. Antrean</label>
+              <input type="text" class="field" id="noAntreanPreview" value="U-015" readonly style="background:#f4f5f6;font-weight:bold;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Keluhan Utama / Alasan Kunjungan</label>
+            <textarea class="field" rows="3" placeholder="Contoh: Demam sejak 2 hari, batuk pilek"></textarea>
+          </div>
+        </div>
+
+        <!-- RIGHT: IDENTIFIKASI PASIEN -->
+        <div class="card">
+          <div class="card-title">
+            <h2>2. Identifikasi Pasien</h2>
+            <span class="muted small">Pilih status pasien</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Status Pasien <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="status_pasien" value="lama" checked onchange="togglePasienMode(false)">
+                <b>Pasien Lama (Sudah punya RM)</b>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="status_pasien" value="baru" onchange="togglePasienMode(true)">
+                <b style="color:#d9534f">+ Pasien Baru (Belum Terdaftar)</b>
+              </label>
+            </div>
+          </div>
+
+          <!-- PANEL PASIEN LAMA -->
+          <div id="panelPasienLama">
+            <div class="form-group">
+              <label class="form-label">Cari Pasien Terdaftar</label>
+              <div style="display:flex;gap:8px;">
+                <input type="text" class="field" id="searchRmInput" placeholder="Ketik No. RM / NIK / Nama Pasien..." value="RM-000124">
+                <button type="button" class="btn primary" onclick="searchPasien()">Cari</button>
+              </div>
+              <p class="small" style="margin-top:4px;">Contoh No. RM: RM-000124, NIK 16 digit, atau nama lengkap.</p>
+            </div>
+
+            <div class="card" style="background:#fcfdfe;border:1px solid #d5dbdb;padding:12px;margin-top:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <h3 style="margin:0 0 4px;" id="dispNamaPasien">Andi Pratama</h3>
+                  <div class="muted small" id="dispInfoPasien">No. RM: <b>RM-000124</b> | NIK: 3201234567890001 | Laki-laki | 32 Thn</div>
+                  <div class="small" style="margin-top:4px;color:#555;" id="dispAlamatPasien">Jl. Anggrek No. 12, Kel. Sukamaju, Jakarta</div>
+                </div>
+                <span class="status dark">Pasien Terverifikasi</span>
+              </div>
+            </div>
+
+            <div class="alert info" style="margin-top:14px;">
+              Pasien sudah terdaftar. Data rekam medis lama akan langsung diteruskan ke poli tujuan setelah nomor antrean diterbitkan.
+            </div>
+          </div>
+
+          <!-- PANEL PASIEN BARU (EMBEDDED) -->
+          <div id="panelPasienBaru" style="display:none;">
+            <div class="sub-card">
+              <div class="sub-card-header">
+                <div>+ Formulir Pendaftaran Pasien Baru</div>
+                <span class="status">Otomatis buat RM baru</span>
+              </div>
+              <p class="small" style="margin-bottom:12px;color:#555;">Isi data identitas di bawah untuk menerbitkan Nomor Rekam Medis (RM-000160) dan langsung masuk antrean.</p>
+
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">No. Rekam Medis Baru</label>
+                  <input type="text" class="field" value="RM-000160 (Auto)" readonly style="background:#eceef1;font-weight:bold;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">NIK (KTP) <span class="req">*</span></label>
+                  <input type="text" class="field" placeholder="16 digit nomor KTP" maxlength="16">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nama Lengkap Pasien <span class="req">*</span></label>
+                <input type="text" class="field" placeholder="Sesuai KTP / Akta">
+              </div>
+
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Tempat Lahir</label>
+                  <input type="text" class="field" placeholder="Kota lahir">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tanggal Lahir <span class="req">*</span></label>
+                  <input type="date" class="field">
+                </div>
+              </div>
+
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Jenis Kelamin <span class="req">*</span></label>
+                  <select class="field">
+                    <option>Laki-laki</option>
+                    <option>Perempuan</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nomor WhatsApp / HP <span class="req">*</span></label>
+                  <input type="tel" class="field" placeholder="08xxxxxxxxxx">
+                </div>
+              </div>
+
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Golongan Darah</label>
+                  <select class="field">
+                    <option>-</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>AB</option>
+                    <option>O</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Agama / Status Nikah</label>
+                  <select class="field">
+                    <option>Islam / Menikah</option>
+                    <option>Islam / Belum Menikah</option>
+                    <option>Kristen</option>
+                    <option>Katolik</option>
+                    <option>Hindu</option>
+                    <option>Buddha</option>
+                    <option>Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Alamat Lengkap KTP <span class="req">*</span></label>
+                <textarea class="field" rows="2" placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota"></textarea>
+              </div>
+
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Nama Kontak Darurat / Keluarga</label>
+                  <input type="text" class="field" placeholder="Nama suami/istri/ortu">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">No. HP Kontak Darurat</label>
+                  <input type="tel" class="field" placeholder="08xxxxxxxxxx">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Riwayat Alergi (Jika Ada)</label>
+                <input type="text" class="field" placeholder="Contoh: Alergi Amoxicillin, seafood">
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTONS -->
+          <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+            <button type="reset" class="btn">Reset Form</button>
+            <div>
+              <button type="button" class="btn secondary" onclick="window.print()">Cetak Karcis Sementara</button>
+              <button type="submit" class="btn primary" style="padding:9px 18px;font-size:13px;font-weight:bold;">Simpan &amp; Cetak Tiket Antrean</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- LIVE NOTIFICATION POPUP SIMULATION -->
+    <div id="simulResult" style="display:none;" class="section">
+      <div class="alert success">
+        <b>Berhasil Diterbitkan:</b> Tiket Antrean <b id="resAntrean">U-015</b> atas nama <b id="resNama">Andi Pratama</b> menuju <b id="resUnit">Poli Umum</b>. Pasien telah terdata di sistem.
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function togglePasienMode(isNew) {
+  const panelLama = document.getElementById("panelPasienLama");
+  const panelBaru = document.getElementById("panelPasienBaru");
+  if (isNew) {
+    panelLama.style.display = "none";
+    panelBaru.style.display = "block";
+  } else {
+    panelLama.style.display = "block";
+    panelBaru.style.display = "none";
+  }
+}
+
+function updatePrefixAntrean() {
+  const map = {
+    umum: "U-015",
+    gigi: "G-007",
+    kia: "K-006",
+    igd: "E-004",
+    lab: "L-022",
+    farmasi: "F-046"
+  };
+  const unit = document.getElementById("unitTujuan").value;
+  document.getElementById("noAntreanPreview").value = map[unit] || "A-001";
+}
+
+function searchPasien() {
+  const val = document.getElementById("searchRmInput").value.trim();
+  if (!val) {
+    alert("Masukkan Nomor RM, NIK, atau Nama Pasien!");
+    return;
+  }
+  // Simulasi temuan pasien
+  document.getElementById("dispNamaPasien").textContent = val.toUpperCase().includes("SITI") ? "Siti Aminah" : "Andi Pratama";
+  document.getElementById("dispInfoPasien").innerHTML = "No. RM: <b>" + (val.startsWith("RM") ? val : "RM-000124") + "</b> | NIK: 3201234567890001 | Terdata Aktif";
+}
+
+function submitQueue() {
+  const isNew = document.querySelector('input[name="status_pasien"]:checked').value === "baru";
+  const unitSelect = document.getElementById("unitTujuan");
+  const unitText = unitSelect.options[unitSelect.selectedIndex].text;
+  const antrean = document.getElementById("noAntreanPreview").value;
+  const nama = isNew ? "Pasien Baru (RM-000160)" : document.getElementById("dispNamaPasien").textContent;
+
+  document.getElementById("resAntrean").textContent = antrean;
+  document.getElementById("resNama").textContent = nama;
+  document.getElementById("resUnit").textContent = unitText;
+  document.getElementById("simulResult").style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

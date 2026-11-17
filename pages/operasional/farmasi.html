@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmasi &amp; Apotek - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">C</div><div><strong>Clinic ERP</strong><small>Management System</small></div></div>
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub active" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> <b>Farmasi &amp; Apotek</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">F</span>
+      <span>Apoteker Penanggung Jawab</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> Farmasi</div>
+        <h1>Farmasi &amp; Dispensing Obat</h1>
+        <p>Telaah resep elektronik (e-Prescription), penyiapan &amp; peracikan obat, telaah etiket, dan penyerahan ke pasien.</p>
+      </div>
+      <div>
+        <a class="btn" href="daftar-antrean.html">+ Tebus Obat Luar</a>
+        <button class="btn primary"><svg class="icon" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg> Panggil Pengambilan Obat</button>
+      </div>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card"><div class="metric-label">Resep Antrean Baru</div><div class="metric-value">5</div></div>
+      <div class="card"><div class="metric-label">Sedang Diracik</div><div class="metric-value">1</div></div>
+      <div class="card"><div class="metric-label">Siap Diambil</div><div class="metric-value">2</div></div>
+      <div class="card"><div class="metric-label">Resep Selesai Hari Ini</div><div class="metric-value">38</div></div>
+    </div>
+
+    <div class="card section">
+      <div class="tabs">
+        <button class="tab active">Antrian Resep (8)</button>
+        <button class="tab">Penyerahan Obat (PIO)</button>
+        <button class="tab">Stok Depo Obat Harian</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>No. Resep</th><th>No. RM</th><th>Nama Pasien</th><th>Dokter Peresep</th><th>Tipe Resep</th><th>Waktu Masuk</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td><b>RX-045</b></td><td>RM-000124</td><td>Andi Pratama</td><td>dr. Budi Santoso</td><td>Non-Racikan (3 R/)</td><td>08:35</td><td><span class="status">Menunggu Telaah</span></td><td><button class="btn primary">Proses Resep</button></td></tr>
+            <tr><td><b>RX-044</b></td><td>RM-000120</td><td>Rina Marlina</td><td>dr. Ani Kusuma</td><td>Racikan Pulveres (Puyer)</td><td>08:20</td><td><span class="status" style="background:#fff3cd;color:#856404;">Sedang Diracik</span></td><td><button class="btn">Selesaikan Racikan</button></td></tr>
+            <tr><td><b>RX-043</b></td><td>RM-000118</td><td>Maya Sari</td><td>drg. Rina</td><td>Non-Racikan (Amoxicillin, Asam Mefenamat)</td><td>08:10</td><td><span class="status dark">Siap Diambil</span></td><td><button class="btn primary">Serahkan &amp; Konseling</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+<script src="../../js/main.js"></script>
+</body>
+</html>

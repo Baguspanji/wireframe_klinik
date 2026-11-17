@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorium - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">C</div><div><strong>Clinic ERP</strong><small>Management System</small></div></div>
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub active" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> <b>Laboratorium Klinis</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">L</span>
+      <span>Analis Lab</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> Laboratorium</div>
+        <h1>Laboratorium Klinis</h1>
+        <p>Order penunjang diagnostik medis, sampling darah/urin, validasi hasil lab, dan cetak laporan hasil.</p>
+      </div>
+      <div>
+        <a class="btn" href="daftar-antrean.html">+ Antrean Lab Langsung</a>
+        <button class="btn primary">+ Buat Order Baru</button>
+      </div>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card"><div class="metric-label">Permintaan Menunggu Sampel</div><div class="metric-value">2</div></div>
+      <div class="card"><div class="metric-label">Sampel Sedang Diuji</div><div class="metric-value">3</div></div>
+      <div class="card"><div class="metric-label">Hasil Siap Cetak</div><div class="metric-value">4</div></div>
+      <div class="card"><div class="metric-label">Hasil Selesai Hari Ini</div><div class="metric-value">16</div></div>
+    </div>
+
+    <div class="card section">
+      <div class="tabs">
+        <button class="tab active">Permintaan Pemeriksaan</button>
+        <button class="tab">Input Nilai Kritis / Hasil</button>
+        <button class="tab">Arsip Riwayat Lab</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>No. Order</th><th>No. RM</th><th>Nama Pasien</th><th>Jenis Parameter Uji</th><th>Dokter Pengirim</th><th>Waktu Order</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td><b>LAB-021</b></td><td>RM-000126</td><td>Budi Santoso</td><td>Darah Lengkap (CBC) + Widal</td><td>dr. Budi Santoso</td><td>09:00</td><td><span class="status">Menunggu Sampel</span></td><td><button class="btn primary">Ambil Sampel</button></td></tr>
+            <tr><td><b>LAB-020</b></td><td>RM-000124</td><td>Andi Pratama</td><td>Gula Darah Puasa (GDP) + Urin Rutin</td><td>dr. Budi Santoso</td><td>08:40</td><td><span class="status">Sedang Diuji</span></td><td><button class="btn primary">Input Hasil</button></td></tr>
+            <tr><td><b>LAB-019</b></td><td>RM-000125</td><td>Siti Aminah</td><td>Masa Perdarahan (BT/CT)</td><td>drg. Rina</td><td>08:20</td><td><span class="status dark">Selesai &amp; Valid</span></td><td><button class="btn">Cetak Hasil</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+<script src="../../js/main.js"></script>
+</body>
+</html>

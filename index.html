@@ -82,7 +82,39 @@ button { cursor: pointer; }
   display: inline-block;
   flex-shrink: 0;
 }
-.nav-sub { padding-left: 36px; font-size: 12px; }
+.nav-sub { padding-left: 36px; font-size: 12px; text-decoration: none; }
+.nav-group-toggle { justify-content: space-between; }
+.nav-group-toggle .nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: transform .15s;
+}
+.nav-caret svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+.nav-group.open .nav-caret { transform: rotate(90deg); }
+.icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+}
+.btn .icon { width: 14px; height: 14px; }
+.nav-subitems { display: none; }
+.nav-group.open .nav-subitems { display: block; }
 
 /* Main */
 .main { margin-left: var(--sidebar); width: calc(100% - var(--sidebar)); }
@@ -267,6 +299,8 @@ tr:last-child td { border-bottom: 0; }
   .brand div:last-child, .nav-label, .nav-item span:not(.nav-icon) { display: none; }
   .nav-item { justify-content: center; padding: 12px 5px; }
   .nav-sub { padding-left: 5px; }
+  .nav-left { display: flex; align-items: center; gap: 5px;}
+  .nav-icon { width: 20px; height: 20px; }
   .main { margin-left: 60px; width: calc(100% - 60px); }
   .content { padding: 18px 12px; }
   .topbar { padding: 0 12px; }
@@ -292,7 +326,27 @@ tr:last-child td { border-bottom: 0; }
   <button class="nav-item active" data-page="dashboard"><i class="nav-icon"></i><span>Dashboard</span></button>
 
   <div class="nav-label">OPERASIONAL</div>
-  <button class="nav-item" data-page="operasional"><i class="nav-icon"></i><span>Operasional Klinik</span></button>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span style="margin-left: 8px;">Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="pages/operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/pemeriksaan-poli-umum.html"><span>+ Form SOAP Poli</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/pemeriksaan-poli-gigi.html"><span>+ Form Odontogram</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="pages/operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
   <button class="nav-item" data-page="billing"><i class="nav-icon"></i><span>Billing & Kasir</span></button>
 
   <div class="nav-label">KEUANGAN</div>
@@ -387,37 +441,269 @@ tr:last-child td { border-bottom: 0; }
     <!-- OPERATIONAL -->
     <section class="page" id="operasional">
       <div class="page-heading">
-        <div><div class="breadcrumb">Operasional <span>/</span> Overview</div><h1>Operasional Klinik</h1><p>Pengelolaan pasien dan seluruh aktivitas pelayanan klinis.</p></div>
+        <div><div class="breadcrumb">Operasional <span>/</span> Overview</div><h1>Operasional Klinik</h1><p>Pengelolaan pasien dan seluruh aktivitas pelayanan klinis per modul.</p></div>
         <button class="btn primary">+ Registrasi Pasien</button>
       </div>
-      <div class="grid grid-3">
+      <div class="grid grid-4">
         <div class="card"><div class="metric-label">Pasien Terdaftar</div><div class="metric-value">12.480</div><p class="small">Total pasien</p></div>
-        <div class="card"><div class="metric-label">Kunjungan Bulan Ini</div><div class="metric-value">1.284</div><p class="small">Semua unit pelayanan</p></div>
-        <div class="card"><div class="metric-label">Pasien Rawat Inap</div><div class="metric-value">18</div><p class="small">Sedang dirawat</p></div>
+        <div class="card"><div class="metric-label">Kunjungan Hari Ini</div><div class="metric-value">128</div><p class="small">Semua unit pelayanan</p></div>
+        <div class="card"><div class="metric-label">Antrean Aktif</div><div class="metric-value">24</div><p class="small">Menunggu dipanggil</p></div>
+        <div class="card"><div class="metric-label">Rawat Inap</div><div class="metric-value">18</div><p class="small">Pasien dirawat</p></div>
       </div>
       <div class="card section">
-        <div class="card-title"><h2>Modul Pelayanan</h2></div>
-        <div class="grid grid-3">
-          <div class="placeholder">Pendaftaran & Loket</div>
-          <div class="placeholder">Poli Umum</div>
-          <div class="placeholder">Poli Gigi</div>
-          <div class="placeholder">KIA & Anak</div>
-          <div class="placeholder">IGD</div>
-          <div class="placeholder">Rawat Inap</div>
-          <div class="placeholder">Laboratorium</div>
-          <div class="placeholder">Farmasi</div>
-          <div class="placeholder">Rekam Medis</div>
+        <div class="card-title"><h2>Status Modul Pelayanan</h2><span class="muted small">Akses cepat ke tiap unit</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Modul</th><th>Antrean</th><th>Dilayani</th><th>Selesai</th><th>Petugas/Dokter</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Pendaftaran &amp; Antrean</td><td>8</td><td>2</td><td>42</td><td>Loket 1-2</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-pendaftaran')">Buka</button></td></tr>
+            <tr><td>Poli Umum</td><td>6</td><td>2</td><td>34</td><td>dr. Budi, dr. Ani</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-poli-umum')">Buka</button></td></tr>
+            <tr><td>Poli Gigi</td><td>3</td><td>1</td><td>15</td><td>drg. Rina</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-poli-gigi')">Buka</button></td></tr>
+            <tr><td>KIA &amp; Kebidanan</td><td>2</td><td>1</td><td>11</td><td>Bdn. Sari</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-kia')">Buka</button></td></tr>
+            <tr><td>IGD</td><td>1</td><td>2</td><td>9</td><td>dr. Dimas (jaga)</td><td><span class="status dark">24 Jam</span></td><td class="right"><button class="btn" onclick="showPage('op-igd')">Buka</button></td></tr>
+            <tr><td>Rawat Inap</td><td>-</td><td>18</td><td>3</td><td>Perawat shift</td><td><span class="status dark">Aktif</span></td><td class="right"><button class="btn" onclick="showPage('op-rawat-inap')">Buka</button></td></tr>
+            <tr><td>Laboratorium</td><td>2</td><td>3</td><td>16</td><td>Analis Lab</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-laboratorium')">Buka</button></td></tr>
+            <tr><td>Farmasi</td><td>4</td><td>1</td><td>38</td><td>Apoteker</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-farmasi')">Buka</button></td></tr>
+            <tr><td>Rekam Medis</td><td>5</td><td>-</td><td>40</td><td>Petugas RM</td><td><span class="status dark">Buka</span></td><td class="right"><button class="btn" onclick="showPage('op-rekam-medis')">Buka</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="card section">
+        <div class="card-title"><h2>Alur Pelayanan Pasien</h2></div>
+        <div class="flow">
+          <div class="flow-box"><b>Pendaftaran</b><p class="small">Registrasi &amp; antrean</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Pemeriksaan</b><p class="small">Poli / IGD / Ranap</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Penunjang</b><p class="small">Lab / Farmasi</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Billing</b><p class="small">Kasir &amp; klaim</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Rekam Medis</b><p class="small">Dokumen &amp; arsip</p></div>
         </div>
       </div>
+    </section>
+
+    <!-- OP: PENDAFTARAN -->
+    <section class="page" id="op-pendaftaran">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Pendaftaran &amp; Antrean</div><h1>Pendaftaran &amp; Antrean</h1><p>Registrasi pasien, pengelolaan antrean loket, dan penjadwalan kunjungan.</p></div>
+        <div><button class="btn">Cetak Nomor Antrean</button><button class="btn primary">+ Daftar Pasien</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Total Antrean</div><div class="metric-value">52</div><p class="small">Hari ini</p></div>
+        <div class="card"><div class="metric-label">Menunggu</div><div class="metric-value">8</div><p class="small">Belum dipanggil</p></div>
+        <div class="card"><div class="metric-label">Sedang Dilayani</div><div class="metric-value">2</div><p class="small">Di loket</p></div>
+        <div class="card"><div class="metric-label">Selesai</div><div class="metric-value">42</div><p class="small">Teregistrasi</p></div>
+      </div>
       <div class="card section">
-        <div class="card-title"><h2>Daftar Kunjungan</h2><button class="btn">Export</button></div>
-        <div class="filters"><input class="field search" placeholder="Cari pasien / nomor RM"><select><option>Semua Unit</option><option>Poli Umum</option></select><select><option>Semua Status</option></select><button class="btn">Filter</button></div>
+        <div class="card-title"><h2>Antrean Loket</h2><button class="btn">Panggil Berikutnya</button></div>
+        <div class="filters"><select><option>Semua Loket</option><option>Loket 1</option><option>Loket 2</option></select><select><option>Semua Tujuan</option><option>Poli Umum</option><option>Poli Gigi</option><option>Laboratorium</option></select><button class="btn">Filter</button></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>No. RM</th><th>Nama Pasien</th><th>Unit</th><th>Dokter</th><th>Waktu</th><th>Status</th></tr></thead>
+          <thead><tr><th>No. Antrean</th><th>No. RM</th><th>Nama Pasien</th><th>Tujuan</th><th>Penjamin</th><th>Waktu Daftar</th><th>Status</th><th>Aksi</th></tr></thead>
           <tbody>
-            <tr><td>RM-000124</td><td>Andi Pratama</td><td>Poli Umum</td><td>dr. Budi</td><td>08:15</td><td><span class="status dark">Selesai</span></td></tr>
-            <tr><td>RM-000125</td><td>Siti Aminah</td><td>Poli Gigi</td><td>drg. Rina</td><td>08:30</td><td><span class="status">Dalam Pelayanan</span></td></tr>
-            <tr><td>RM-000126</td><td>Budi Santoso</td><td>Laboratorium</td><td>Petugas Lab</td><td>09:00</td><td><span class="status">Menunggu</span></td></tr>
+            <tr><td>A-021</td><td>RM-000130</td><td>Dewi Lestari</td><td>Poli Umum</td><td>Umum</td><td>08:05</td><td><span class="status">Menunggu</span></td><td><button class="btn">Panggil</button></td></tr>
+            <tr><td>A-022</td><td>RM-000131</td><td>Rudi Hartono</td><td>Poli Gigi</td><td>BPJS</td><td>08:12</td><td><span class="status">Menunggu</span></td><td><button class="btn">Panggil</button></td></tr>
+            <tr><td>A-020</td><td>RM-000129</td><td>Wati Susanti</td><td>Laboratorium</td><td>Umum</td><td>07:58</td><td><span class="status dark">Dipanggil</span></td><td><button class="btn">Proses</button></td></tr>
+            <tr><td>A-019</td><td>RM-000128</td><td>Agus Salim</td><td>Poli Umum</td><td>Asuransi</td><td>07:50</td><td><span class="status dark">Selesai</span></td><td>-</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: POLI UMUM -->
+    <section class="page" id="op-poli-umum">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Poli Umum</div><h1>Poli Umum</h1><p>Pemeriksaan dokter umum, tindakan, resep, dan rujukan.</p></div>
+        <div><button class="btn">Jadwal Dokter</button><button class="btn primary">Panggil Pasien</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Antrean</div><div class="metric-value">6</div></div>
+        <div class="card"><div class="metric-label">Sedang Diperiksa</div><div class="metric-value">2</div></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">34</div></div>
+        <div class="card"><div class="metric-label">Dokter Jaga</div><div class="metric-value">2</div><p class="small">dr. Budi, dr. Ani</p></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Antrean &amp; Pemeriksaan</button><button class="tab">Tindakan</button><button class="tab">Resep &amp; Rujukan</button></div>
+        <div class="filters"><input class="field search" placeholder="Cari pasien / No. RM"><select><option>Semua Dokter</option><option>dr. Budi</option><option>dr. Ani</option></select><select><option>Semua Status</option></select><button class="btn">Filter</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Antrean</th><th>No. RM</th><th>Nama Pasien</th><th>Keluhan</th><th>Dokter</th><th>Masuk</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>U-012</td><td>RM-000124</td><td>Andi Pratama</td><td>Demam, batuk</td><td>dr. Budi</td><td>08:15</td><td><span class="status dark">Diperiksa</span></td><td><button class="btn">Input SOAP</button></td></tr>
+            <tr><td>U-013</td><td>RM-000130</td><td>Dewi Lestari</td><td>Pusing</td><td>dr. Ani</td><td>08:25</td><td><span class="status dark">Diperiksa</span></td><td><button class="btn">Input SOAP</button></td></tr>
+            <tr><td>U-014</td><td>RM-000132</td><td>Hendra Wijaya</td><td>Nyeri lambung</td><td>dr. Budi</td><td>-</td><td><span class="status">Menunggu</span></td><td><button class="btn">Panggil</button></td></tr>
+            <tr><td>U-011</td><td>RM-000120</td><td>Rina Marlina</td><td>Kontrol</td><td>dr. Ani</td><td>08:00</td><td><span class="status dark">Selesai</span></td><td><button class="btn">Detail</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: POLI GIGI -->
+    <section class="page" id="op-poli-gigi">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Poli Gigi</div><h1>Poli Gigi</h1><p>Pemeriksaan gigi, tindakan dental, dan perencanaan perawatan.</p></div>
+        <div><button class="btn">Jadwal Dokter</button><button class="btn primary">Panggil Pasien</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Antrean</div><div class="metric-value">3</div></div>
+        <div class="card"><div class="metric-label">Sedang Ditangani</div><div class="metric-value">1</div></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">15</div></div>
+        <div class="card"><div class="metric-label">Dokter Jaga</div><div class="metric-value">1</div><p class="small">drg. Rina</p></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Antrean &amp; Tindakan</button><button class="tab">Odontogram</button><button class="tab">Rencana Perawatan</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Antrean</th><th>No. RM</th><th>Nama Pasien</th><th>Keluhan</th><th>Tindakan</th><th>Dokter Gigi</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>G-005</td><td>RM-000125</td><td>Siti Aminah</td><td>Sakit gigi geraham</td><td>Pemeriksaan</td><td>drg. Rina</td><td><span class="status dark">Ditangani</span></td><td><button class="btn">Input Tindakan</button></td></tr>
+            <tr><td>G-006</td><td>RM-000131</td><td>Rudi Hartono</td><td>Scaling</td><td>-</td><td>drg. Rina</td><td><span class="status">Menunggu</span></td><td><button class="btn">Panggil</button></td></tr>
+            <tr><td>G-004</td><td>RM-000118</td><td>Maya Sari</td><td>Tambal gigi</td><td>Restorasi komposit</td><td>drg. Rina</td><td><span class="status dark">Selesai</span></td><td><button class="btn">Detail</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: KIA -->
+    <section class="page" id="op-kia">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> KIA &amp; Kebidanan</div><h1>KIA &amp; Kebidanan</h1><p>Pelayanan kesehatan ibu, anak, kehamilan, dan imunisasi.</p></div>
+        <div><button class="btn">Jadwal Bidan</button><button class="btn primary">Panggil Pasien</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Antrean</div><div class="metric-value">2</div></div>
+        <div class="card"><div class="metric-label">Sedang Dilayani</div><div class="metric-value">1</div></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">11</div></div>
+        <div class="card"><div class="metric-label">Bidan Jaga</div><div class="metric-value">1</div><p class="small">Bdn. Sari</p></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Antrean &amp; Kunjungan</button><button class="tab">ANC / Kehamilan</button><button class="tab">Imunisasi Anak</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Antrean</th><th>No. RM</th><th>Nama Pasien</th><th>Jenis Layanan</th><th>Petugas</th><th>Catatan</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>K-004</td><td>RM-000140</td><td>Lina Marlina</td><td>ANC</td><td>Bdn. Sari</td><td>UK 28 minggu</td><td><span class="status dark">Dilayani</span></td><td><button class="btn">Input</button></td></tr>
+            <tr><td>K-005</td><td>RM-000141</td><td>Putri Ayu (Bayi)</td><td>Imunisasi</td><td>Bdn. Sari</td><td>DPT-HB-Hib</td><td><span class="status">Menunggu</span></td><td><button class="btn">Panggil</button></td></tr>
+            <tr><td>K-003</td><td>RM-000138</td><td>Novi Handayani</td><td>KB</td><td>Bdn. Sari</td><td>Suntik 3 bulan</td><td><span class="status dark">Selesai</span></td><td><button class="btn">Detail</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: IGD -->
+    <section class="page" id="op-igd">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> IGD</div><h1>IGD (Instalasi Gawat Darurat)</h1><p>Triase, penanganan emergensi, observasi, dan keputusan tindak lanjut.</p></div>
+        <div><button class="btn">Lihat Bed</button><button class="btn primary">+ Pasien Darurat</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Pasien Aktif</div><div class="metric-value">3</div></div>
+        <div class="card"><div class="metric-label">Triase Merah</div><div class="metric-value">0</div></div>
+        <div class="card"><div class="metric-label">Triase Kuning</div><div class="metric-value">2</div></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">9</div></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Triase &amp; Penanganan</button><button class="tab">Observasi</button><button class="tab">Rujukan / Rawat Inap</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Waktu Masuk</th><th>No. RM</th><th>Nama Pasien</th><th>Keluhan Utama</th><th>Triase</th><th>DPJP</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>08:40</td><td>RM-000150</td><td>Fajar Nugroho</td><td>Nyeri dada</td><td><span class="status">Kuning</span></td><td>dr. Dimas</td><td><span class="status dark">Observasi</span></td><td><button class="btn">Update</button></td></tr>
+            <tr><td>09:10</td><td>RM-000151</td><td>Tono Wijaya</td><td>Luka jatuh</td><td><span class="status">Kuning</span></td><td>dr. Dimas</td><td><span class="status dark">Ditangani</span></td><td><button class="btn">Update</button></td></tr>
+            <tr><td>07:30</td><td>RM-000148</td><td>Sri Mulyani</td><td>Demam tinggi</td><td><span class="status dark">Hijau</span></td><td>dr. Dimas</td><td><span class="status dark">Selesai</span></td><td><button class="btn">Detail</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: RAWAT INAP -->
+    <section class="page" id="op-rawat-inap">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Rawat Inap</div><h1>Rawat Inap</h1><p>Manajemen kamar, pasien inap, visite dokter, dan perencanaan pulang.</p></div>
+        <div><button class="btn">Peta Kamar</button><button class="btn primary">+ Admisi Pasien</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Pasien Dirawat</div><div class="metric-value">18</div></div>
+        <div class="card"><div class="metric-label">Bed Terisi</div><div class="metric-value">18 / 24</div></div>
+        <div class="card"><div class="metric-label">Rencana Pulang</div><div class="metric-value">3</div><p class="small">Hari ini</p></div>
+        <div class="card"><div class="metric-label">Masuk Hari Ini</div><div class="metric-value">2</div></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Daftar Pasien Inap</button><button class="tab">Kamar &amp; Bed</button><button class="tab">Visite &amp; CPPT</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. RM</th><th>Nama Pasien</th><th>Ruang / Bed</th><th>Tgl Masuk</th><th>DPJP</th><th>Diagnosa</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>RM-000110</td><td>Hasan Basri</td><td>Mawar / 01</td><td>15 Nov 2026</td><td>dr. Budi</td><td>Demam tifoid</td><td><span class="status dark">Dirawat</span></td><td><button class="btn">CPPT</button></td></tr>
+            <tr><td>RM-000112</td><td>Nur Aini</td><td>Melati / 03</td><td>16 Nov 2026</td><td>dr. Ani</td><td>Observasi pasca operasi</td><td><span class="status">Rencana Pulang</span></td><td><button class="btn">Resume</button></td></tr>
+            <tr><td>RM-000150</td><td>Fajar Nugroho</td><td>Anggrek / 02</td><td>17 Nov 2026</td><td>dr. Dimas</td><td>Observasi nyeri dada</td><td><span class="status dark">Dirawat</span></td><td><button class="btn">CPPT</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: LABORATORIUM -->
+    <section class="page" id="op-laboratorium">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Laboratorium</div><h1>Laboratorium</h1><p>Permintaan pemeriksaan, pengambilan sampel, proses, dan hasil lab.</p></div>
+        <div><button class="btn">Daftar Tarif</button><button class="btn primary">+ Order Lab</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Permintaan Baru</div><div class="metric-value">2</div></div>
+        <div class="card"><div class="metric-label">Sampel Diproses</div><div class="metric-value">3</div></div>
+        <div class="card"><div class="metric-label">Hasil Siap</div><div class="metric-value">4</div></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">16</div></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Order &amp; Sampel</button><button class="tab">Input Hasil</button><button class="tab">Riwayat Hasil</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Order</th><th>No. RM</th><th>Nama Pasien</th><th>Pemeriksaan</th><th>Dokter Pengirim</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>LAB-021</td><td>RM-000126</td><td>Budi Santoso</td><td>Darah Lengkap</td><td>dr. Budi</td><td>09:00</td><td><span class="status">Menunggu Sampel</span></td><td><button class="btn">Ambil Sampel</button></td></tr>
+            <tr><td>LAB-020</td><td>RM-000124</td><td>Andi Pratama</td><td>Gula Darah, Urin</td><td>dr. Budi</td><td>08:40</td><td><span class="status">Diproses</span></td><td><button class="btn">Input Hasil</button></td></tr>
+            <tr><td>LAB-019</td><td>RM-000125</td><td>Siti Aminah</td><td>Darah Rutin</td><td>drg. Rina</td><td>08:20</td><td><span class="status dark">Hasil Siap</span></td><td><button class="btn">Cetak</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: FARMASI -->
+    <section class="page" id="op-farmasi">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Farmasi</div><h1>Farmasi</h1><p>Pelayanan resep, peracikan, penyerahan obat, dan stok operasional.</p></div>
+        <div><button class="btn">Stok Obat</button><button class="btn primary">Proses Resep</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Resep Masuk</div><div class="metric-value">5</div></div>
+        <div class="card"><div class="metric-label">Diracik</div><div class="metric-value">1</div></div>
+        <div class="card"><div class="metric-label">Siap Diambil</div><div class="metric-value">2</div></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">38</div></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Antrian Resep</button><button class="tab">Penyerahan Obat</button><button class="tab">Riwayat Resep</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Resep</th><th>No. RM</th><th>Nama Pasien</th><th>Dokter</th><th>Jenis</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>RX-045</td><td>RM-000124</td><td>Andi Pratama</td><td>dr. Budi</td><td>Non-racikan</td><td>08:35</td><td><span class="status">Menunggu</span></td><td><button class="btn">Proses</button></td></tr>
+            <tr><td>RX-044</td><td>RM-000120</td><td>Rina Marlina</td><td>dr. Ani</td><td>Racikan</td><td>08:20</td><td><span class="status">Diracik</span></td><td><button class="btn">Detail</button></td></tr>
+            <tr><td>RX-043</td><td>RM-000118</td><td>Maya Sari</td><td>drg. Rina</td><td>Non-racikan</td><td>08:10</td><td><span class="status dark">Siap Diambil</span></td><td><button class="btn">Serahkan</button></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- OP: REKAM MEDIS -->
+    <section class="page" id="op-rekam-medis">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Rekam Medis</div><h1>Rekam Medis</h1><p>Pengelolaan berkas pasien, kelengkapan dokumen, dan peminjaman arsip.</p></div>
+        <div><button class="btn">Peminjaman Berkas</button><button class="btn primary">+ Cari Berkas</button></div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Permintaan Berkas</div><div class="metric-value">5</div></div>
+        <div class="card"><div class="metric-label">Dipinjam</div><div class="metric-value">12</div></div>
+        <div class="card"><div class="metric-label">Belum Lengkap</div><div class="metric-value">7</div><p class="small">Dokumen kunjungan</p></div>
+        <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">40</div></div>
+      </div>
+      <div class="card section">
+        <div class="tabs"><button class="tab active">Permintaan &amp; Distribusi</button><button class="tab">Kelengkapan Berkas</button><button class="tab">Peminjaman</button></div>
+        <div class="filters"><input class="field search" placeholder="Cari No. RM / Nama pasien"><select><option>Semua Status</option><option>Diminta</option><option>Dikirim</option><option>Dikembalikan</option></select><button class="btn">Filter</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. RM</th><th>Nama Pasien</th><th>Asal Permintaan</th><th>Tujuan</th><th>Waktu</th><th>Kelengkapan</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>RM-000124</td><td>Andi Pratama</td><td>Pendaftaran</td><td>Poli Umum</td><td>08:10</td><td><span class="status dark">Lengkap</span></td><td><span class="status dark">Dikirim</span></td><td><button class="btn">Detail</button></td></tr>
+            <tr><td>RM-000125</td><td>Siti Aminah</td><td>Poli Gigi</td><td>Rekam Medis</td><td>09:05</td><td><span class="status">Belum Lengkap</span></td><td><span class="status">Diminta</span></td><td><button class="btn">Proses</button></td></tr>
+            <tr><td>RM-000110</td><td>Hasan Basri</td><td>Rawat Inap</td><td>Rawat Inap</td><td>07:30</td><td><span class="status dark">Lengkap</span></td><td><span class="status">Dipinjam</span></td><td><button class="btn">Kembalikan</button></td></tr>
           </tbody>
         </table></div>
       </div>
@@ -478,28 +764,108 @@ tr:last-child td { border-bottom: 0; }
         <div class="card"><div class="metric-label">Jurnal Menunggu</div><div class="metric-value">12</div><div class="metric-note">Belum diposting</div></div>
       </div>
       <div class="grid grid-2 section">
+        <!-- MENU ACCOUNTING MODULAR -->
         <div class="card">
-          <div class="card-title"><h2>Menu Accounting</h2></div>
+          <div class="card-title">
+            <h2>Modul &amp; Menu Accounting</h2>
+            <span class="muted small">Akses fitur akuntansi terpadu</span>
+          </div>
           <div class="table-wrap"><table>
+            <thead>
+              <tr><th>Menu</th><th>Deskripsi</th><th>Status / Item</th><th class="right">Aksi</th></tr>
+            </thead>
             <tbody>
-              <tr><td>Chart of Accounts</td><td class="right"><button class="btn">Buka</button></td></tr>
-              <tr><td>Account Mapping</td><td class="right"><button class="btn">Buka</button></td></tr>
-              <tr><td>Journal Entries</td><td class="right"><button class="btn">Buka</button></td></tr>
-              <tr><td>General Ledger</td><td class="right"><button class="btn">Buka</button></td></tr>
-              <tr><td>Trial Balance</td><td class="right"><button class="btn">Buka</button></td></tr>
-              <tr><td>Accounting Period</td><td class="right"><button class="btn">Buka</button></td></tr>
+              <tr>
+                <td><b>Chart of Accounts (COA)</b></td>
+                <td><span class="small muted">Daftar kode akun 5 digit (Aset, Liabilitas, Ekuitas, Pendapatan, Beban)</span></td>
+                <td><span class="status">142 Akun</span></td>
+                <td class="right"><button class="btn primary">Buka COA</button></td>
+              </tr>
+              <tr>
+                <td><b>Account Mapping</b></td>
+                <td><span class="small muted">Otomasi jurnal billing, farmasi, lab, kasir, &amp; inventori</span></td>
+                <td><span class="status dark">28 Mapping Aktif</span></td>
+                <td class="right"><button class="btn">Konfigurasi</button></td>
+              </tr>
+              <tr>
+                <td><b>Journal Entries</b></td>
+                <td><span class="small muted">Pencatatan manual, approval, verifikasi, dan posting jurnal</span></td>
+                <td><span class="status" style="background:#fff3cd;color:#856404;font-weight:bold;">12 Draft</span></td>
+                <td class="right"><button class="btn">Buat Jurnal</button></td>
+              </tr>
+              <tr>
+                <td><b>General Ledger (Buku Besar)</b></td>
+                <td><span class="small muted">Mutasi transaksi detail per rekening dan saldo berjalan</span></td>
+                <td><span class="status dark">Terverifikasi</span></td>
+                <td class="right"><button class="btn">Buku Besar</button></td>
+              </tr>
+              <tr>
+                <td><b>Trial Balance (Neraca Saldo)</b></td>
+                <td><span class="small muted">Pemeriksaan keseimbangan total debit dan kredit sebelum tutup buku</span></td>
+                <td><span class="status dark">Balance (Rp 0 Diff)</span></td>
+                <td class="right"><button class="btn">Cek Saldo</button></td>
+              </tr>
+              <tr>
+                <td><b>Accounting Period &amp; Closing</b></td>
+                <td><span class="small muted">Setup kalender fiskal, lock posting, dan rekonsiliasi akhir bulan</span></td>
+                <td><span class="status">Nov 2026</span></td>
+                <td class="right"><button class="btn">Kelola</button></td>
+              </tr>
             </tbody>
           </table></div>
         </div>
+
+        <!-- STATUS PERIODE AKUNTANSI -->
         <div class="card">
-          <div class="card-title"><h2>Status Periode Akuntansi</h2></div>
-          <p class="small">Periode November 2026</p>
-          <div style="font-size:20px;font-weight:bold;margin:12px 0">Open</div>
-          <p class="small">Periode masih terbuka untuk transaksi dan jurnal.</p>
-          <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
-          <div class="metric-label">Jurnal belum diposting</div><div class="metric-value">12</div>
-          <div class="metric-label">Jurnal sudah diposting</div><div class="metric-value">348</div>
-          <button class="btn">Kelola Periode</button>
+          <div class="card-title">
+            <h2>Status Periode Akuntansi</h2>
+            <span class="status dark" style="background:#d4edda;color:#155724;font-weight:bold;">STATUS: OPEN</span>
+          </div>
+
+          <div style="background:#fafbfc;border:1px solid #e1e4e8;border-radius:5px;padding:14px;margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <p class="small muted">Periode Berjalan:</p>
+                <div style="font-size:18px;font-weight:bold;margin:2px 0;">November 2026 (Tahun Buku 2026)</div>
+                <p class="small muted">Masa aktif: 01 Nov 2026 – 30 Nov 2026</p>
+              </div>
+              <div style="text-align:right;">
+                <span class="status" style="background:#28a745;color:#fff;font-weight:bold;padding:5px 10px;">TERBUKA</span>
+              </div>
+            </div>
+            <p class="small" style="margin-top:8px;color:#555;">Klinik dapat mencatat transaksi kasir, inventori obat, dan pembuatan jurnal harian ke periode ini.</p>
+          </div>
+
+          <div class="grid grid-2" style="gap:10px;margin-bottom:14px;">
+            <div class="card" style="padding:12px;background:#fefefe;border:1px solid #e5e7eb;">
+              <div class="metric-label">Jurnal Belum Diposting</div>
+              <div class="metric-value" style="color:#d9534f;font-size:20px;">12 Jurnal</div>
+              <p class="small muted">Perlu review &amp; posting</p>
+            </div>
+            <div class="card" style="padding:12px;background:#fefefe;border:1px solid #e5e7eb;">
+              <div class="metric-label">Jurnal Sudah Diposting</div>
+              <div class="metric-value" style="color:#28a745;font-size:20px;">348 Jurnal</div>
+              <p class="small muted">Terkunci di buku besar</p>
+            </div>
+          </div>
+
+          <div class="card" style="padding:12px;background:#fff8e6;border:1px solid #ffeeba;margin-bottom:16px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <svg class="icon" viewBox="0 0 24 24" style="stroke:#856404;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+              <b>Prasyarat Tutup Buku Bulanan:</b>
+            </div>
+            <ul style="margin:8px 0 0;padding-left:18px;font-size:11px;color:#856404;line-height:1.6;">
+              <li>Semua klaim asuransi &amp; kasir harus terposting (12 draft tertunda).</li>
+              <li>Rekonsiliasi bank dan kas fisik kasir selesai.</li>
+              <li>Opname stok farmasi per 30 Nov terkonfirmasi.</li>
+            </ul>
+          </div>
+
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button class="btn">Log Audit Periode</button>
+            <button class="btn secondary">Kunci Sementara (Lock Transaksi)</button>
+            <button class="btn primary" onclick="alert('Posting seluruh jurnal draft terlebih dahulu sebelum menutup periode!')">Proses Tutup Buku (Month-End Close)</button>
+          </div>
         </div>
       </div>
       <div class="card section">
@@ -784,6 +1150,15 @@ tr:last-child td { border-bottom: 0; }
 const pageNames = {
   dashboard: "Dashboard",
   operasional: "Operasional Klinik",
+  "op-pendaftaran": "Pendaftaran & Antrean",
+  "op-poli-umum": "Poli Umum",
+  "op-poli-gigi": "Poli Gigi",
+  "op-kia": "KIA & Kebidanan",
+  "op-igd": "IGD",
+  "op-rawat-inap": "Rawat Inap",
+  "op-laboratorium": "Laboratorium",
+  "op-farmasi": "Farmasi",
+  "op-rekam-medis": "Rekam Medis",
   billing: "Billing & Kasir",
   accounting: "Accounting",
   reports: "Laporan Keuangan",
@@ -793,16 +1168,28 @@ const pageNames = {
 
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.querySelectorAll(".nav-item[data-page]").forEach(n => n.classList.remove("active"));
   const page = document.getElementById(id);
   if (page) page.classList.add("active");
   const nav = document.querySelector('[data-page="' + id + '"]');
   if (nav) nav.classList.add("active");
+  if (id === "operasional" || id.startsWith("op-")) {
+    const group = document.getElementById("nav-operasional");
+    if (group) group.classList.add("open");
+  }
   document.getElementById("currentPage").textContent = pageNames[id] || id;
 }
 
 document.querySelectorAll(".nav-item[data-page]").forEach(btn => {
   btn.addEventListener("click", () => showPage(btn.dataset.page));
+});
+
+document.querySelectorAll("[data-toggle]").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const group = document.getElementById(btn.dataset.toggle);
+    if (group) group.classList.toggle("open");
+  });
 });
 
 document.querySelectorAll(".report-menu button[data-report]").forEach(btn => {

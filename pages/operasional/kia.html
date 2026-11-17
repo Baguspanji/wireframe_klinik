@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIA &amp; Kebidanan - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">C</div><div><strong>Clinic ERP</strong><small>Management System</small></div></div>
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub active" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> <b>KIA &amp; Kebidanan</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Bdn. Sari</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> KIA</div>
+        <h1>KIA &amp; Kebidanan</h1>
+        <p>Pemeriksaan antenatal (ANC), imunisasi bayi, posyandu/tumbuh kembang, dan program KB.</p>
+      </div>
+      <div>
+        <a class="btn" href="daftar-antrean.html">+ Antrean KIA</a>
+        <button class="btn primary"><svg class="icon" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg> Panggil Pasien</button>
+      </div>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card"><div class="metric-label">Antrean Menunggu</div><div class="metric-value">2</div></div>
+      <div class="card"><div class="metric-label">Sedang Konsultasi</div><div class="metric-value">1</div></div>
+      <div class="card"><div class="metric-label">Selesai Hari Ini</div><div class="metric-value">11</div></div>
+      <div class="card"><div class="metric-label">Bidan Jaga</div><div class="metric-value">1</div><p class="small">Bdn. Sari</p></div>
+    </div>
+
+    <div class="card section">
+      <div class="tabs">
+        <button class="tab active">Kunjungan KIA (3)</button>
+        <button class="tab">Pemeriksaan Kehamilan (ANC)</button>
+        <button class="tab">Imunisasi Bayi</button>
+        <button class="tab">Keluarga Berencana (KB)</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>No. Antrean</th><th>No. RM</th><th>Nama Pasien</th><th>Jenis Layanan</th><th>Catatan</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td><b>K-004</b></td><td>RM-000140</td><td>Lina Marlina</td><td>ANC (Pemeriksaan Kehamilan)</td><td>Usia Kandungan 28 Minggu</td><td><span class="status dark">Dilayani</span></td><td><button class="btn primary">Input Partograf &amp; KIA</button></td></tr>
+            <tr><td><b>K-005</b></td><td>RM-000141</td><td>Putri Ayu (Bayi)</td><td>Imunisasi</td><td>Vaksin DPT-HB-Hib 2</td><td><span class="status">Menunggu</span></td><td><button class="btn">Panggil</button></td></tr>
+            <tr><td><b>K-003</b></td><td>RM-000138</td><td>Novi Handayani</td><td>Keluarga Berencana</td><td>Suntik KB 3 Bulan</td><td><span class="status dark">Selesai</span></td><td><button class="btn">Detail</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+<script src="../../js/main.js"></script>
+</body>
+</html>

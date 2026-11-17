@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Pemeriksaan Dokter - Poli Umum</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Layout Khusus Tab Kiri & Top */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.exam-workspace {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.exam-workspace.full-width {
+  display: block;
+}
+.exam-workspace.full-width .exam-left-nav {
+  display: none !important;
+}
+.exam-left-nav {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.left-tab-btn {
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4b525d;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.left-tab-btn:hover { background: #f0f1f3; color: #111; }
+.left-tab-btn.active {
+  background: #e9eaec;
+  color: #111;
+  font-weight: bold;
+}
+.left-tab-btn .badge-step {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d5d7da;
+  color: #333;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.left-tab-btn.active .badge-step {
+  background: #111;
+  color: #fff;
+}
+
+.exam-content-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 20px;
+  min-height: 480px;
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* History Mini Timeline */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+@media(max-width: 900px) {
+  .exam-workspace { grid-template-columns: 1fr; }
+  .exam-left-nav { flex-direction: row; overflow-x: auto; }
+  .left-tab-btn { white-space: nowrap; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub active" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="pemeriksaan-poli-umum.html"><span>+ Form SOAP Poli</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> Poli Umum <span style="margin:0 8px">/</span> <b>Pemeriksaan Pasien</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">D</span>
+      <span>dr. Budi Santoso</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="poli-umum.html">Poli Umum</a> <span>/</span> Pemeriksaan Klinis</div>
+        <h1>Pemeriksaan Klinis Rawat Jalan</h1>
+        <p>Entri rekam medis elektronik (RME) komprehensif berbasis modul tab terstruktur.</p>
+      </div>
+      <div>
+        <a class="btn" href="poli-umum.html">Kembali ke Antrean</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: DATA DASAR PASIEN (KIRI) & 3 RIWAYAT TERAKHIR RM (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: DATA DASAR PASIEN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Data Dasar Pasien</h2>
+          </div>
+          <span class="status dark">Antrean: U-012</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:16px;font-weight:bold;">Andi Pratama</div>
+            <div class="small muted" style="margin-top:2px;">No. RM: <b>RM-000124</b> | NIK: 3201234567890001</div>
+          </div>
+          <span class="status" style="background:#e8f4fd;color:#0b69a3;font-weight:600;">Umum / Tunai</span>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;font-size:11px;gap:8px;">
+          <div><b>Tgl Lahir / Usia:</b> 12 Mei 1994 (32 Thn)</div>
+          <div><b>Jenis Kelamin:</b> Laki-laki</div>
+          <div><b>Gol. Darah:</b> O Rhesus (+)</div>
+          <div><b>Kontak / WA:</b> 0812-3456-7890</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;">
+          <div style="color:#c0392b;display:flex;align-items:center;gap:6px;">
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#c0392b;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <b>Riwayat Alergi:</b> Amoxicillin (Erupsi kulit &amp; gatal), Makanan Laut (Seafood)
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 RIWAYAT TERAKHIR REKAM MEDIS -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <h2>3 Riwayat Terakhir Rekam Medis</h2>
+          </div>
+          <button class="btn" style="padding:3px 8px;font-size:11px;" onclick="alert('Membuka seluruh rekam medis RM-000124')">Semua (8)</button>
+        </div>
+
+        <!-- LIST RIWAYAT 1 -->
+        <div class="history-item">
+          <div class="history-date">
+            <span>28 Okt 2026 - Poli Umum</span>
+            <span class="muted">dr. Budi Santoso</span>
+          </div>
+          <div class="history-diag">K29.7 - Gastritis, Unspecified</div>
+          <div class="history-notes">Keluhan: Perih ulu hati, mual pasca kopi. Terapi: Omeprazole 20mg, Antasida sirup. Status: Sembuh.</div>
+        </div>
+
+        <!-- LIST RIWAYAT 2 -->
+        <div class="history-item">
+          <div class="history-date">
+            <span>14 Agu 2026 - Poli Gigi</span>
+            <span class="muted">drg. Rina</span>
+          </div>
+          <div class="history-diag">K02.1 - Caries of Dentine (Gigi 36)</div>
+          <div class="history-notes">Tindakan: Penambalan komposit kelas I gigi molar bawah. Terapi: Asam Mefenamat 500mg.</div>
+        </div>
+
+        <!-- LIST RIWAYAT 3 -->
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>02 Mar 2026 - IGD</span>
+            <span class="muted">dr. Dimas</span>
+          </div>
+          <div class="history-diag">A09 - Gastroenteritis Akut Tanpa Dehidrasi</div>
+          <div class="history-notes">Keluhan: Diare cair 5x sejak pagi. Terapi: Oralit, Attapulgite, Zink tablet 10 hari.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB TOP BERDASARKAN KATEGORI PEMERIKSAAN -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-top="soap" onclick="switchTopTab('soap')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Pemeriksaan Klinis (SOAP)
+      </button>
+      <button class="exam-top-tab" data-top="penunjang" onclick="switchTopTab('penunjang')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="m21.5 2-1.4 1.4M15 8l-4 4"/><circle cx="10" cy="14" r="5"/><path d="M19 10l-4-4"/></svg>
+        Penunjang &amp; Laboratorium
+      </button>
+      <button class="exam-top-tab" data-top="resep" onclick="switchTopTab('resep')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+        Resep Obat (E-Prescription)
+      </button>
+      <button class="exam-top-tab" data-top="edukasi" onclick="switchTopTab('edukasi')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+        Edukasi &amp; Tindak Lanjut
+      </button>
+    </nav>
+
+    <!-- FORM PEMERIKSAAN: WORKSPACE DENGAN TAB KIRI (LEFT NAV) -->
+    <form id="formPemeriksaan" onsubmit="event.preventDefault(); simpanPemeriksaan();">
+      <div class="exam-workspace">
+
+        <!-- LEFT SUB-TABS (KATEGORI DETAIL PEMERIKSAAN) -->
+        <aside class="exam-left-nav" id="leftNavContainer">
+          <button type="button" class="left-tab-btn active" data-left="tab-ttv" onclick="switchLeftTab('tab-ttv')">
+            <span class="badge-step">1</span>
+            <span>Tanda Vital (TTV)</span>
+          </button>
+          <button type="button" class="left-tab-btn" data-left="tab-anamnesa" onclick="switchLeftTab('tab-anamnesa')">
+            <span class="badge-step">2</span>
+            <span>[S] Anamnesa</span>
+          </button>
+          <button type="button" class="left-tab-btn" data-left="tab-fisik" onclick="switchLeftTab('tab-fisik')">
+            <span class="badge-step">3</span>
+            <span>[O] Pemeriksaan Fisik</span>
+          </button>
+          <button type="button" class="left-tab-btn" data-left="tab-diagnosa" onclick="switchLeftTab('tab-diagnosa')">
+            <span class="badge-step">4</span>
+            <span>[A] Diagnosa (ICD-10)</span>
+          </button>
+          <button type="button" class="left-tab-btn" data-left="tab-tindakan" onclick="switchLeftTab('tab-tindakan')">
+            <span class="badge-step">5</span>
+            <span>[P] Tindakan Medis</span>
+          </button>
+        </aside>
+
+        <!-- KONTEN FORM BERDASARKAN TAB AKTIF -->
+        <div class="exam-content-panel">
+
+          <!-- TAB 1: TANDA VITAL -->
+          <div class="tab-pane active" id="tab-ttv">
+            <div class="card-title">
+              <h2>1. Tanda Vital &amp; Antropometri Pasien</h2>
+              <span class="muted small">Diperbarui: 17 Nov 2026 08:20</span>
+            </div>
+            <div class="grid grid-3">
+              <div class="form-group">
+                <label class="form-label">Tekanan Darah (mmHg) <span class="req">*</span></label>
+                <input type="text" class="field" value="120/80" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Frekuensi Nadi (x/menit) <span class="req">*</span></label>
+                <input type="number" class="field" value="82" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Suhu Tubuh (&deg;C) <span class="req">*</span></label>
+                <input type="number" step="0.1" class="field" value="38.2" required>
+              </div>
+            </div>
+            <div class="grid grid-3">
+              <div class="form-group">
+                <label class="form-label">Frekuensi Napas (x/menit)</label>
+                <input type="number" class="field" value="20">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tinggi Badan (cm)</label>
+                <input type="number" class="field" id="tb" value="172" oninput="calcImt()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Berat Badan (kg)</label>
+                <input type="number" class="field" id="bb" value="68" oninput="calcImt()">
+              </div>
+            </div>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Saturasi Oksigen SpO2 (%)</label>
+                <input type="number" class="field" value="98">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Indeks Massa Tubuh (IMT)</label>
+                <input type="text" class="field" id="imt" value="23.0 (Normal)" readonly style="background:#f4f5f6;font-weight:600;">
+              </div>
+            </div>
+            <div style="margin-top:14px;text-align:right;">
+              <button type="button" class="btn primary" onclick="switchLeftTab('tab-anamnesa')">Lanjut ke Anamnesa &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TAB 2: ANAMNESA (S) -->
+          <div class="tab-pane" id="tab-anamnesa">
+            <div class="card-title">
+              <h2>2. [S] Subjective: Keluhan &amp; Anamnesa Pasien</h2>
+              <span class="status dark">Auto-synced</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Keluhan Utama <span class="req">*</span></label>
+              <input type="text" class="field" value="Demam sejak 2 hari, disertai batuk kering dan sakit kepala" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Riwayat Penyakit Sekarang (RPS) <span class="req">*</span></label>
+              <textarea class="field" rows="4" required>Pasien mengeluh demam mendadak sejak 2 hari yang lalu terutama sore dan malam hari. Batuk kering, tenggorokan terasa kering dan perih saat menelan. Mual ringan, nafsu makan menurun. Pasien sudah meminum paracetamol warung 1 tablet tadi pagi, panas turun sementara lalu naik kembali.</textarea>
+            </div>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Riwayat Penyakit Dahulu (RPD)</label>
+                <input type="text" class="field" value="Gastritis berulang (2025)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Riwayat Pengobatan</label>
+                <input type="text" class="field" value="Paracetamol 500mg (swamedikasi)">
+              </div>
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:space-between;">
+              <button type="button" class="btn" onclick="switchLeftTab('tab-ttv')">&larr; Kembali ke TTV</button>
+              <button type="button" class="btn primary" onclick="switchLeftTab('tab-fisik')">Lanjut ke Pemeriksaan Fisik &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TAB 3: PEMERIKSAAN FISIK (O) -->
+          <div class="tab-pane" id="tab-fisik">
+            <div class="card-title">
+              <h2>3. [O] Objective: Pemeriksaan Fisik Sistem Organ</h2>
+            </div>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Kesadaran &amp; Keadaan Umum</label>
+                <select class="field">
+                  <option selected>Compos Mentis (Tampak Sakit Sedang)</option>
+                  <option>Compos Mentis (Tampak Sakit Ringan)</option>
+                  <option>Apatis / Somnolen</option>
+                  <option>Koma</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Kepala &amp; Mata</label>
+                <input type="text" class="field" value="Mata: Konjungtiva ananemis, sklera anikterik">
+              </div>
+            </div>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Telinga, Hidung, Tenggorokan (THT)</label>
+                <input type="text" class="field" value="Faring hiperemis (+), pembesaran tonsil T1-T1 tenang">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Thoraks (Jantung &amp; Paru)</label>
+                <input type="text" class="field" value="Cor BJ I-II murni reguler. Pulmo: vesikuler +/+, ronki -/-, wheezing -/-">
+              </div>
+            </div>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Abdomen</label>
+                <input type="text" class="field" value="Dinding perut supel, bising usus (+) 8x/mnt, nyeri tekan epigastrium (-)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ekstremitas</label>
+                <input type="text" class="field" value="Akral hangat, CRT &lt; 2 detik, tidak ada edema perifer">
+              </div>
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:space-between;">
+              <button type="button" class="btn" onclick="switchLeftTab('tab-anamnesa')">&larr; Kembali ke Anamnesa</button>
+              <button type="button" class="btn primary" onclick="switchLeftTab('tab-diagnosa')">Lanjut ke Diagnosa &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TAB 4: DIAGNOSA (A) -->
+          <div class="tab-pane" id="tab-diagnosa">
+            <div class="card-title">
+              <h2>4. [A] Assessment: Penegakan Diagnosa (ICD-10)</h2>
+              <span class="status dark">RME Standar Kemkes</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Diagnosa Primer (Utama) <span class="req">*</span></label>
+              <select class="field" required>
+                <option value="J06.9" selected>J06.9 - Acute upper respiratory infection, unspecified (ISPA Akut)</option>
+                <option value="J02.9">J02.9 - Acute pharyngitis, unspecified (Faringitis Akut)</option>
+                <option value="A09">A09 - Infectious gastroenteritis and colitis, unspecified</option>
+                <option value="A01.0">A01.0 - Typhoid fever</option>
+                <option value="K29.7">K29.7 - Gastritis, unspecified</option>
+                <option value="I10">I10 - Essential (primary) hypertension</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Diagnosa Sekunder / Komorbid</label>
+              <input type="text" class="field" value="R50.9 - Fever, unspecified">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan Differensial Diagnosa / Kasus</label>
+              <textarea class="field" rows="3">Curiga faringitis viral akut dengan febris hari ke-2. Bila demam berlanjut hingga hari ke-4 disarankan uji lab Widal / Darah Lengkap.</textarea>
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:space-between;">
+              <button type="button" class="btn" onclick="switchLeftTab('tab-fisik')">&larr; Kembali ke Fisik</button>
+              <button type="button" class="btn primary" onclick="switchLeftTab('tab-tindakan')">Lanjut ke Tindakan &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TAB 5: TINDAKAN MEDIS -->
+          <div class="tab-pane" id="tab-tindakan">
+            <div class="card-title">
+              <h2>5. [P] Plan: Prosedur &amp; Tindakan Medis</h2>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pilih Tindakan Klinis yang Dilakukan</label>
+              <div class="radio-group" style="flex-wrap:wrap;margin:8px 0;">
+                <label class="radio-label"><input type="checkbox" checked> Konsultasi Dokter Umum</label>
+                <label class="radio-label"><input type="checkbox"> Pemeriksaan Laringoskopi Indirek</label>
+                <label class="radio-label"><input type="checkbox"> Injeksi / Tindakan Terapi</label>
+                <label class="radio-label"><input type="checkbox"> Nebulisasi</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan Prosedur Medis</label>
+              <textarea class="field" rows="3" placeholder="Rincian prosedur yang dilakukan dokter..."></textarea>
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:space-between;">
+              <button type="button" class="btn" onclick="switchLeftTab('tab-diagnosa')">&larr; Kembali ke Diagnosa</button>
+              <button type="button" class="btn primary" onclick="switchTopTab('resep')">Lanjut ke Resep Obat &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TOP TAB 2: PENUNJANG & LAB -->
+          <div class="tab-pane" id="tab-top-penunjang">
+            <div class="card-title">
+              <h2>Permintaan Pemeriksaan Penunjang (Laboratorium / Radiologi)</h2>
+            </div>
+            <div class="sub-card">
+              <div class="sub-card-header">
+                <div>Order Tes Laboratorium Baru</div>
+                <span class="status">Integrasi Modul Lab</span>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Pilih Paket Uji Darah / Urin</label>
+                  <select class="field">
+                    <option value="">-- Pilih jika ada indikasi --</option>
+                    <option value="cbc">Darah Rutin / Hematologi Lengkap</option>
+                    <option value="widal">Serologi Widal (Salmonella)</option>
+                    <option value="gds">Gula Darah Sewaktu (GDS)</option>
+                    <option value="urin">Urin Lengkap</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Prioritas Pemeriksaan</label>
+                  <select class="field">
+                    <option>Rutin (Hasil Hari Ini)</option>
+                    <option>CITO (Segera / Darurat)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Catatan Klinis untuk Analis Laboratorium</label>
+                <input type="text" class="field" placeholder="Contoh: Evaluasi febris hari ke-2...">
+              </div>
+            </div>
+            <div style="margin-top:14px;text-align:right;">
+              <button type="button" class="btn primary" onclick="switchTopTab('resep')">Lanjut ke E-Resep &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TOP TAB 3: RESEP OBAT (E-PRESCRIPTION) -->
+          <div class="tab-pane" id="tab-top-resep">
+            <div class="card-title">
+              <h2>Resep Obat Elektronik (Langsung Terhubung Farmasi)</h2>
+              <button type="button" class="btn" onclick="tambahObat()">+ Tambah Item Obat</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Nama Obat / Sediaan</th><th style="width:90px;">Jumlah</th><th>Signa / Aturan Minum</th><th style="width:50px;"></th></tr>
+                </thead>
+                <tbody id="resepTbody">
+                  <tr>
+                    <td><b>Paracetamol 500mg Tablet</b></td>
+                    <td><input type="number" class="field" value="10" style="height:30px;"></td>
+                    <td><input type="text" class="field" value="3 x 1 tablet sesudah makan (bila demam)" style="height:30px;"></td>
+                    <td><button type="button" class="btn" style="padding:2px 6px;" onclick="this.closest('tr').remove()">&times;</button></td>
+                  </tr>
+                  <tr>
+                    <td><b>Cetirizine 10mg Tablet</b></td>
+                    <td><input type="number" class="field" value="5" style="height:30px;"></td>
+                    <td><input type="text" class="field" value="1 x 1 tablet malam hari sesudah makan" style="height:30px;"></td>
+                    <td><button type="button" class="btn" style="padding:2px 6px;" onclick="this.closest('tr').remove()">&times;</button></td>
+                  </tr>
+                  <tr>
+                    <td><b>Vitamin C 500mg Tablet</b></td>
+                    <td><input type="number" class="field" value="10" style="height:30px;"></td>
+                    <td><input type="text" class="field" value="1 x 1 tablet sesudah makan pagi" style="height:30px;"></td>
+                    <td><button type="button" class="btn" style="padding:2px 6px;" onclick="this.closest('tr').remove()">&times;</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert info" style="margin-top:12px;">
+              Resep akan otomatis masuk ke antrean farmasi begitu formulir pemeriksaan ini disimpan.
+            </div>
+            <div style="margin-top:14px;text-align:right;">
+              <button type="button" class="btn primary" onclick="switchTopTab('edukasi')">Lanjut ke Edukasi &amp; Simpan &rarr;</button>
+            </div>
+          </div>
+
+          <!-- TOP TAB 4: EDUKASI & TINDAK LANJUT -->
+          <div class="tab-pane" id="tab-top-edukasi">
+            <div class="card-title">
+              <h2>Edukasi, Tindak Lanjut &amp; Selesai Pelayanan</h2>
+            </div>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Status Tindak Lanjut Pasien <span class="req">*</span></label>
+                <select class="field" required>
+                  <option value="pulang" selected>Pulang Berobat Jalan</option>
+                  <option value="kontrol">Kontrol Ulang (3-5 Hari)</option>
+                  <option value="ranap">Rujuk Rawat Inap (Klinik)</option>
+                  <option value="rujuk_rs">Rujukan ke RS Eksternal (FKRTL)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tanggal Rencana Kontrol (Bila Ada)</label>
+                <input type="date" class="field" value="2026-11-21">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Edukasi &amp; Komunikasi Dokter ke Pasien</label>
+              <textarea class="field" rows="3">Istirahat tirah baring minimal 2 hari, hidrasi air putih hangat minimal 2 liter per hari, hindari gorengan dan es. Bila demam bertahan &gt;3 hari segera datang kembali.</textarea>
+            </div>
+
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+              <button type="button" class="btn secondary" onclick="window.print()">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+                Cetak Resume Medis
+              </button>
+              <button type="submit" class="btn primary" style="padding:10px 22px;font-size:13px;font-weight:bold;">
+                Simpan Rekam Medis &amp; Teruskan ke Kasir / Farmasi
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+
+    <div id="alertSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Pemeriksaan Berhasil Disimpan:</b> Rekam medis pasien <b>Andi Pratama (RM-000124)</b> berhasil ditutup. Resep obat diteruskan ke <b>Farmasi</b> dan tagihan dibuat di <b>Billing &amp; Kasir</b>.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function switchTopTab(key) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.top === key);
+  });
+
+  const workspace = document.querySelector(".exam-workspace");
+  const leftNav = document.getElementById("leftNavContainer");
+
+  if (key === "soap") {
+    workspace.classList.remove("full-width");
+    leftNav.style.display = "flex";
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    const activeLeftBtn = document.querySelector(".left-tab-btn.active") || document.querySelector(".left-tab-btn");
+    const targetId = activeLeftBtn.dataset.left;
+    const targetPane = document.getElementById(targetId);
+    if (targetPane) targetPane.classList.add("active");
+  } else {
+    workspace.classList.add("full-width");
+    leftNav.style.display = "none";
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    const pane = document.getElementById("tab-top-" + key);
+    if (pane) pane.classList.add("active");
+  }
+}
+
+function switchLeftTab(paneId) {
+  document.querySelectorAll(".left-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.left === paneId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(paneId);
+  if (target) target.classList.add("active");
+}
+
+function calcImt() {
+  const tb = parseFloat(document.getElementById("tb").value) / 100;
+  const bb = parseFloat(document.getElementById("bb").value);
+  if (tb > 0 && bb > 0) {
+    const imt = (bb / (tb * tb)).toFixed(1);
+    let note = "Normal";
+    if (imt < 18.5) note = "Underweight";
+    else if (imt >= 25) note = "Overweight";
+    document.getElementById("imt").value = imt + " (" + note + ")";
+  }
+}
+
+function tambahObat() {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" class="field" placeholder="Nama obat" style="height:30px;"></td>
+    <td><input type="number" class="field" value="10" style="height:30px;"></td>
+    <td><input type="text" class="field" placeholder="Dosis / aturan" style="height:30px;"></td>
+    <td><button type="button" class="btn" style="padding:2px 6px;" onclick="this.closest('tr').remove()">&times;</button></td>
+  `;
+  document.getElementById("resepTbody").appendChild(tr);
+}
+
+function simpanPemeriksaan() {
+  document.getElementById("alertSuccess").style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
