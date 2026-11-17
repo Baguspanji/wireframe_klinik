@@ -1124,12 +1124,45 @@ tr:last-child td { border-bottom: 0; }
 
     <!-- SETTINGS -->
     <section class="page" id="settings">
-      <div class="page-heading"><div><div class="breadcrumb">Pengaturan</div><h1>Pengaturan Sistem</h1><p>Konfigurasi organisasi, pengguna, hak akses, dan data referensi.</p></div></div>
-      <div class="grid grid-2">
-        <div class="card"><h2>Organisasi & Unit</h2><p class="small" style="margin-top:8px">Cabang, klinik, unit pelayanan, cost center.</p></div>
-        <div class="card"><h2>Pengguna & Hak Akses</h2><p class="small" style="margin-top:8px">User, role, permission, penugasan unit.</p></div>
-        <div class="card"><h2>Data Master</h2><p class="small" style="margin-top:8px">Pasien, layanan, tarif, obat, supplier.</p><a class="btn" style="margin-top:10px;display:inline-block;" href="pages/master/index.html">Buka Master Data</a></div>
-        <div class="card"><h2>Konfigurasi Keuangan</h2><p class="small" style="margin-top:8px">COA, account mapping, periode akuntansi.</p></div>
+      <div class="page-heading">
+        <div>
+          <div class="breadcrumb">Pengaturan</div>
+          <h1>Pengaturan Sistem</h1>
+          <p>Konfigurasi organisasi, pengguna, hak akses, sequence dokumen, bridging eksternal, dan audit log.</p>
+        </div>
+        <a class="btn primary" href="pages/pengaturan/index.html">Buka Portal Pengaturan</a>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h2>Organisasi &amp; Fasilitas</h2>
+          <p class="small" style="margin-top:8px">Badan hukum PT/Yayasan, izin faskes, cabang, dan kapasitas bed rawat inap.</p>
+          <a class="btn small" style="margin-top:10px;display:inline-block;" href="pages/pengaturan/organisasi.html">Buka Organisasi</a>
+        </div>
+        <div class="card">
+          <h2>Unit Pelayanan</h2>
+          <p class="small" style="margin-top:8px">Poli rawat jalan, IGD, rawat inap, farmasi, lab, dan penugasan staf ke unit.</p>
+          <a class="btn small" style="margin-top:10px;display:inline-block;" href="pages/pengaturan/unit-pelayanan.html">Buka Unit Layanan</a>
+        </div>
+        <div class="card">
+          <h2>Pengguna &amp; Hak Akses</h2>
+          <p class="small" style="margin-top:8px">Akun pengguna, granular RBAC (role &amp; permission), 2FA, dan akses darurat break-glass.</p>
+          <a class="btn small" style="margin-top:10px;display:inline-block;" href="pages/pengaturan/pengguna-akses.html">Buka Pengguna</a>
+        </div>
+        <div class="card">
+          <h2>Penomoran Dokumen</h2>
+          <p class="small" style="margin-top:8px">Pola nomor urut sequence RM, antrean, resep, billing, kuitansi, dan jurnal.</p>
+          <a class="btn small" style="margin-top:10px;display:inline-block;" href="pages/pengaturan/penomoran.html">Buka Penomoran</a>
+        </div>
+        <div class="card">
+          <h2>Integrasi &amp; Bridging</h2>
+          <p class="small" style="margin-top:8px">Konektor Kemenkes SATUSEHAT (FHIR R4), BPJS PCare FKTP, antrean Mobile JKN.</p>
+          <a class="btn small" style="margin-top:10px;display:inline-block;" href="pages/pengaturan/integrasi.html">Buka Integrasi</a>
+        </div>
+        <div class="card">
+          <h2>Audit Log &amp; Keamanan</h2>
+          <p class="small" style="margin-top:8px">Catatan immutable akses rekam medis, pembatalan invoice kasir, dan deteksi anomali.</p>
+          <a class="btn small" style="margin-top:10px;display:inline-block;" href="pages/pengaturan/audit-log.html">Buka Audit Log</a>
+        </div>
       </div>
     </section>
 

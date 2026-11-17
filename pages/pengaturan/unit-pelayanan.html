@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Pelayanan (Service Units) - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Pengaturan Sistem <span style="margin:0 8px">/</span> <b>Unit Pelayanan</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">S</span>
+      <span>System Administrator</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#settings">Pengaturan Sistem</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Unit Pelayanan</div>
+        <h1>Unit Pelayanan &amp; Penugasan Staf</h1>
+        <p>Konfigurasi ruang layanan klinis, pemetaan modul sistem, kuota antrean harian, serta penugasan pengguna aktif ke unit kerja operasional.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Ringkasan Unit -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <h2>Struktur Unit Layanan Aktif</h2>
+          </div>
+          <span class="status ok">9 Unit Siap Layani</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Fasilitas: <strong>Klinik Pratama Sehat Sejahtera (Pusat)</strong> &bull; FSK-001</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Rawat Jalan</div>
+            <div style="font-weight:bold;margin-top:2px">4 Poliklinik</div>
+            <div style="font-size:10px;color:#27ae60">Umum, Gigi, Anak, KIA</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Gawat Darurat &amp; Inap</div>
+            <div style="font-weight:bold;margin-top:2px">2 Unit 24 Jam</div>
+            <div style="font-size:10px;color:#2980b9">IGD &bull; Rawat Inap (10 TT)</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Penunjang Medis</div>
+            <div style="font-weight:bold;margin-top:2px">3 Unit Farmasi/Lab/Kasir</div>
+            <div style="font-size:10px;color:#555">Apotek, Laboratorium, Kasir</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Penugasan -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Penugasan Unit</h2>
+          </div>
+          <span class="status">Histori Staf</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>dr. Farhan Maulana &bull; Tambah Unit</span>
+            <span class="status ok\">Aktif</span>
+          </div>
+          <div class="history-diag">Penugasan tambahan ke Instalasi Gawat Darurat (Shift Malam)</div>
+          <div class="history-notes">Role: Dokter Umum &bull; Unit: Poli Umum + IGD &bull; 16 Nov 2026</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>Ns. Siti Aminah, S.Kep &bull; Rotasi Unit</span>
+            <span class="status ok\">Aktif</span>
+          </div>
+          <div class="history-diag">Penetapan sebagai Penanggung Jawab Unit Rawat Inap</div>
+          <div class="history-notes">Role: Perawat &bull; Unit: Rawat Inap Mawar &bull; 15 Nov 2026</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;\">
+          <div class="history-date">
+            <span>Rina Fitriani &bull; Multi-Penugasan</span>
+            <span class="status ok\">Aktif</span>
+          </div>
+          <div class="history-diag">Penugasan ganda: Petugas Pendaftaran Loket 1 &amp; Kasir Billing</div>
+          <div class="history-notes">Pemisahan hak kasir aktif saat membuka loket kasir &bull; 14 Nov 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-unit-daftar" onclick="switchTab('tab-unit-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1=\"8\" x2=\"21\" y1=\"6\" y2=\"6\"/><line x1=\"8\" x2=\"21\" y1=\"12\" y2=\"12\"/><line x1=\"8\" x2=\"21\" y1=\"18\" y2=\"18\"/><line x1=\"3\" x2=\"3.01\" y1=\"6\" y2=\"6\"/><line x1=\"3\" x2=\"3.01\" y1=\"12\" y2=\"12\"/><line x1=\"3\" x2=\"3.01\" y1=\"18\" y2=\"18\"/></svg>
+        1. Daftar Unit Layanan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-unit-form" onclick="switchTab('tab-unit-form')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        2. Tambah / Edit Unit
+      </button>
+      <button class="exam-top-tab" data-tab="tab-unit-penugasan" onclick="switchTab('tab-unit-penugasan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        3. Penugasan Staf ke Unit
+      </button>
+      <button class="exam-top-tab" data-tab="tab-unit-jadwal" onclick="switchTab('tab-unit-jadwal')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        4. Jam Operasional &amp; Kuota
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR UNIT -->
+    <div id="tab-unit-daftar" class="tab-pane active">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="Cari unit atau kode..." style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;width:240px">
+            <select style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px">
+              <option>Semua Tipe Unit</option>
+              <option>Rawat Jalan (Outpatient)</option>
+              <option>Gawat Darurat (Emergency)</option>
+              <option>Rawat Inap (Inpatient)</option>
+              <option>Penunjang &amp; Layanan Farmasi</option>
+            </select>
+          </div>
+          <button class="btn primary small" onclick="switchTab('tab-unit-form')">+ Tambah Unit Pelayanan</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Nama Unit Pelayanan</th>
+              <th>Tipe Layanan</th>
+              <th>Ruangan / Lokasi</th>
+              <th>Penanggung Jawab</th>
+              <th>Staf Bertugas</th>
+              <th>Modul Aktif</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">UNT-POL-01</span></td>
+              <td><strong>Poli Umum</strong></td>
+              <td>Rawat Jalan</td>
+              <td>Lantai 1 &bull; R.101-102</td>
+              <td>dr. Farhan Maulana</td>
+              <td>3 Dokter &bull; 2 Perawat</td>
+              <td>Pemeriksaan &bull; EMR &bull; Resep</td>
+              <td><span class="status ok">Buka</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-unit-form')">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">UNT-POL-02</span></td>
+              <td><strong>Poli Gigi &amp; Mulut</strong></td>
+              <td>Rawat Jalan</td>
+              <td>Lantai 1 &bull; R.103</td>
+              <td>drg. Maya Santoso</td>
+              <td>2 Dokter Gigi &bull; 1 Perawat Gigi</td>
+              <td>Odontogram &bull; EMR Gigi</td>
+              <td><span class="status ok">Buka</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">UNT-POL-03</span></td>
+              <td><strong>Poli Kebidanan (KIA / Obgyn)</strong></td>
+              <td>Rawat Jalan</td>
+              <td>Lantai 1 &bull; R.104</td>
+              <td>Bdn. Siti Rahma, S.Tr.Keb</td>
+              <td>1 Spesialis &bull; 2 Bidan</td>
+              <td>Partograf &bull; ANC &bull; USG</td>
+              <td><span class="status ok">Buka</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">UNT-IGD-01</span></td>
+              <td><strong>Instalasi Gawat Darurat (IGD)</strong></td>
+              <td>Gawat Darurat</td>
+              <td>Lantai 1 &bull; Sayap Depan</td>
+              <td>dr. Adrian Permana, Sp.A</td>
+              <td>4 Dokter Jaga &bull; 6 Perawat</td>
+              <td>Triage ATS &bull; Resusitasi &bull; 24 Jam</td>
+              <td><span class="status ok">24 Jam</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">UNT-RNP-01</span></td>
+              <td><strong>Rawat Inap Mawar</strong></td>
+              <td>Rawat Inap</td>
+              <td>Lantai 2 &bull; Bangsal Mawar</td>
+              <td>Ns. Siti Aminah, S.Kep</td>
+              <td>8 Perawat &bull; Dokter DPJP</td>
+              <td>CPPT &bull; Monitoring Bed (10 TT)</td>
+              <td><span class="status ok">24 Jam</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">UNT-FAR-01</span></td>
+              <td><strong>Farmasi &amp; Apotek Klinik</strong></td>
+              <td>Penunjang Medis</td>
+              <td>Lantai 1 &bull; Depan Loket</td>
+              <td>apt. Ratna Dewi, S.Farm</td>
+              <td>2 Apoteker &bull; 3 TTK</td>
+              <td>Telaah Resep &bull; Dispensing &bull; Stok</td>
+              <td><span class="status ok">Buka</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: FORM UNIT -->
+    <div id="tab-unit-form" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Konfigurasi Modul &amp; Cost Center:</strong> Penambahan unit pelayanan mewajibkan pemetaan modul sistem yang boleh dibuka pada unit ini (misal: Poli Umum hanya membuka form EMR Rawat Jalan, bukan Kasir atau Inventaris Farmasi).
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Formulir Pengaturan Unit Pelayanan</h2>
+          <span class="status dark">Konfigurasi Unit</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Nama Unit Pelayanan</label>
+            <input type="text" value="Poli Umum" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Tipe Pelayanan (Unit Type)</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>Rawat Jalan (Outpatient Clinic)</option>
+              <option>Gawat Darurat (Emergency Department)</option>
+              <option>Rawat Inap (Inpatient Ward)</option>
+              <option>Instalasi Farmasi (Pharmacy Dispensing)</option>
+              <option>Laboratorium &amp; Diagnostik</option>
+              <option>Kasir &amp; Pendaftaran Administrasi</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Dokter / Nakes Penanggung Jawab</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>dr. Farhan Maulana (SIP Aktif)</option>
+              <option>dr. Adrian Permana, Sp.A</option>
+              <option>drg. Maya Santoso</option>
+              <option>apt. Ratna Dewi, S.Farm</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="gap:12px;margin-top:12px">
+          <div>
+            <label class="small" style="font-weight:600">Ruangan &amp; Lokasi Fisik</label>
+            <input type="text" value="Lantai 1 &bull; R.101 &amp; R.102" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Kode Cost Center Akuntansi</label>
+            <input type="text" value="CC-POL-01 (Unit Rawat Jalan)" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Mapping FHIR Location SATUSEHAT</label>
+            <input type="text" value="Location/loc-pol-umum-01" class="input" style="width:100%;margin-top:4px;background:#f9f9f9" readonly>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <label class="small" style="font-weight:600">Modul Aplikasi yang Diaktifkan di Unit Ini:</label>
+          <div style="display:flex;gap:18px;margin-top:6px;font-size:12px;flex-wrap:wrap">
+            <label><input type="checkbox" checked> Antrean Unit</label>
+            <label><input type="checkbox" checked> Rekam Medis (EMR)</label>
+            <label><input type="checkbox" checked> e-Resep Dokter</label>
+            <label><input type="checkbox" checked> Permintaan Lab</label>
+            <label><input type="checkbox"> Kasir &amp; Billing</label>
+            <label><input type="checkbox"> Stok Farmasi</label>
+            <label><input type="checkbox"> Rawat Inap &amp; Bed</label>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn secondary">Batal</button>
+          <button class="btn primary">Simpan Perubahan Unit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PENUGASAN STAF -->
+    <div id="tab-unit-penugasan" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Pemisahan Role vs Penugasan:</strong> Role menentukan kemampuan teknis (misal: meresepkan obat), sedangkan Penugasan Unit menentukan pasien mana yang berhak dilayani. Seorang dokter umum hanya melihat antrean unit tempat ia ditugaskan hari ini.
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Matriks Penugasan Staf ke Unit Pelayanan Aktif</h3>
+            <span class="small" style="color:var(--muted)">Pengguna dapat ditugaskan ke lebih dari satu unit kerja sesuai jadwal dinas</span>
+          </div>
+          <button class="btn small primary">+ Tugaskan Staf Baru</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Nama Staf Pengguna</th>
+              <th>Role Sistem</th>
+              <th>Nomor SIP / STR</th>
+              <th>Unit Pelayanan yang Ditugaskan</th>
+              <th>Jenis Penugasan</th>
+              <th>Status Izin</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>dr. Farhan Maulana</strong><br><small class="code-chip">USR-DOK-01</small></td>
+              <td>Dokter Umum</td>
+              <td>SIP: 446/0921/SIP/D/2021</td>
+              <td><span class="code-chip">Poli Umum</span> <span class="code-chip">IGD</span></td>
+              <td>Primer &bull; Jaga Harian</td>
+              <td><span class="status ok">SIP Valid</span></td>
+              <td><button class="btn small">Ubah Unit</button></td>
+            </tr>
+            <tr>
+              <td><strong>dr. Adrian Permana, Sp.A</strong><br><small class="code-chip">USR-DOK-02</small></td>
+              <td>Dokter Spesialis Anak</td>
+              <td>SIP: 446/0114/SIP/SP/2022</td>
+              <td><span class="code-chip">Poli Anak</span> <span class="code-chip">Rawat Inap</span></td>
+              <td>Primer &bull; Konsulen DPJP</td>
+              <td><span class="status ok">SIP Valid</span></td>
+              <td><button class="btn small">Ubah Unit</button></td>
+            </tr>
+            <tr>
+              <td><strong>Ns. Siti Aminah, S.Kep</strong><br><small class="code-chip">USR-PRW-01</small></td>
+              <td>Perawat</td>
+              <td>SIPP: 446/1823/SIPP/2022</td>
+              <td><span class="code-chip">Rawat Inap Mawar</span></td>
+              <td>Kepala Ruangan &bull; Shift Pagi</td>
+              <td><span class="status ok">SIPP Valid</span></td>
+              <td><button class="btn small">Ubah Unit</button></td>
+            </tr>
+            <tr>
+              <td><strong>Rina Fitriani</strong><br><small class="code-chip">USR-ADM-02</small></td>
+              <td>Petugas Administrasi</td>
+              <td>-</td>
+              <td><span class="code-chip">Loket Pendaftaran</span> <span class="code-chip">Kasir Billing</span></td>
+              <td>Dual Assignment</td>
+              <td><span class="status ok">Aktif</span></td>
+              <td><button class="btn small">Ubah Unit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: JAM & KUOTA -->
+    <div id="tab-unit-jadwal" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Jadwal Jam Buka &amp; Kuota Antrean Pasien Harian</h2>
+          <span class="status ok">Sinkron Mobile JKN</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Unit Pelayanan</th>
+              <th>Hari Operasional</th>
+              <th>Jam Buka</th>
+              <th>Kuota Pasien / Hari</th>
+              <th>Estimasi Waktu Layanan</th>
+              <th>Integrasi Antrean</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Poli Umum</strong></td>
+              <td>Senin - Sabtu</td>
+              <td>08:00 - 21:00 (2 Sesi)</td>
+              <td>80 Pasien (40/sesi)</td>
+              <td>10 - 15 Menit</td>
+              <td><span class="status ok">Bridging BPJS</span></td>
+            </tr>
+            <tr>
+              <td><strong>Poli Gigi &amp; Mulut</strong></td>
+              <td>Senin - Jumat</td>
+              <td>09:00 - 17:00</td>
+              <td>25 Pasien</td>
+              <td>20 - 30 Menit</td>
+              <td><span class="status ok">Bridging BPJS</span></td>
+            </tr>
+            <tr>
+              <td><strong>Poli Anak (Spesialis)</strong></td>
+              <td>Selasa, Kamis, Sabtu</td>
+              <td>16:00 - 20:00</td>
+              <td>20 Pasien</td>
+              <td>15 Menit</td>
+              <td><span class="status">Internal Only</span></td>
+            </tr>
+            <tr>
+              <td><strong>IGD &amp; Rawat Inap</strong></td>
+              <td>Setiap Hari (Senin - Minggu)</td>
+              <td>24 Jam Non-Stop</td>
+              <td>Tanpa Batas Kuota</td>
+              <td>Triase &amp; Rawat Inap</td>
+              <td><span class="status ok">Siaga 24 Jam</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

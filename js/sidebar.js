@@ -103,6 +103,7 @@
         match: "pages/bisnis/",
         openOnHash: ["management"],
         items: [
+          { label: "Portal Bisnis", page: "management", path: "index.html#management" },
           { label: "Overview Bisnis", path: "pages/bisnis/index.html" },
           { label: "Pengadaan (PO)", path: "pages/bisnis/purchasing.html" },
           { label: "Supplier & Utang AP", path: "pages/bisnis/supplier-ap.html" },
@@ -115,9 +116,22 @@
     },
     {
       label: "PENGATURAN",
-      items: [
-        { label: "Pengaturan Sistem", page: "settings", path: "index.html#settings" }
-      ]
+      group: {
+        id: "nav-pengaturan",
+        title: "Pengaturan Sistem",
+        match: "pages/pengaturan/",
+        openOnHash: ["settings"],
+        items: [
+          { label: "Portal Pengaturan", page: "settings", path: "index.html#settings" },
+          { label: "Overview Pengaturan", path: "pages/pengaturan/index.html" },
+          { label: "Organisasi & Fasilitas", path: "pages/pengaturan/organisasi.html" },
+          { label: "Unit Pelayanan", path: "pages/pengaturan/unit-pelayanan.html" },
+          { label: "Pengguna & Hak Akses", path: "pages/pengaturan/pengguna-akses.html" },
+          { label: "Penomoran Dokumen", path: "pages/pengaturan/penomoran.html" },
+          { label: "Integrasi & Bridging", path: "pages/pengaturan/integrasi.html" },
+          { label: "Audit Log & Keamanan", path: "pages/pengaturan/audit-log.html" }
+        ]
+      }
     }
   ];
 

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organisasi &amp; Fasilitas - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Pengaturan Sistem <span style="margin:0 8px">/</span> <b>Organisasi &amp; Fasilitas</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">S</span>
+      <span>System Administrator</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#settings">Pengaturan Sistem</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Organisasi &amp; Fasilitas</div>
+        <h1>Profil Organisasi &amp; Fasilitas Layanan</h1>
+        <p>Konfigurasi badan hukum pengelola, izin operasional sarana fasilitas kesehatan, kapasitas tempat tidur rawat inap, dan kebijakan batas layanan klinik.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Identitas Fasilitas Utama -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18M9 8h1M9 12h1M9 16h1M14 8h1M14 12h1M14 16h1M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+            <h2>Klinik Pratama Sehat Sejahtera</h2>
+          </div>
+          <span class="status ok">Izin Aktif</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Badan Hukum: <strong>PT Sehat Sejahtera Medika</strong> &bull; NPWP: 01.234.567.8-012.000</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">No. Izin Faskes</div>
+            <div style="font-weight:bold;margin-top:2px">445/019/DPMPTSP/2022</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Masa Berlaku Izin</div>
+            <div style="font-weight:bold;color:#27ae60;margin-top:2px">18 Des 2027</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Penanggung Jawab</div>
+            <div style="font-weight:bold;margin-top:2px">dr. Adrian Permana, Sp.A</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Kebijakan Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Pembaruan Kebijakan</h2>
+          </div>
+          <span class="status">Histori Kebijakan</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>POL-2026-003 &bull; Kapasitas Rawat Inap</span>
+            <span class="status ok">Berlaku</span>
+          </div>
+          <div class="history-diag">Penambahan 2 Tempat Tidur Isolasi Ranap (Total kapasitas: 10 TT)</div>
+          <div class="history-notes">Sesuai rekomendasi Dinkes &bull; Efektif 01 Jan 2026</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>POL-2025-012 &bull; Jam Operasional IGD</span>
+            <span class="status ok">Berlaku</span>
+          </div>
+          <div class="history-diag">Penetapan Layanan IGD &amp; Ranap 24 Jam Non-Stop</div>
+          <div class="history-notes">Pemberlakuan 3 shift jaga perawat &bull; Efektif 01 Des 2025</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>POL-2025-008 &bull; Kebijakan Batas Inap</span>
+            <span class="status ok">Berlaku</span>
+          </div>
+          <div class="history-diag">Pembatasan Lama Rawat Inap Maksimal 5 Hari Kalender</div>
+          <div class="history-notes">Kepatuhan regulasi klinik pratama &bull; Sistem notifikasi H-1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-org-badan" onclick="switchTab('tab-org-badan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18M9 8h1M9 12h1M9 16h1M14 8h1M14 12h1M14 16h1M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+        1. Badan Usaha &amp; Organisasi
+      </button>
+      <button class="exam-top-tab" data-tab="tab-org-fasilitas" onclick="switchTab('tab-org-fasilitas')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        2. Fasilitas &amp; Cabang Klinik
+      </button>
+      <button class="exam-top-tab" data-tab="tab-org-kebijakan" onclick="switchTab('tab-org-kebijakan')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3. Kebijakan Operasional Fasilitas
+      </button>
+      <button class="exam-top-tab" data-tab="tab-org-izin" onclick="switchTab('tab-org-izin')">
+        <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+        4. Izin &amp; Akreditasi
+      </button>
+    </nav>
+
+    <!-- TAB 1: BADAN USAHA -->
+    <div id="tab-org-badan" class="tab-pane active">
+      <div class="card">
+        <div class="card-title">
+          <h2>Profil Entitas Hukum &amp; Perpajakan</h2>
+          <span class="status ok">PKP Terdaftar</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Nama Badan Hukum Pengelola</label>
+            <input type="text" value="PT Sehat Sejahtera Medika" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Nomor Pokok Wajib Pajak (NPWP)</label>
+            <input type="text" value="01.234.567.8-012.000" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Status Pengusaha Kena Pajak (PKP)</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>Ya (PKP Aktif - Pengukuhan No. S-192/PKP/2021)</option>
+              <option>Tidak (Non-PKP)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="gap:12px;margin-top:12px">
+          <div>
+            <label class="small" style="font-weight:600">Alamat Domisili Legal Perusahaan</label>
+            <textarea class="input" style="width:100%;height:55px;margin-top:4px">Jl. Kesehatan Medika No. 45, Kebayoran Baru, Jakarta Selatan 12160</textarea>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Kontak Resmi &amp; Email Perusahaan</label>
+            <input type="text" value="021-7291823 &bull; info@kliniksehatsejahtera.co.id" class="input" style="width:100%;margin-top:4px">
+            <div class="small" style="color:var(--muted);margin-top:4px">Digunakan pada kop surat resmi, faktur tagihan, dan bukti potong.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:flex-end">
+          <button class="btn primary">Simpan Perubahan Organisasi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: FASILITAS & CABANG -->
+    <div id="tab-org-fasilitas" class="tab-pane">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Daftar Fasilitas &amp; Cabang Klinik</h3>
+            <span class="small" style="color:var(--muted)">Setiap fasilitas memiliki izin operasional, kapasitas bed, dan akun bridging mandiri</span>
+          </div>
+          <button class="btn small primary">+ Tambah Cabang Baru</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode Faskes</th>
+              <th>Nama Fasilitas</th>
+              <th>Jenis Pelayanan</th>
+              <th>Alamat Lokasi</th>
+              <th>Kapasitas Bed</th>
+              <th>IHS Location ID</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">FSK-001</span></td>
+              <td><strong>Klinik Pratama Sehat Sejahtera (Pusat)</strong></td>
+              <td>Rawat Jalan &amp; Inap 24 Jam</td>
+              <td>Jl. Kesehatan Medika No. 45</td>
+              <td>10 TT Ranap &bull; 2 TT IGD</td>
+              <td><span class="code-chip">loc-d991-8812</span></td>
+              <td><span class="status ok">Utama &bull; Beroperasi</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">FSK-002</span></td>
+              <td><strong>Klinik Sehat Sejahtera Cabang Bintaro</strong></td>
+              <td>Rawat Jalan &amp; Gigi</td>
+              <td>Ruko Bintaro Arcade Sektor 7</td>
+              <td>Non-Ranap</td>
+              <td><span class="code-chip">loc-d991-8813</span></td>
+              <td><span class="status ok">Beroperasi</span></td>
+              <td><button class="btn small">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: KEBIJAKAN OPERASIONAL -->
+    <div id="tab-org-kebijakan" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Pemberlakuan Kebijakan Ber-Tanggal-Berlaku:</strong> Kebijakan fasilitas memiliki tanggal mulai berlaku dan tidak boleh menimpa rekam transaksi lama. Perubahan batasan bed atau lama inap dicatat dalam histori regulasi sarana.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Parameter Operasional &amp; Batasan Pelayanan</h2>
+          <span class="status dark">Konfigurasi Faskes</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Batas Maksimal Rawat Inap (Hari)</label>
+            <input type="number" value="5" class="input" style="width:100%;margin-top:4px;font-weight:bold">
+            <div class="small" style="color:var(--muted);margin-top:2px">Sesuai regulasi klinik pratama (Maks 5 hari).</div>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Zona Waktu Fasilitas (Timezone)</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>Asia/Jakarta (WIB &bull; UTC+7)</option>
+              <option>Asia/Makassar (WITA &bull; UTC+8)</option>
+              <option>Asia/Jayapura (WIT &bull; UTC+9)</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Toleransi Selisih Kas Kasir (Maks)</label>
+            <input type="number" value="10000" class="input" style="width:100%;margin-top:4px">
+            <div class="small" style="color:var(--muted);margin-top:2px">Dicatat ke akun 5900 Selisih Kas.</div>
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="gap:12px;margin-top:12px">
+          <div>
+            <label class="small" style="font-weight:600">Jam Pergantian Shift Pagi / Siang</label>
+            <input type="time" value="14:00" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Jam Pergantian Shift Siang / Malam</label>
+            <input type="time" value="21:00" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Auto-lock Sesi Pengguna Tanpa Aktivitas</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>15 Menit</option>
+              <option>30 Menit</option>
+              <option>60 Menit</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:flex-end">
+          <button class="btn primary">Simpan Kebijakan Operasional</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: IZIN & AKREDITASI -->
+    <div id="tab-org-izin" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Legalitas Perizinan &amp; Akreditasi Fasilitas Kesehatan</h2>
+          <span class="status ok">Akreditasi Paripurna</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Jenis Dokumen Legal</th>
+              <th>Nomor Sertifikat / Izin</th>
+              <th>Instansi Penerbit</th>
+              <th>Masa Berlaku</th>
+              <th>Status Verifikasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Surat Izin Operasional Klinik Pratama</strong></td>
+              <td>445/019/DPMPTSP/2022</td>
+              <td>Dinas PMPTSP Prov. DKI Jakarta</td>
+              <td>18 Des 2027</td>
+              <td><span class="status ok">Aktif Berlaku</span></td>
+            </tr>
+            <tr>
+              <td><strong>Sertifikat Akreditasi Fasilitas Kesehatan</strong></td>
+              <td>YM.02.01/Kemenkes/4921/2023</td>
+              <td>Lembaga Akreditasi Fasyankes (KARS)</td>
+              <td>14 Okt 2028</td>
+              <td><span class="status ok">Paripurna (Bintang 5)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Izin Pengelolaan Limbah B3 Medis</strong></td>
+              <td>660.1/IL-B3/KLHK/2024</td>
+              <td>Dinas Lingkungan Hidup</td>
+              <td>09 Agu 2027</td>
+              <td><span class="status ok">Aktif Berlaku</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

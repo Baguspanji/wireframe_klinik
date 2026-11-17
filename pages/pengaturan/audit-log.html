@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Log &amp; Keamanan - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Pengaturan Sistem <span style="margin:0 8px">/</span> <b>Audit Log &amp; Keamanan</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">S</span>
+      <span>System Administrator</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#settings">Pengaturan Sistem</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Audit Log &amp; Keamanan</div>
+        <h1>Audit Trail &amp; Pengawasan Keamanan</h1>
+        <p>Rekam jejak immutable seluruh interaksi sistem: penginputan rekam medis, pembatalan invoice kasir, otentikasi login, serta deteksi anomali akses darurat.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Statistik Log -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h2>Integritas Audit Trail Sistem</h2>
+          </div>
+          <span class="status ok">Append-Only Verified</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Penyimpanan: <strong>Write-Once-Read-Many (WORM)</strong> &bull; Bebas Modifikasi / Penghapusan</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Total Event Bulan Ini</div>
+            <div style="font-weight:bold;margin-top:2px">14.820 Catatan</div>
+            <div style="font-size:10px;color:#27ae60">Integritas 100%</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Akses Rekam Medis</div>
+            <div style="font-weight:bold;margin-top:2px">3.412 Read/Edit</div>
+            <div style="font-size:10px;color:#2980b9">Tercatat Lengkap</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Peringatan Anomali</div>
+            <div style="font-weight:bold;margin-top:2px">2 Insiden</div>
+            <div style="font-size:10px;color:#27ae60">Telah Diverifikasi</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Audit Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Catatan Log Kritis Terakhir</h2>
+          </div>
+          <span class="status">Realtime</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>dr. Adrian Permana &bull; Buka Berkas Medis</span>
+            <span class="status ok">Tercatat</span>
+          </div>
+          <div class="history-diag">Akses CPPT Pasien Rawat Inap #002910 dari IP 192.168.1.45</div>
+          <div class="history-notes">Sesi Poli Anak &bull; Modul EMR &bull; 17 Nov 2026 10:45 WIB</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>Rina Fitriani &bull; Void Pembayaran Kasir</span>
+            <span class="status warn">Void Audit</span>
+          </div>
+          <div class="history-diag">Pembatalan Kuitansi KUI-202611-0182 (Salah pilih metode bayar)</div>
+          <div class="history-notes">Otorisasi Supervisor Kasir &bull; 17 Nov 2026 09:20 WIB</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>SysAdmin &bull; Perubahan Master Tarif</span>
+            <span class="status ok">Tercatat</span>
+          </div>
+          <div class="history-diag">Penyesuaian tarif konsultasi dokter spesialis anak (Rp 150rb &rarr; Rp 175rb)</div>
+          <div class="history-notes">Tanggal efektif 01 Des 2026 &bull; 16 Nov 2026 15:30 WIB</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-log-semua" onclick="switchTab('tab-log-semua')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Log Aktivitas Sistem
+      </button>
+      <button class="exam-top-tab" data-tab="tab-log-emr" onclick="switchTab('tab-log-emr')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        2. Akses Rekam Medis (EMR)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-log-keuangan" onclick="switchTab('tab-log-keuangan')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        3. Log Transaksi Keuangan &amp; Kasir
+      </button>
+      <button class="exam-top-tab" data-tab="tab-log-insiden" onclick="switchTab('tab-log-insiden')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        4. Insiden Keamanan &amp; Anomali
+      </button>
+    </nav>
+
+    <!-- TAB 1: LOG SEMUA -->
+    <div id="tab-log-semua" class="tab-pane active">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="Cari user, IP, atau aksi..." style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;width:240px">
+            <select style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px">
+              <option>Semua Tipe Aksi</option>
+              <option>LOGIN / LOGOUT</option>
+              <option>CREATE (Tambah Data)</option>
+              <option>UPDATE (Ubah Data)</option>
+              <option>VOID / CANCEL (Pembatalan)</option>
+            </select>
+          </div>
+          <button class="btn secondary small">Ekspor Log (.CSV)</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Waktu Transaksi</th>
+              <th>Nama Pengguna</th>
+              <th>Role</th>
+              <th>Alamat IP</th>
+              <th>Tipe Aksi</th>
+              <th>Entitas Modul</th>
+              <th>Uraian Aktivitas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>17 Nov 2026 10:48:12</td>
+              <td><strong>dr. Farhan Maulana</strong></td>
+              <td>Dokter Umum</td>
+              <td><span class="code-chip">192.168.1.32</span></td>
+              <td><span class="status ok">CREATE</span></td>
+              <td>e-Resep (Prescription)</td>
+              <td>Penerbitan resep obat amoxicillin &bull; Pasien #002920</td>
+            </tr>
+            <tr>
+              <td>17 Nov 2026 10:42:05</td>
+              <td><strong>Rina Fitriani</strong></td>
+              <td>Kasir Billing</td>
+              <td><span class="code-chip">192.168.1.18</span></td>
+              <td><span class="status ok">CREATE</span></td>
+              <td>Billing Kasir</td>
+              <td>Penerimaan kas Rp 85.000 (KUI-202611-0189)</td>
+            </tr>
+            <tr>
+              <td>17 Nov 2026 10:30:19</td>
+              <td><strong>apt. Ratna Dewi</strong></td>
+              <td>Apoteker PJ</td>
+              <td><span class="code-chip">192.168.1.50</span></td>
+              <td><span class="status ok">UPDATE</span></td>
+              <td>Farmasi Dispense</td>
+              <td>Verifikasi telaah 5T resep #RSP-20261117-034</td>
+            </tr>
+            <tr>
+              <td>17 Nov 2026 09:20:41</td>
+              <td><strong>Rina Fitriani</strong></td>
+              <td>Kasir Billing</td>
+              <td><span class="code-chip">192.168.1.18</span></td>
+              <td><span class="status warn">VOID</span></td>
+              <td>Kuitansi Pembayaran</td>
+              <td>Pembatalan KUI-0182 &bull; Kesalahan input non-tunai</td>
+            </tr>
+            <tr>
+              <td>17 Nov 2026 08:00:15</td>
+              <td><strong>dr. Adrian Permana</strong></td>
+              <td>Dokter Spesialis</td>
+              <td><span class="code-chip">192.168.1.45</span></td>
+              <td><span class="status">LOGIN</span></td>
+              <td>Sesi Pengguna</td>
+              <td>Autentikasi sukses via password + TOTP 2FA</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: LOG EMR -->
+    <div id="tab-log-emr" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Kerahasiaan Berkas Medis (UU Kesehatan):</strong> Setiap kali seorang dokter, perawat, atau staf membuka halaman rekam medis seorang pasien, sistem secara otomatis mencatat ID pasien, nama petugas, waktu, dan tujuan penelusuran berkas.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Audit Trail Akses Berkas Rekam Medis Pasien (EMR)</h2>
+          <span class="status ok">Privasi Terjaga</span>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Waktu Buka</th>
+              <th>Petugas / Nakes</th>
+              <th>Role</th>
+              <th>No. RM Pasien</th>
+              <th>Nama Pasien</th>
+              <th>Bagian / Form yang Dilihat</th>
+              <th>Penugasan Unit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>17 Nov 2026 10:45:10</td>
+              <td><strong>dr. Adrian Permana, Sp.A</strong></td>
+              <td>Dokter Spesialis</td>
+              <td><span class="code-chip">RM-002910</span></td>
+              <td>An. Kenzo Alfarizi</td>
+              <td>Catatan Perkembangan Pasien Terintegrasi (CPPT)</td>
+              <td><span class="status ok">Sesuai Unit</span></td>
+            </tr>
+            <tr>
+              <td>17 Nov 2026 10:15:33</td>
+              <td><strong>dr. Farhan Maulana</strong></td>
+              <td>Dokter Umum</td>
+              <td><span class="code-chip">RM-002920</span></td>
+              <td>Ny. Dewi Sartika</td>
+              <td>Riwayat Alergi Obat &amp; Diagnosis Terdahulu</td>
+              <td><span class="status ok">Sesuai Unit</span></td>
+            </tr>
+            <tr>
+              <td>17 Nov 2026 09:30:18</td>
+              <td><strong>Ns. Siti Aminah, S.Kep</strong></td>
+              <td>Perawat</td>
+              <td><span class="code-chip">RM-002890</span></td>
+              <td>Tn. Hendra Setiawan</td>
+              <td>Grafik Tanda Vital (TTV) &amp; Output Cairan</td>
+              <td><span class="status ok">Sesuai Unit</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: LOG KEUANGAN -->
+    <div id="tab-log-keuangan" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Pengawasan Transaksi Keuangan Kasir &amp; Akuntansi</h2>
+          <span class="status dark">Financial Audit</span>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>No. Referensi Transaksi</th>
+              <th>Aksi Keuangan</th>
+              <th>Nominal Terkait</th>
+              <th>Aktor Pembuat</th>
+              <th>Otorisator Supervisor</th>
+              <th>Keterangan / Alasan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>17 Nov 2026 09:20</td>
+              <td><span class="code-chip">KUI-202611-0182</span></td>
+              <td><span class="status warn">Pembatalan Kuitansi</span></td>
+              <td>Rp 185.000</td>
+              <td>Rina Fitriani</td>
+              <td>Supervisor Keuangan</td>
+              <td>Pasien ganti kartu debit ke QRIS</td>
+            </tr>
+            <tr>
+              <td>16 Nov 2026 14:10</td>
+              <td><span class="code-chip">BIL-202611-0180</span></td>
+              <td><span class="status">Pemberian Diskon</span></td>
+              <td>Rp 25.000</td>
+              <td>Rina Fitriani</td>
+              <td>Manajer Klinik</td>
+              <td>Program CSR warga sekitar faskes</td>
+            </tr>
+            <tr>
+              <td>15 Nov 2026 17:00</td>
+              <td><span class="code-chip">CSH-20261115-01</span></td>
+              <td><span class="status ok">Tutup Kas Kasir Shift 1</span></td>
+              <td>Rp 4.820.000</td>
+              <td>Rina Fitriani</td>
+              <td>Kasir Utama</td>
+              <td>Setor fisik kas: selisih Rp 0 (Cocok)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: INSIDEN KEAMANAN -->
+    <div id="tab-log-insiden" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Laporan Peringatan Anomali &amp; Insiden Keamanan</h2>
+          <span class="status ok">Terkendali</span>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Waktu Deteksi</th>
+              <th>Jenis Peringatan Keamanan</th>
+              <th>Tingkat Keparahan</th>
+              <th>Sumber IP / Perangkat</th>
+              <th>Tindakan Sistem Pencegahan</th>
+              <th>Status Tindak Lanjut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>17 Nov 2026 03:10 WIB</td>
+              <td>Akses Darurat Break-Glass Rekam Medis #002919</td>
+              <td><span class="status warn">Peringatan</span></td>
+              <td>Ruang Resusitasi IGD</td>
+              <td>Pencatatan stempel waktu &amp; notifikasi Komite Medis</td>
+              <td><span class="status ok">Telah Diverifikasi</span></td>
+            </tr>
+            <tr>
+              <td>14 Nov 2026 23:14 WIB</td>
+              <td>Percobaan Login Gagal 5x Akun 'staff.it'</td>
+              <td><span class="status">Info</span></td>
+              <td>192.168.1.112 (LAN Klinik)</td>
+              <td>Akun otomatis terkunci selama 15 menit</td>
+              <td><span class="status ok">Reset oleh Admin</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>
