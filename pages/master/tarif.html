@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Tarif Layanan - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.segment-card {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  font-size: 11px;
+}
+.segment-card b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+tr.inactive-row td { color: #9aa0a6; }
+tr.inactive-row td .tarif-name { text-decoration: line-through; }
+
+.tax-tag {
+  display: inline-block;
+  font-size: 10px;
+  border: 1px solid #dde1e6;
+  background: #f1f2f4;
+  border-radius: 3px;
+  padding: 1px 6px;
+  color: #444;
+}
+.tax-bkp { background: #fff3d6; border-color: #f0d7a0; color: #8a5a00; }
+.tax-exempt { background: #e8eefb; border-color: #c3d2f0; color: #2b4b8a; }
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+
+.hist-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e6e8ea;
+  font-size: 11px;
+}
+.hist-line:last-child { border-bottom: 0; }
+
+.pl-card {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 12px;
+  background: #fafbfc;
+}
+.pl-card h3 { margin: 0 0 4px; font-size: 13px; }
+.pl-card p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MASTER DATA</div>
+  <div class="nav-group open" id="nav-master">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
+      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview Master</span></a>
+      <a class="nav-item nav-sub" href="obat.html"><span>Data Obat</span></a>
+      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
+      <a class="nav-item nav-sub" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
+      <a class="nav-item nav-sub active" href="tarif.html"><span>Tarif Layanan</span></a>
+      <a class="nav-item nav-sub" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
+      <a class="nav-item nav-sub" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Master Data <span style="margin:0 8px">/</span> Billing <span style="margin:0 8px">/</span> <b>Tarif Layanan</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">M</span>
+      <span>Manajer Keuangan</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Master Data</a> <span>/</span> Tarif Layanan</div>
+        <h1>Master Tarif &amp; Katalog Layanan</h1>
+        <p>Katalog layanan, tarif ber-tanggal-berlaku, price list per pembayar, dan kode pajak per item. Perubahan tarif tidak menulis ulang invoice atau jurnal lama.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Master</a>
+        <button class="btn primary" onclick="formBaruTarif()">+ Tarif Baru</button>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <h2>Profil Katalog Tarif</h2>
+          </div>
+          <span class="status dark" id="profileTarifCount">12 layanan</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Entitas:</b> PT Sehat Nusantara (PKP)</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Katalog:</b> <span class="code-chip">service_catalogs</span></div>
+          <div><b>Tarif:</b> <span class="code-chip">service_prices</span></div>
+          <div><b>Price List:</b> <span class="code-chip">price_lists</span></div>
+          <div><b>Mata Uang:</b> IDR</div>
+          <div><b>Price List Default:</b> PL-UMUM</div>
+          <div><b>Kebijakan Pajak:</b> Per item</div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;">
+          <div class="segment-card"><b id="segLayanan">12</b>Total layanan</div>
+          <div class="segment-card"><b id="segAktifTarif">11</b>Aktif</div>
+          <div class="segment-card"><b id="segBkp">3</b>Kena PPN</div>
+          <div class="segment-card"><b id="segPriceList">4</b>Price list</div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Tarif disimpan dengan <span class="code-chip">effective_from</span> dan <span class="code-chip">effective_to</span>.
+          Invoice menyimpan snapshot harga dan kode pajak saat transaksi, sehingga perubahan master tidak mengubah dokumen lama.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Perubahan Tarif Terakhir</h2>
+          </div>
+          <span class="muted small">Audit Trail</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 10:22 WIB</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Berlaku</span>
+          </div>
+          <div class="history-diag">Nebulisasi Rp 80.000 &rarr; Rp 85.000</div>
+          <div class="history-notes">Price list Umum 2026 &middot; berlaku 01 Nov 2026 &middot; kode pajak PPN_DIBEBASKAN</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>16 Nov 2026 &middot; 13:40 WIB</span>
+            <span class="status dark">Baru</span>
+          </div>
+          <div class="history-diag">Tambah layanan Paket MCU Dasar Rp 650.000</div>
+          <div class="history-notes">Kategori Paket &middot; akun 4100 Pendapatan Tindakan &middot; berlaku 01 Des 2026</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>15 Nov 2026 &middot; 09:05 WIB</span>
+            <span class="status">Nonaktif</span>
+          </div>
+          <div class="history-diag">Nonaktifkan Konsultasi Gizi Rp 100.000</div>
+          <div class="history-notes">Alasan: layanan dialihkan ke unit lain &middot; invoice lama tetap memakai tarif saat transaksi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-daftar" onclick="switchTab('tab-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar Tarif
+      </button>
+      <button class="exam-top-tab" data-tab="tab-form" onclick="switchTab('tab-form')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+        2. Tambah / Ubah Tarif
+      </button>
+      <button class="exam-top-tab" data-tab="tab-riwayat" onclick="switchTab('tab-riwayat')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3. Price List &amp; Riwayat
+      </button>
+      <button class="exam-top-tab" data-tab="tab-pajak" onclick="switchTab('tab-pajak')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 11V7a3 3 0 0 1 6 0v4"/><path d="M4 11h16v10H4z"/><circle cx="12" cy="16" r="1"/></svg>
+        4. Simulasi Pajak
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR -->
+    <div class="tab-pane active" id="tab-daftar">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="card"><div class="metric-label">Total Layanan</div><div class="metric-value" id="mTotalTarif">12</div><div class="metric-note">Termasuk nonaktif</div></div>
+        <div class="card"><div class="metric-label">Layanan Aktif</div><div class="metric-value" id="mAktifTarif">11</div><div class="metric-note">Dapat ditagihkan</div></div>
+        <div class="card"><div class="metric-label">Kena PPN</div><div class="metric-value" id="mBkp">3</div><div class="metric-note">Barang/paket tertentu</div></div>
+        <div class="card"><div class="metric-label">Rata-rata Tarif</div><div class="metric-value" id="mRata">Rp 0</div><div class="metric-note">Layanan aktif</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Katalog Tarif Layanan</h2>
+          <span class="muted small">Harga per price list default</span>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <input type="text" id="cariTarif" class="field" placeholder="Cari kode atau nama layanan" oninput="renderTarif()" style="min-width:230px;">
+          <select id="filterKategoriTarif" class="field" onchange="renderTarif()">
+            <option value="">Semua Kategori</option>
+            <option>Konsultasi</option>
+            <option>Tindakan</option>
+            <option>Laboratorium</option>
+            <option>Radiologi</option>
+            <option>Kamar</option>
+            <option>Paket</option>
+          </select>
+          <select id="filterPajak" class="field" onchange="renderTarif()">
+            <option value="">Semua Kode Pajak</option>
+            <option>PPN_DIBEBASKAN</option>
+            <option>PPN_BKP</option>
+            <option>NON_BKP</option>
+          </select>
+          <select id="filterStatusTarif" class="field" onchange="renderTarif()">
+            <option value="">Semua Status</option>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+          <button class="btn" onclick="resetFilterTarif()">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:95px;">Kode</th>
+                <th>Nama Layanan</th>
+                <th style="width:115px;">Kategori</th>
+                <th style="width:85px;">Satuan</th>
+                <th style="width:125px;text-align:right;">Tarif</th>
+                <th style="width:135px;">Kode Pajak</th>
+                <th style="width:110px;">Akun Pendapatan</th>
+                <th style="width:150px;">Berlaku</th>
+                <th style="width:85px;">Status</th>
+                <th style="width:100px;text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tarifBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          <b>Aturan tarif:</b> satu kode layanan memiliki satu tarif aktif per price list pada satu tanggal.
+          Tarif baru dibuat sebagai baris baru dengan tanggal berlaku; tarif lama ditutup dengan
+          <span class="code-chip">effective_to</span>, bukan dihapus.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: FORM -->
+    <div class="tab-pane" id="tab-form">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Form Tarif Layanan</h2><span class="status dark" id="formModeTarif">Tarif Baru</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Kode Layanan <span class="req">*</span></label>
+              <input type="text" id="tarifKode" class="field" placeholder="TRF-013" maxlength="12">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Layanan <span class="req">*</span></label>
+              <input type="text" id="tarifNama" class="field" placeholder="Contoh: Nebulisasi">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori <span class="req">*</span></label>
+              <select id="tarifKategori" class="field">
+                <option>Konsultasi</option>
+                <option>Tindakan</option>
+                <option>Laboratorium</option>
+                <option>Radiologi</option>
+                <option>Kamar</option>
+                <option>Paket</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Satuan <span class="req">*</span></label>
+              <select id="tarifSatuan" class="field">
+                <option>Kunjungan</option>
+                <option>Tindakan</option>
+                <option>Pemeriksaan</option>
+                <option>Hari</option>
+                <option>Paket</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tarif (Rp) <span class="req">*</span></label>
+              <input type="number" id="tarifHarga" class="field" value="0" min="0" step="1000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kode Pajak <span class="req">*</span></label>
+              <select id="tarifPajak" class="field">
+                <option value="PPN_DIBEBASKAN">PPN_DIBEBASKAN (jasa medis)</option>
+                <option value="PPN_BKP">PPN_BKP (barang/paket kena pajak)</option>
+                <option value="NON_BKP">NON_BKP</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price List</label>
+              <select id="tarifPriceList" class="field">
+                <option value="PL-UMUM">PL-UMUM Tarif Umum 2026</option>
+                <option value="PL-ASR">PL-ASR Tarif Asuransi 2026</option>
+                <option value="PL-PRS">PL-PRS Tarif Perusahaan 2026</option>
+                <option value="PL-KRY">PL-KRY Tarif Karyawan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Akun Pendapatan</label>
+              <select id="tarifAkun" class="field">
+                <option value="4000">4000 Pendapatan Konsultasi</option>
+                <option value="4100">4100 Pendapatan Tindakan</option>
+                <option value="4200">4200 Pendapatan Farmasi</option>
+                <option value="4300">4300 Pendapatan Laboratorium</option>
+                <option value="4600">4600 Pendapatan Rawat Inap/Kamar</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Dari <span class="req">*</span></label>
+              <input type="date" id="tarifFrom" class="field" value="2026-11-17">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Sampai</label>
+              <input type="date" id="tarifTo" class="field" placeholder="Kosong = seterusnya">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="tarifStatus" class="field">
+                <option value="aktif">Aktif</option>
+                <option value="nonaktif">Nonaktif</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kode KPTL (bila tindakan)</label>
+              <input type="text" id="tarifKptl" class="field" placeholder="Contoh: 89.39">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Catatan / Alasan Perubahan <span class="req">*</span></label>
+            <textarea id="tarifCatatan" class="field" rows="2" placeholder="Wajib diisi untuk audit trail perubahan tarif"></textarea>
+          </div>
+
+          <div id="tarifError" class="alert info" style="display:none;margin-bottom:10px;"></div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button type="button" class="btn" onclick="formBaruTarif()">Bersihkan Form</button>
+            <button type="button" class="btn primary" onclick="simpanTarif()">Simpan Tarif</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Validasi Tarif</h2><span class="status dark">Kontrol</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode layanan unik.</b><div class="small muted">Kode dipakai pada transaksi layanan, billing, dan klaim.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Tarif lebih besar dari nol.</b><div class="small muted">Layanan gratis memakai mekanisme diskon, bukan tarif nol tanpa otorisasi.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Tanggal berlaku wajib.</b><div class="small muted">Tarif tanpa tanggal tidak dapat dipakai pada billing.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok" id="markPajak">OK</span>
+            <div><b>Kode pajak wajib dipilih.</b><div class="small muted">Jasa medis umumnya dibebaskan; obat dan paket tertentu BKP sesuai kebijakan.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Tidak ada tarif tumpang tindih.</b><div class="small muted">Satu kode + price list hanya memiliki satu tarif aktif pada satu tanggal.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Perubahan tidak mengubah invoice lama.</b><div class="small muted">Invoice menyimpan snapshot harga, kode pajak, dan akun pendapatan.</div></div>
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Pratinjau Tarif</div>
+            <div class="metric-value" id="tarifPreview" style="font-size:17px;">Belum ada tarif</div>
+            <p class="small muted" id="tarifPreviewNote" style="margin-top:4px;">Isi form untuk melihat ringkasan.</p>
+            <div id="tarifBkpNote" class="note-band" style="display:none;margin-top:10px;">
+              Kode pajak PPN_BKP: tarif ilustrasi 11% akan dihitung pada simulasi pajak. Konfirmasikan dasar pengenaan
+              dan tarif final ke konsultan pajak.
+            </div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            <b>Mapping akun:</b> akun pendapatan dipilih melalui <span class="code-chip">account_mapping_rules</span>
+            berdasarkan kategori layanan. Tarif tidak menulis jurnal secara langsung.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PRICE LIST & RIWAYAT -->
+    <div class="tab-pane" id="tab-riwayat">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="pl-card"><h3>PL-UMUM</h3><p>Tarif Umum 2026 &middot; pembayar mandiri &middot; default fasilitas</p></div>
+        <div class="pl-card"><h3>PL-ASR</h3><p>Tarif Asuransi 2026 &middot; kontrak per penjamin &middot; plafon per polis</p></div>
+        <div class="pl-card"><h3>PL-PRS</h3><p>Tarif Perusahaan 2026 &middot; kontrak korporat &middot; invoice berkala</p></div>
+        <div class="pl-card"><h3>PL-KRY</h3><p>Tarif Karyawan &middot; potongan 20% &middot; memerlukan verifikasi kepegawaian</p></div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Riwayat Harga Layanan</h2><span class="muted small">Pilih layanan</span></div>
+          <div class="form-group">
+            <select id="histLayanan" class="field" onchange="renderHistory()"></select>
+          </div>
+          <div id="historyList"></div>
+          <div class="note-band" style="margin-top:12px;">
+            Riwayat harga bersifat append-only. Koreksi harga yang sudah terlanjur dipakai dilakukan dengan tarif baru
+            dan, bila perlu, credit note atas invoice terkait.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Matriks Tarif per Price List</h2><span class="status dark">Contoh</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Layanan</th><th style="text-align:right;">Umum</th><th style="text-align:right;">Asuransi</th><th style="text-align:right;">Perusahaan</th><th style="text-align:right;">Karyawan</th></tr></thead>
+              <tbody id="matrixBody"></tbody>
+            </table>
+          </div>
+          <div class="note-band" style="margin-top:12px;">
+            Price list bukan diskon bebas. Setiap perbedaan harga harus memiliki kontrak atau kebijakan yang
+            ber-tanggal-berlaku dan dapat diaudit.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SIMULASI PAJAK -->
+    <div class="tab-pane" id="tab-pajak">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Simulasi Perhitungan Tarif</h2><span class="muted small">Ilustrasi PPN</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group" style="grid-column:span 2;">
+              <label class="form-label">Layanan</label>
+              <select id="simLayanan" class="field" onchange="syncSimPajak();hitungSimulasi()"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Qty</label>
+              <input type="number" id="simQtyTarif" class="field" value="1" min="1" oninput="hitungSimulasi()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Diskon (Rp)</label>
+              <input type="number" id="simDiskon" class="field" value="0" min="0" step="1000" oninput="hitungSimulasi()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price List</label>
+              <select id="simPriceList" class="field" onchange="hitungSimulasi()">
+                <option value="PL-UMUM">PL-UMUM (faktor 1,00)</option>
+                <option value="PL-ASR">PL-ASR (faktor 1,10)</option>
+                <option value="PL-PRS">PL-PRS (faktor 0,90)</option>
+                <option value="PL-KRY">PL-KRY (faktor 0,80)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kode Pajak</label>
+              <input type="text" id="simPajakKode" class="field" readonly style="background:#f4f5f6;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tarif PPN (ilustrasi)</label>
+              <input type="number" id="simPpnRate" class="field" value="11" min="0" max="100" oninput="hitungSimulasi()">
+            </div>
+          </div>
+
+          <div class="card" style="padding:12px;background:#fafbfc;">
+            <div class="sum-line"><span>Harga satuan (price list)</span><span id="simHarga">Rp 0</span></div>
+            <div class="sum-line"><span>Subtotal</span><span id="simSubtotal">Rp 0</span></div>
+            <div class="sum-line"><span>Diskon</span><span id="simDiskonOut">Rp 0</span></div>
+            <div class="sum-line"><span>DPP</span><span id="simDpp">Rp 0</span></div>
+            <div class="sum-line"><span>PPN</span><span id="simPpn">Rp 0</span></div>
+            <div class="sum-line"><span><b>Total dibayar</b></span><span><b id="simTotal">Rp 0</b></span></div>
+            <div class="sum-line"><span>Akun pendapatan</span><span id="simAkun">-</span></div>
+          </div>
+
+          <div id="simBox" class="balance-box balance-ok" style="margin-top:12px;">
+            <span>Status Pajak:</span>
+            <span id="simStatus">PPN DIBEBASKAN</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Pratinjau Jurnal Billing</h2><span class="status dark">Accounting Engine</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Akun</th><th style="text-align:right;">Debit</th><th style="text-align:right;">Kredit</th></tr></thead>
+              <tbody id="simJurnal"></tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Jurnal di atas hanya pratinjau. Jurnal sebenarnya dibuat Accounting Engine dari event
+            <span class="code-chip">billing.invoice.issued</span> dengan mapping akun aktif pada tanggal transaksi.
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="card-title" style="margin-bottom:8px;"><h3 style="font-size:12px;margin:0;">Kebijakan Pajak Layanan</h3></div>
+            <div class="rule-row" style="padding:6px 0;">
+              <span class="rule-mark rule-ok">OK</span>
+              <div><b>Jasa medis dibebaskan PPN.</b><div class="small muted">PP 49/2022 Pasal 11 mencakup jasa pelayanan kesehatan medis dan fasilitas klinik.</div></div>
+            </div>
+            <div class="rule-row" style="padding:6px 0;">
+              <span class="rule-mark rule-ok">OK</span>
+              <div><b>Obat dan barang BKP tetap kena PPN.</b><div class="small muted">Kode pajak ditentukan per item, bukan per invoice.</div></div>
+            </div>
+            <div class="rule-row" style="padding:6px 0;border-bottom:0;">
+              <span class="rule-mark rule-warn">!</span>
+              <div><b>Tarif 11% adalah ilustrasi.</b><div class="small muted">Tarif dan dasar pengenaan wajib diverifikasi ke konsultan pajak sebelum produksi.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var TODAY = "2026-11-17";
+var PPN_RATE = 11;
+
+var services = [
+  { code: "TRF-001", name: "Konsultasi dokter umum", category: "Konsultasi", unit: "Kunjungan", price: 150000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4000", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-002", name: "Konsultasi dokter spesialis", category: "Konsultasi", unit: "Kunjungan", price: 250000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4000", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-003", name: "Nebulisasi", category: "Tindakan", unit: "Tindakan", price: 85000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4100", from: "2026-11-01", to: "", active: true },
+  { code: "TRF-004", name: "Pembersihan karang gigi (scaling)", category: "Tindakan", unit: "Tindakan", price: 350000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4100", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-005", name: "Tambal gigi komposit", category: "Tindakan", unit: "Tindakan", price: 275000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4100", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-006", name: "Darah lengkap", category: "Laboratorium", unit: "Pemeriksaan", price: 120000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4300", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-007", name: "Gula darah sewaktu", category: "Laboratorium", unit: "Pemeriksaan", price: 45000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4300", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-008", name: "Foto thorax", category: "Radiologi", unit: "Pemeriksaan", price: 175000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4100", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-009", name: "Kamar rawat inap kelas 1 per hari", category: "Kamar", unit: "Hari", price: 750000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4600", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-010", name: "Tindakan IGD kecil", category: "Tindakan", unit: "Tindakan", price: 200000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4100", from: "2026-01-01", to: "", active: true },
+  { code: "TRF-011", name: "Paket MCU dasar", category: "Paket", unit: "Paket", price: 650000, tax: "PPN_BKP", pl: "PL-UMUM", account: "4100", from: "2026-12-01", to: "", active: true },
+  { code: "TRF-012", name: "Konsultasi gizi", category: "Konsultasi", unit: "Kunjungan", price: 100000, tax: "PPN_DIBEBASKAN", pl: "PL-UMUM", account: "4000", from: "2026-01-01", to: "2026-10-31", active: false }
+];
+
+var priceLists = {
+  "PL-UMUM": { name: "Tarif Umum 2026", factor: 1.00 },
+  "PL-ASR": { name: "Tarif Asuransi 2026", factor: 1.10 },
+  "PL-PRS": { name: "Tarif Perusahaan 2026", factor: 0.90 },
+  "PL-KRY": { name: "Tarif Karyawan", factor: 0.80 }
+};
+
+var histories = {
+  "TRF-001": [
+    { from: "2026-01-01", price: 150000, note: "Tarif awal 2026" }
+  ],
+  "TRF-002": [
+    { from: "2026-01-01", price: 250000, note: "Tarif awal 2026" }
+  ],
+  "TRF-003": [
+    { from: "2025-07-01", price: 75000, note: "Tarif lama" },
+    { from: "2026-01-01", price: 80000, note: "Penyesuaian awal tahun" },
+    { from: "2026-11-01", price: 85000, note: "Penyesuaian biaya alat" }
+  ],
+  "TRF-006": [
+    { from: "2026-01-01", price: 110000, note: "Tarif awal 2026" },
+    { from: "2026-07-01", price: 120000, note: "Kenaikan harga reagen" }
+  ]
+};
+
+var editingTarif = null;
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  if (tabId === "tab-riwayat") { renderHistory(); renderMatrix(); }
+  if (tabId === "tab-pajak") { syncSimPajak(); hitungSimulasi(); }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function formatRupiah(n) {
+  return "Rp " + Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+}
+
+function taxTag(t) {
+  var cls = t === "PPN_BKP" ? "tax-bkp" : (t === "PPN_DIBEBASKAN" ? "tax-exempt" : "");
+  return '<span class="tax-tag ' + cls + '">' + escapeHtml(t) + "</span>";
+}
+
+function renderTarif() {
+  var q = (document.getElementById("cariTarif").value || "").toLowerCase();
+  var kategori = document.getElementById("filterKategoriTarif").value;
+  var pajak = document.getElementById("filterPajak").value;
+  var status = document.getElementById("filterStatusTarif").value;
+  var tbody = document.getElementById("tarifBody");
+  tbody.innerHTML = "";
+
+  var shown = services.filter(function (s) {
+    if (q && s.code.toLowerCase().indexOf(q) === -1 && s.name.toLowerCase().indexOf(q) === -1) return false;
+    if (kategori && s.category !== kategori) return false;
+    if (pajak && s.tax !== pajak) return false;
+    if (status === "aktif" && !s.active) return false;
+    if (status === "nonaktif" && s.active) return false;
+    return true;
+  });
+
+  shown.forEach(function (s) {
+    var tr = document.createElement("tr");
+    if (!s.active) tr.className = "inactive-row";
+    tr.innerHTML = "<td><b>" + escapeHtml(s.code) + "</b></td>"
+      + '<td><span class="tarif-name">' + escapeHtml(s.name) + "</span></td>"
+      + "<td>" + escapeHtml(s.category) + "</td>"
+      + "<td>" + escapeHtml(s.unit) + "</td>"
+      + '<td style="text-align:right;font-weight:600;">' + formatRupiah(s.price) + "</td>"
+      + "<td>" + taxTag(s.tax) + "</td>"
+      + '<td><span class="code-chip">' + escapeHtml(s.account) + "</span></td>"
+      + '<td class="small muted">' + escapeHtml(s.from) + (s.to ? " s.d. " + escapeHtml(s.to) : " &rarr;") + "</td>"
+      + '<td><span class="status ' + (s.active ? "dark" : "") + '">' + (s.active ? "Aktif" : "Nonaktif") + "</span></td>"
+      + '<td style="text-align:right;white-space:nowrap;">'
+      + '<button type="button" class="btn" style="padding:2px 7px;font-size:11px;" onclick="editTarif(\'' + s.code + '\')">Ubah</button> '
+      + '<button type="button" class="btn secondary" style="padding:2px 7px;font-size:11px;" onclick="toggleTarif(\'' + s.code + '\')">' + (s.active ? "Nonaktif" : "Aktifkan") + "</button>"
+      + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  if (shown.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" class="muted" style="text-align:center;padding:18px;">Tidak ada tarif pada filter ini.</td></tr>';
+  }
+
+  updateTarifMetrics();
+}
+
+function updateTarifMetrics() {
+  var active = services.filter(function (s) { return s.active; });
+  var bkp = active.filter(function (s) { return s.tax === "PPN_BKP"; }).length;
+  var avg = active.length ? Math.round(active.reduce(function (sum, s) { return sum + s.price; }, 0) / active.length) : 0;
+
+  document.getElementById("mTotalTarif").textContent = services.length;
+  document.getElementById("mAktifTarif").textContent = active.length;
+  document.getElementById("mBkp").textContent = bkp;
+  document.getElementById("mRata").textContent = formatRupiah(avg);
+  document.getElementById("segLayanan").textContent = services.length;
+  document.getElementById("segAktifTarif").textContent = active.length;
+  document.getElementById("segBkp").textContent = bkp;
+  document.getElementById("segPriceList").textContent = Object.keys(priceLists).length;
+  document.getElementById("profileTarifCount").textContent = services.length + " layanan";
+}
+
+function resetFilterTarif() {
+  document.getElementById("cariTarif").value = "";
+  document.getElementById("filterKategoriTarif").value = "";
+  document.getElementById("filterPajak").value = "";
+  document.getElementById("filterStatusTarif").value = "";
+  renderTarif();
+}
+
+function updateTarifPreview() {
+  var kode = document.getElementById("tarifKode").value || "____";
+  var nama = document.getElementById("tarifNama").value || "Nama layanan belum diisi";
+  var harga = Number(document.getElementById("tarifHarga").value) || 0;
+  var kategori = document.getElementById("tarifKategori").value;
+  var pajak = document.getElementById("tarifPajak").value;
+  document.getElementById("tarifPreview").textContent = kode + " - " + nama;
+  document.getElementById("tarifPreviewNote").textContent = kategori + " · " + formatRupiah(harga) + " · " + pajak;
+  document.getElementById("tarifBkpNote").style.display = pajak === "PPN_BKP" ? "block" : "none";
+
+  var mark = document.getElementById("markPajak");
+  mark.textContent = "OK";
+  mark.className = "rule-mark rule-ok";
+}
+
+function formBaruTarif() {
+  editingTarif = null;
+  document.getElementById("formModeTarif").textContent = "Tarif Baru";
+  document.getElementById("tarifKode").value = "";
+  document.getElementById("tarifKode").removeAttribute("readonly");
+  document.getElementById("tarifNama").value = "";
+  document.getElementById("tarifKategori").value = "Konsultasi";
+  document.getElementById("tarifSatuan").value = "Kunjungan";
+  document.getElementById("tarifHarga").value = "0";
+  document.getElementById("tarifPajak").value = "PPN_DIBEBASKAN";
+  document.getElementById("tarifPriceList").value = "PL-UMUM";
+  document.getElementById("tarifAkun").value = "4000";
+  document.getElementById("tarifFrom").value = TODAY;
+  document.getElementById("tarifTo").value = "";
+  document.getElementById("tarifStatus").value = "aktif";
+  document.getElementById("tarifKptl").value = "";
+  document.getElementById("tarifCatatan").value = "";
+  document.getElementById("tarifError").style.display = "none";
+  updateTarifPreview();
+  switchTab("tab-form");
+}
+
+function editTarif(code) {
+  var s = services.filter(function (x) { return x.code === code; })[0];
+  if (!s) return;
+  editingTarif = code;
+  document.getElementById("formModeTarif").textContent = "Ubah " + code;
+  document.getElementById("tarifKode").value = s.code;
+  document.getElementById("tarifKode").setAttribute("readonly", "readonly");
+  document.getElementById("tarifNama").value = s.name;
+  document.getElementById("tarifKategori").value = s.category;
+  document.getElementById("tarifSatuan").value = s.unit;
+  document.getElementById("tarifHarga").value = s.price;
+  document.getElementById("tarifPajak").value = s.tax;
+  document.getElementById("tarifPriceList").value = s.pl;
+  document.getElementById("tarifAkun").value = s.account;
+  document.getElementById("tarifFrom").value = s.from;
+  document.getElementById("tarifTo").value = s.to || "";
+  document.getElementById("tarifStatus").value = s.active ? "aktif" : "nonaktif";
+  document.getElementById("tarifCatatan").value = "";
+  document.getElementById("tarifError").style.display = "none";
+  updateTarifPreview();
+  switchTab("tab-form");
+}
+
+function showTarifError(msg) {
+  var box = document.getElementById("tarifError");
+  box.textContent = msg;
+  box.style.display = "block";
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function simpanTarif() {
+  var kode = (document.getElementById("tarifKode").value || "").trim().toUpperCase();
+  var nama = (document.getElementById("tarifNama").value || "").trim();
+  var kategori = document.getElementById("tarifKategori").value;
+  var harga = Number(document.getElementById("tarifHarga").value);
+  var pajak = document.getElementById("tarifPajak").value;
+  var from = document.getElementById("tarifFrom").value;
+  var to = document.getElementById("tarifTo").value;
+  var catatan = (document.getElementById("tarifCatatan").value || "").trim();
+  var status = document.getElementById("tarifStatus").value;
+
+  document.getElementById("tarifError").style.display = "none";
+
+  if (!/^TRF-\d{3}$/.test(kode)) return showTarifError("Kode layanan harus berformat TRF-XXX (tiga digit).");
+  if (!nama) return showTarifError("Nama layanan wajib diisi.");
+  if (!(harga > 0)) return showTarifError("Tarif harus lebih besar dari nol. Gunakan mekanisme diskon untuk layanan gratis.");
+  if (!pajak) return showTarifError("Kode pajak wajib dipilih.");
+  if (!from) return showTarifError("Tanggal berlaku wajib diisi.");
+  if (to && to < from) return showTarifError("Tanggal berlaku sampai tidak boleh lebih awal dari tanggal mulai.");
+  if (!catatan) return showTarifError("Catatan atau alasan perubahan wajib diisi untuk audit trail.");
+
+  var existing = services.filter(function (s) { return s.code === kode; })[0];
+
+  if (editingTarif === null) {
+    if (existing) return showTarifError("Kode layanan " + kode + " sudah dipakai.");
+    services.push({
+      code: kode, name: nama, category: kategori,
+      unit: document.getElementById("tarifSatuan").value,
+      price: harga, tax: pajak,
+      pl: document.getElementById("tarifPriceList").value,
+      account: document.getElementById("tarifAkun").value,
+      from: from, to: to, active: status === "aktif"
+    });
+    services.sort(function (a, b) { return a.code.localeCompare(b.code); });
+    if (!histories[kode]) histories[kode] = [];
+    histories[kode].push({ from: from, price: harga, note: "Tarif baru ditambahkan" });
+  } else if (existing) {
+    existing.name = nama;
+    existing.category = kategori;
+    existing.unit = document.getElementById("tarifSatuan").value;
+    existing.price = harga;
+    existing.tax = pajak;
+    existing.pl = document.getElementById("tarifPriceList").value;
+    existing.account = document.getElementById("tarifAkun").value;
+    existing.from = from;
+    existing.to = to;
+    existing.active = status === "aktif";
+    if (!histories[kode]) histories[kode] = [];
+    histories[kode].push({ from: from, price: harga, note: "Perubahan tarif" });
+  }
+
+  renderTarif();
+  fillHistSelect();
+  renderMatrix();
+  formBaruTarif();
+  switchTab("tab-daftar");
+}
+
+function toggleTarif(code) {
+  var s = services.filter(function (x) { return x.code === code; })[0];
+  if (!s) return;
+  if (!confirm((s.active ? "Nonaktifkan" : "Aktifkan kembali") + " layanan " + code + " - " + s.name + "?")) return;
+  s.active = !s.active;
+  renderTarif();
+}
+
+function fillHistSelect() {
+  var sel = document.getElementById("histLayanan");
+  sel.innerHTML = services.map(function (s) {
+    return '<option value="' + s.code + '">' + s.code + " - " + escapeHtml(s.name) + "</option>";
+  }).join("");
+  var available = services.filter(function (s) { return histories[s.code] && histories[s.code].length > 1; });
+  if (available.length) sel.value = available[0].code;
+  renderHistory();
+}
+
+function renderHistory() {
+  var code = document.getElementById("histLayanan").value;
+  var list = histories[code] || [];
+  var wrap = document.getElementById("historyList");
+  var s = services.filter(function (x) { return x.code === code; })[0];
+
+  if (!list.length) {
+    wrap.innerHTML = '<p class="small muted">Belum ada riwayat harga untuk layanan ini.</p>';
+    return;
+  }
+
+  wrap.innerHTML = list.slice().reverse().map(function (h, idx) {
+    var isCurrent = idx === 0;
+    return '<div class="hist-line">'
+      + '<div><b>' + escapeHtml(h.from) + "</b><div class='small muted'>" + escapeHtml(h.note) + "</div></div>"
+      + '<div style="text-align:right;"><b>' + formatRupiah(h.price) + "</b>"
+      + (isCurrent ? '<div><span class="status dark" style="font-size:9px;">BERLAKU</span></div>' : "")
+      + "</div></div>";
+  }).join("");
+
+  if (s) {
+    wrap.innerHTML += '<p class="small muted" style="margin-top:8px;">Price list default: ' + escapeHtml(s.pl) + " &middot; akun " + escapeHtml(s.account) + " &middot; pajak " + escapeHtml(s.tax) + "</p>";
+  }
+}
+
+function renderMatrix() {
+  var tbody = document.getElementById("matrixBody");
+  tbody.innerHTML = "";
+  services.filter(function (s) { return s.active; }).forEach(function (s) {
+    var umum = s.price;
+    var asr = Math.round(umum * priceLists["PL-ASR"].factor);
+    var prs = Math.round(umum * priceLists["PL-PRS"].factor);
+    var kry = Math.round(umum * priceLists["PL-KRY"].factor);
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + escapeHtml(s.name) + "</td>"
+      + '<td style="text-align:right;">' + formatRupiah(umum) + "</td>"
+      + '<td style="text-align:right;">' + formatRupiah(asr) + "</td>"
+      + '<td style="text-align:right;">' + formatRupiah(prs) + "</td>"
+      + '<td style="text-align:right;">' + formatRupiah(kry) + "</td>";
+    tbody.appendChild(tr);
+  });
+}
+
+function fillSimSelect() {
+  var sel = document.getElementById("simLayanan");
+  sel.innerHTML = services.filter(function (s) { return s.active; }).map(function (s) {
+    return '<option value="' + s.code + '">' + s.code + " - " + escapeHtml(s.name) + "</option>";
+  }).join("");
+  syncSimPajak();
+}
+
+function syncSimPajak() {
+  var code = document.getElementById("simLayanan").value;
+  var s = services.filter(function (x) { return x.code === code; })[0];
+  document.getElementById("simPajakKode").value = s ? s.tax : "";
+  document.getElementById("simPpnRate").value = PPN_RATE;
+  hitungSimulasi();
+}
+
+function hitungSimulasi() {
+  var code = document.getElementById("simLayanan").value;
+  var s = services.filter(function (x) { return x.code === code; })[0];
+  if (!s) return;
+
+  var qty = Number(document.getElementById("simQtyTarif").value) || 0;
+  var diskon = Number(document.getElementById("simDiskon").value) || 0;
+  var pl = document.getElementById("simPriceList").value;
+  var rate = Number(document.getElementById("simPpnRate").value) || 0;
+
+  var harga = Math.round(s.price * priceLists[pl].factor);
+  var subtotal = harga * qty;
+  var dpp = Math.max(subtotal - Math.min(diskon, subtotal), 0);
+  var ppn = s.tax === "PPN_BKP" ? Math.round(dpp * rate / 100) : 0;
+  var total = dpp + ppn;
+
+  document.getElementById("simHarga").textContent = formatRupiah(harga);
+  document.getElementById("simSubtotal").textContent = formatRupiah(subtotal);
+  document.getElementById("simDiskonOut").textContent = formatRupiah(Math.min(diskon, subtotal));
+  document.getElementById("simDpp").textContent = formatRupiah(dpp);
+  document.getElementById("simPpn").textContent = formatRupiah(ppn);
+  document.getElementById("simTotal").textContent = formatRupiah(total);
+  document.getElementById("simAkun").textContent = s.account + " (" + s.category + ")";
+
+  var box = document.getElementById("simBox");
+  var status = document.getElementById("simStatus");
+  if (s.tax === "PPN_BKP") {
+    box.className = "balance-box balance-warn";
+    status.textContent = "PPN BKP " + rate + "% - ilustrasi";
+  } else if (s.tax === "PPN_DIBEBASKAN") {
+    box.className = "balance-box balance-ok";
+    status.textContent = "PPN DIBEBASKAN (PP 49/2022)";
+  } else {
+    box.className = "balance-box balance-ok";
+    status.textContent = "NON BKP - tidak dikenakan PPN";
+  }
+
+  var lines = [];
+  lines.push(["1100 Piutang Pasien", total, 0]);
+  lines.push([s.account + " Pendapatan Layanan", 0, dpp]);
+  if (ppn > 0) lines.push(["2200 Utang PPN (PPN Keluaran)", 0, ppn]);
+  if (diskon > 0) lines.push(["4900 Diskon dan Potongan Pendapatan", Math.min(diskon, subtotal), 0]);
+
+  var tbody = document.getElementById("simJurnal");
+  tbody.innerHTML = "";
+  lines.forEach(function (ln) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + escapeHtml(ln[0]) + "</td>"
+      + '<td style="text-align:right;">' + (ln[1] ? formatRupiah(ln[1]) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (ln[2] ? formatRupiah(ln[2]) : "-") + "</td>";
+    tbody.appendChild(tr);
+  });
+}
+
+["tarifKode", "tarifNama", "tarifHarga", "tarifKategori", "tarifPajak"].forEach(function (id) {
+  var el = document.getElementById(id);
+  el.addEventListener("input", updateTarifPreview);
+  el.addEventListener("change", updateTarifPreview);
+});
+
+fillHistSelect();
+fillSimSelect();
+renderTarif();
+renderMatrix();
+updateTarifPreview();
+hitungSimulasi();
+</script>
+</body>
+</html>

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master ICD-9 Tindakan - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.segment-card {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  font-size: 11px;
+}
+.segment-card b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+tr.inactive-row td { color: #9aa0a6; }
+tr.inactive-row td .proc-name { text-decoration: line-through; }
+
+.proc-code {
+  font-family: ui-monospace, Menlo, monospace;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.v-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 1px 5px;
+  border: 1px solid #c8e6cf;
+  background: #eaf7ec;
+  color: #276749;
+}
+.draft-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 1px 5px;
+  border: 1px solid #f0d7a0;
+  background: #fff3d6;
+  color: #8a5a00;
+}
+
+.cat-tag {
+  display: inline-block;
+  font-size: 10px;
+  border: 1px solid #dde1e6;
+  background: #f1f2f4;
+  border-radius: 3px;
+  padding: 1px 6px;
+  color: #444;
+}
+.cat-rad { background: #e8eefb; border-color: #c3d2f0; color: #2b4b8a; }
+.cat-lab { background: #eaf7ec; border-color: #c8e6cf; color: #276749; }
+.cat-tind { background: #f3ecfb; border-color: #ddcdf0; color: #5b3a8a; }
+.cat-farm { background: #fff3d6; border-color: #f0d7a0; color: #8a5a00; }
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+
+.detail-box {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  padding: 12px;
+  font-size: 12px;
+}
+.detail-box h3 { margin: 0 0 4px; font-size: 15px; }
+.detail-box p { margin: 0 0 8px; font-size: 11px; color: var(--muted); line-height: 1.55; }
+
+.term-list {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #444;
+}
+.term-list li { margin-bottom: 2px; }
+
+.chapter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 11px;
+}
+.chapter-bar .bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #eef0f3;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.chapter-bar .bar-fill {
+  height: 100%;
+  background: #6c757d;
+  border-radius: 4px;
+}
+.chapter-bar .bar-label { width: 46px; text-align: right; font-size: 10px; color: #555; }
+
+.ver-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 11px;
+}
+.ver-row:last-child { border-bottom: 0; }
+.ver-row .ver-name { flex: 1; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MASTER DATA</div>
+  <div class="nav-group open" id="nav-master">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
+      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview Master</span></a>
+      <a class="nav-item nav-sub" href="obat.html"><span>Data Obat</span></a>
+      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
+      <a class="nav-item nav-sub" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
+      <a class="nav-item nav-sub" href="tarif.html"><span>Tarif Layanan</span></a>
+      <a class="nav-item nav-sub" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
+      <a class="nav-item nav-sub active" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Master Data <span style="margin:0 8px">/</span> Terminologi <span style="margin:0 8px">/</span> <b>ICD-9</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Koder Rekam Medis</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Master Data</a> <span>/</span> ICD-9 Tindakan</div>
+        <h1>Master ICD-9 Tindakan &amp; KPTL</h1>
+        <p>Kode prosedur/tindakan medis untuk service transaction dan klaim, dipetakan ke KPTL. Setiap pemetaan wajib diverifikasi dan ditandai <span class="code-chip">[V]</span>.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Master</a>
+        <button class="btn primary" onclick="openDetailByInput()">Buka Detail Kode</button>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <h2>Profil Terminologi Tindakan</h2>
+          </div>
+          <span class="status dark" id="profileProcCount">20 kode contoh</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Entitas:</b> PT Sehat Nusantara</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Tabel:</b> <span class="code-chip">terminology_codes</span></div>
+          <div><b>Sistem:</b> <span class="code-chip">KPTL / ICD-9-CM</span></div>
+          <div><b>Versi Aktif:</b> KPTL 2026 + ICD-9-CM Vol. 3</div>
+          <div><b>Dipakai Pada:</b> Service transaction</div>
+          <div><b>Kaitan Tarif:</b> <span class="code-chip">service_catalogs</span></div>
+          <div><b>Status Validasi:</b> Wajib <span class="code-chip">[V]</span></div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;">
+          <div class="segment-card"><b id="segProc">20</b>Kode contoh</div>
+          <div class="segment-card"><b id="segProcVerified">13</b>Terverifikasi [V]</div>
+          <div class="segment-card"><b id="segProcDraft">7</b>Menunggu review</div>
+          <div class="segment-card"><b id="segProcCat">6</b>Kategori</div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Kode tindakan tidak boleh dipakai pada service transaction sebelum pemetaan KPTL diverifikasi. Tarif layanan
+          diambil dari katalog tarif, bukan dari kode terminologi.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Perubahan Terakhir</h2>
+          </div>
+          <span class="muted small">Audit Trail</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 09:10 WIB</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">[V]</span>
+          </div>
+          <div class="history-diag">Verifikasi pemetaan 93.94 Nebulisasi</div>
+          <div class="history-notes">Oleh Koder Rekam Medis &middot; KPTL 93.94 &middot; rujukan ICD-9-CM Vol. 3</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>16 Nov 2026 &middot; 15:35 WIB</span>
+            <span class="status dark">Diperbarui</span>
+          </div>
+          <div class="history-diag">Ubah istilah Indonesia 87.44 menjadi Foto toraks rutin</div>
+          <div class="history-notes">Oleh Koder Rekam Medis &middot; kode dan judul Inggris tidak berubah</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>15 Nov 2026 &middot; 10:20 WIB</span>
+            <span class="status">Impor</span>
+          </div>
+          <div class="history-diag">Impor 120 kode tindakan KPTL 2026</div>
+          <div class="history-notes">Oleh Administrator &middot; status menunggu review &middot; belum dapat dipakai billing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-daftar" onclick="switchTab('tab-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar Kode Tindakan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-detail" onclick="switchTab('tab-detail')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        2. Detail &amp; Pemetaan KPTL
+      </button>
+      <button class="exam-top-tab" data-tab="tab-penggunaan" onclick="switchTab('tab-penggunaan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        3. Service Transaction
+      </button>
+      <button class="exam-top-tab" data-tab="tab-versi" onclick="switchTab('tab-versi')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        4. Versi &amp; Validasi
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR -->
+    <div class="tab-pane active" id="tab-daftar">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="card"><div class="metric-label">Kode Ditampilkan</div><div class="metric-value" id="mProcShown">20</div><div class="metric-note">Sesuai filter aktif</div></div>
+        <div class="card"><div class="metric-label">Terverifikasi</div><div class="metric-value" id="mProcVerified">13</div><div class="metric-note">Siap dipakai billing</div></div>
+        <div class="card"><div class="metric-label">Pernah Dipakai</div><div class="metric-value" id="mProcUsed">10</div><div class="metric-note">Terkunci histori</div></div>
+        <div class="card"><div class="metric-label">Tanpa Pemetaan KPTL</div><div class="metric-value" id="mProcNoKptl">3</div><div class="metric-note">Perlu review koder</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Katalog Kode Tindakan</h2>
+          <span class="muted small">Klik Detail untuk memeriksa pemetaan KPTL</span>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <input type="text" id="cariProc" class="field" placeholder="Cari kode atau nama tindakan" oninput="renderProcs()" style="min-width:240px;">
+          <select id="filterProcCat" class="field" onchange="renderProcs()">
+            <option value="">Semua Kategori</option>
+            <option>Radiologi</option>
+            <option>Laboratorium</option>
+            <option>Tindakan Medis</option>
+            <option>Keperawatan</option>
+            <option>Farmasi</option>
+            <option>Bedah</option>
+          </select>
+          <select id="filterProcVal" class="field" onchange="renderProcs()">
+            <option value="">Semua Status</option>
+            <option value="verified">Terverifikasi [V]</option>
+            <option value="draft">Menunggu review</option>
+            <option value="nokptl">Tanpa KPTL</option>
+          </select>
+          <select id="filterProcUse" class="field" onchange="renderProcs()">
+            <option value="">Semua Pemakaian</option>
+            <option value="used">Pernah dipakai</option>
+            <option value="unused">Belum dipakai</option>
+          </select>
+          <button class="btn" onclick="resetFilterProc()">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:95px;">Kode</th>
+                <th>Nama Tindakan</th>
+                <th style="width:120px;">Kategori</th>
+                <th style="width:100px;">KPTL</th>
+                <th style="width:95px;">Validasi</th>
+                <th style="width:105px;">Dipakai</th>
+                <th style="width:115px;">Tarif Terkait</th>
+                <th style="width:85px;text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="procBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          <b>Kunci katalog:</b> <span class="code-chip">system</span> + <span class="code-chip">code</span> +
+          <span class="code-chip">version</span>. Kode tanpa pemetaan KPTL tetap dapat dipakai internal, tetapi tidak
+          dapat dikirim pada klaim yang mewajibkan KPTL.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DETAIL -->
+    <div class="tab-pane" id="tab-detail">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">
+            <h2>Detail Kode Tindakan</h2>
+            <span class="status dark" id="detailProcBadge">Pilih kode</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cari &amp; pilih kode</label>
+            <select id="detailProcSelect" class="field" onchange="renderProcDetail()"></select>
+          </div>
+
+          <div id="detailProcBody"></div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Definisi tindakan mengikuti ICD-9-CM Volume 3. Pemetaan KPTL tidak boleh mengubah makna klinis kode asal.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Pemetaan KPTL &amp; Tarif</h2><span class="muted small">[V] wajib</span></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Atribut</th><th>Nilai</th><th style="width:110px;">Status</th></tr></thead>
+              <tbody id="mapProcBody"></tbody>
+            </table>
+          </div>
+
+          <div class="rule-row" style="margin-top:10px;">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Satu kode, satu pemetaan KPTL aktif.</b><div class="small muted">Masa berlaku pemetaan disimpan dengan tanggal mulai dan berakhir.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Tarif diambil dari katalog layanan.</b><div class="small muted">Terminologi tidak menyimpan harga. Perubahan tarif tidak mengubah kode tindakan.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-warn">!</span>
+            <div><b>Kode tanpa KPTL tidak untuk klaim.</b><div class="small muted">Service transaction tetap tercatat, tetapi status klaim ditandai belum lengkap.</div></div>
+          </div>
+
+          <div class="detail-box" style="margin-top:12px;">
+            <div class="metric-label">Pratinjau Snapshot Service Transaction</div>
+            <div id="snapshotProcBody" class="small" style="margin-top:6px;line-height:1.75;">Pilih kode untuk melihat contoh snapshot.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SERVICE TRANSACTION -->
+    <div class="tab-pane" id="tab-penggunaan">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Penggunaan pada Service Transaction</h2><span class="status dark">Snapshot</span></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th style="width:110px;">Transaksi</th><th>Pasien</th><th style="width:80px;">Kode</th><th>Tindakan Saat Dicatat</th><th style="width:110px;text-align:right;">Tarif</th><th style="width:95px;">Klaim</th></tr>
+              </thead>
+              <tbody id="svcBody"></tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Service transaction menyimpan snapshot kode, nama tindakan, dan tarif saat layanan diberikan. Perubahan
+            katalog tidak mengubah transaksi yang sudah terbit.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Distribusi Tindakan</h2><span class="muted small">Contoh 30 hari</span></div>
+          <div id="procDistBody"></div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Kontrol Pemakaian</div>
+            <div class="sum-line"><span>Kode dipakai transaksi</span><span id="procUsageUsed">10</span></div>
+            <div class="sum-line"><span>Kode belum pernah dipakai</span><span id="procUsageUnused">10</span></div>
+            <div class="sum-line"><span>Kode tanpa KPTL</span><span id="procUsageNoKptl">3</span></div>
+            <div class="sum-line"><span>Transaksi klaim belum lengkap</span><span id="procUsageRisk">1</span></div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Kode yang sudah dipakai tidak dapat dihapus. Bila pemetaan KPTL berubah, transaksi lama tetap memakai
+            pemetaan saat transaksi dan transaksi baru memakai pemetaan yang berlaku.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: VERSI -->
+    <div class="tab-pane" id="tab-versi">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Versi &amp; Sumber Kode</h2><span class="muted small">Append-only</span></div>
+          <div id="procVersionList"></div>
+
+          <div class="note-band" style="margin-top:12px;">
+            KPTL dan ICD-9-CM diperlakukan sebagai dua sistem terpisah yang dipetakan. Jangan mencampur kode dari
+            versi berbeda dalam satu transaksi tanpa catatan versi.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Validasi &amp; Kelengkapan</h2><span class="status dark">Kontrol</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Format kode sesuai pola ICD-9-CM.</b><div class="small muted">Dua digit kategori, titik, lalu subkategori bila ada.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Nama tindakan wajib ada.</b><div class="small muted">Judul asli disimpan; istilah Indonesia bersifat tambahan.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok" id="markKptl">OK</span>
+            <div><b>Pemetaan KPTL wajib untuk klaim.</b><div class="small muted">Kode tanpa pemetaan atau belum [V] ditandai pada transaksi.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode terpakai tidak dapat dihapus.</b><div class="small muted">Gunakan nonaktif agar transaksi historis tetap valid.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode tidak menyimpan tarif.</b><div class="small muted">Tarif berada di <span class="code-chip">service_prices</span> dan disalin sebagai snapshot saat transaksi.</div></div>
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Ringkasan Validasi</div>
+            <div class="sum-line"><span>Total kode contoh</span><span id="procValTotal">20</span></div>
+            <div class="sum-line"><span>Terverifikasi [V]</span><span id="procValVerified">13</span></div>
+            <div class="sum-line"><span>Menunggu review</span><span id="procValDraft">7</span></div>
+            <div class="sum-line"><span>Tanpa pemetaan KPTL</span><span id="procValNoKptl">3</span></div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            <b>Catatan implementasi:</b> katalog KPTL lengkap harus diimpor dari sumber resmi dan diverifikasi koder.
+            Halaman ini memuat contoh terbatas untuk wireframe.
+          </div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title"><h2>Cakupan Kategori Tindakan</h2><span class="muted small">Kode contoh per kategori</span></div>
+        <div class="grid grid-2" id="procCatCoverage"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var TODAY = "2026-11-17";
+
+var procs = [
+  { code: "87.44", title: "Routine chest x-ray", indo: "Foto toraks rutin", cat: "Radiologi", kptl: "87.44", verified: true, used: 8, version: "ICD-9-CM", active: true, note: "Foto toraks PA/AP standar" },
+  { code: "87.03", title: "Computerized axial tomography of head", indo: "CT scan kepala", cat: "Radiologi", kptl: "87.03", verified: true, used: 2, version: "ICD-9-CM", active: true, note: "CT kepala tanpa kontras" },
+  { code: "88.01", title: "Computerized axial tomography of abdomen", indo: "CT scan abdomen", cat: "Radiologi", kptl: "88.01", verified: false, used: 0, version: "ICD-9-CM", active: true, note: "Perlu verifikasi KPTL" },
+  { code: "88.72", title: "Diagnostic ultrasound of heart", indo: "Ekokardiografi", cat: "Radiologi", kptl: "88.72", verified: true, used: 3, version: "ICD-9-CM", active: true, note: "USG jantung" },
+  { code: "89.52", title: "Electrocardiogram", indo: "Elektrokardiografi (EKG)", cat: "Tindakan Medis", kptl: "89.52", verified: true, used: 11, version: "ICD-9-CM", active: true, note: "EKG 12 sadapan" },
+  { code: "90.59", title: "Other microscopic examination of blood", indo: "Pemeriksaan mikroskopik darah", cat: "Laboratorium", kptl: "90.59", verified: true, used: 14, version: "ICD-9-CM", active: true, note: "Sediaan apus darah" },
+  { code: "90.5", title: "Microscopic examination of blood", indo: "Pemeriksaan darah mikroskopik", cat: "Laboratorium", kptl: "", verified: false, used: 0, version: "ICD-9-CM", active: true, note: "Kode induk, gunakan subkode spesifik" },
+  { code: "93.94", title: "Respiratory medication administered by nebulizer", indo: "Nebulisasi", cat: "Tindakan Medis", kptl: "93.94", verified: true, used: 9, version: "ICD-9-CM", active: true, note: "Inhalasi obat via nebulizer" },
+  { code: "93.96", title: "Other oxygen enrichment", indo: "Terapi oksigen", cat: "Keperawatan", kptl: "93.96", verified: true, used: 5, version: "ICD-9-CM", active: true, note: "Suplementasi oksigen" },
+  { code: "99.04", title: "Transfusion of packed cells", indo: "Transfusi packed red cells", cat: "Tindakan Medis", kptl: "99.04", verified: true, used: 1, version: "ICD-9-CM", active: true, note: "Transfusi PRC" },
+  { code: "99.21", title: "Injection of antibiotic", indo: "Injeksi antibiotik", cat: "Farmasi", kptl: "99.21", verified: true, used: 12, version: "ICD-9-CM", active: true, note: "Pemberian antibiotik injeksi" },
+  { code: "99.29", title: "Injection of other therapeutic or prophylactic substance", indo: "Injeksi zat terapeutik lain", cat: "Farmasi", kptl: "99.29", verified: false, used: 0, version: "ICD-9-CM", active: true, note: "Perlu spesifikasi zat" },
+  { code: "86.22", title: "Excisional debridement", indo: "Debridement eksisional", cat: "Bedah", kptl: "86.22", verified: true, used: 2, version: "ICD-9-CM", active: true, note: "Debridement luka" },
+  { code: "86.59", title: "Closure of skin and subcutaneous tissue of other sites", indo: "Penjahitan luka", cat: "Bedah", kptl: "86.59", verified: true, used: 6, version: "ICD-9-CM", active: true, note: "Sutura luka kulit" },
+  { code: "85.21", title: "Local excision of lesion of breast", indo: "Eksisi lokal lesi payudara", cat: "Bedah", kptl: "", verified: false, used: 0, version: "ICD-9-CM", active: true, note: "Rujuk ke fasilitas bedah" },
+  { code: "23.19", title: "Other surgical extraction of tooth", indo: "Ekstraksi gigi bedah", cat: "Bedah", kptl: "23.19", verified: true, used: 4, version: "ICD-9-CM", active: true, note: "Odontectomy sederhana" },
+  { code: "96.71", title: "Continuous invasive mechanical ventilation less than 96 hours", indo: "Ventilasi mekanik invasif < 96 jam", cat: "Keperawatan", kptl: "96.71", verified: false, used: 0, version: "ICD-9-CM", active: true, note: "ICU/ruang intensif" },
+  { code: "47.09", title: "Other appendectomy", indo: "Apendektomi", cat: "Bedah", kptl: "", verified: false, used: 0, version: "ICD-9-CM", active: false, note: "Tidak tersedia di fasilitas" },
+  { code: "89.65", title: "Other nonoperative respiratory measurements", indo: "Pengukuran fungsi paru", cat: "Tindakan Medis", kptl: "89.65", verified: false, used: 0, version: "ICD-9-CM", active: true, note: "Spirometri sederhana" },
+  { code: "93.57", title: "Application of other cast", indo: "Pemasangan gips", cat: "Tindakan Medis", kptl: "93.57", verified: true, used: 2, version: "ICD-9-CM", active: true, note: "Gips ekstremitas" }
+];
+
+var serviceTx = [
+  { tx: "SVC-2026-2081", patient: "Tn. Bagus Pratama", code: "89.52", title: "Electrocardiogram", tariff: 95000, claim: "Lengkap" },
+  { tx: "SVC-2026-2080", patient: "Ny. Siti Aminah", code: "90.59", title: "Other microscopic examination of blood", tariff: 120000, claim: "Lengkap" },
+  { tx: "SVC-2026-2079", patient: "An. Raka Wijaya", code: "93.94", title: "Respiratory medication administered by nebulizer", tariff: 85000, claim: "Lengkap" },
+  { tx: "SVC-2026-2078", patient: "Tn. Hendra Saputra", code: "93.57", title: "Application of other cast", tariff: 210000, claim: "Lengkap" },
+  { tx: "SVC-2026-2077", patient: "Ny. Rina Marlina", code: "99.21", title: "Injection of antibiotic", tariff: 65000, claim: "Lengkap" },
+  { tx: "SVC-2026-2076", patient: "An. Nadia Putri", code: "87.44", title: "Routine chest x-ray", tariff: 175000, claim: "Lengkap" },
+  { tx: "SVC-2026-2075", patient: "Tn. Joko Susilo", code: "86.59", title: "Closure of skin and subcutaneous tissue of other sites", tariff: 250000, claim: "Lengkap" },
+  { tx: "SVC-2026-2074", patient: "Ny. Dewi Lestari", code: "88.72", title: "Diagnostic ultrasound of heart", tariff: 320000, claim: "Lengkap" },
+  { tx: "SVC-2026-2073", patient: "Tn. Agus Salim", code: "90.5", title: "Microscopic examination of blood", tariff: 45000, claim: "Belum lengkap" },
+  { tx: "SVC-2026-2072", patient: "An. Bunga Pertiwi", code: "23.19", title: "Other surgical extraction of tooth", tariff: 450000, claim: "Lengkap" }
+];
+
+var procVersions = [
+  { version: "KPTL 2026", source: "Katalog KPTL Kemenkes", codes: 1800, imported: "01 Feb 2026", status: "Aktif", note: "Pemetaan utama untuk klaim" },
+  { version: "ICD-9-CM Vol. 3", source: "WHO / CMS ICD-9-CM", codes: 3900, imported: "10 Jan 2026", status: "Aktif", note: "Referensi kode tindakan" },
+  { version: "KPTL 2024", source: "Katalog KPTL Kemenkes", codes: 1750, imported: "10 Jan 2026", status: "Arsip", note: "Membaca transaksi lama" }
+];
+
+var selectedProc = "93.94";
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  if (tabId === "tab-detail") renderProcDetail();
+  if (tabId === "tab-penggunaan") { renderServiceTx(); renderProcDistribution(); }
+  if (tabId === "tab-versi") { renderProcVersions(); renderProcCoverage(); updateProcValidation(); }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function formatRupiah(n) {
+  return "Rp " + Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+}
+
+function verifiedTag(ok) {
+  return ok ? '<span class="v-tag">[V]</span>' : '<span class="draft-tag">Review</span>';
+}
+
+function catTag(cat) {
+  var cls = cat === "Radiologi" ? "cat-rad" : (cat === "Laboratorium" ? "cat-lab" : (cat === "Farmasi" ? "cat-farm" : "cat-tind"));
+  return '<span class="cat-tag ' + cls + '">' + escapeHtml(cat) + "</span>";
+}
+
+function renderProcs() {
+  var q = (document.getElementById("cariProc").value || "").toLowerCase();
+  var cat = document.getElementById("filterProcCat").value;
+  var val = document.getElementById("filterProcVal").value;
+  var use = document.getElementById("filterProcUse").value;
+  var tbody = document.getElementById("procBody");
+  tbody.innerHTML = "";
+
+  var shown = procs.filter(function (p) {
+    if (q && p.code.toLowerCase().indexOf(q) === -1 && p.title.toLowerCase().indexOf(q) === -1 && (p.indo || "").toLowerCase().indexOf(q) === -1) return false;
+    if (cat && p.cat !== cat) return false;
+    if (val === "verified" && !p.verified) return false;
+    if (val === "draft" && p.verified) return false;
+    if (val === "nokptl" && p.kptl) return false;
+    if (use === "used" && p.used <= 0) return false;
+    if (use === "unused" && p.used > 0) return false;
+    return true;
+  });
+
+  shown.forEach(function (p) {
+    var tr = document.createElement("tr");
+    if (!p.active) tr.className = "inactive-row";
+    tr.innerHTML = "<td><span class='proc-code'>" + escapeHtml(p.code) + "</span></td>"
+      + '<td><span class="proc-name"><b>' + escapeHtml(p.title) + "</b></span>"
+      + (p.indo ? '<div class="small muted">' + escapeHtml(p.indo) + "</div>" : '<div class="small muted">Belum ada istilah Indonesia</div>')
+      + "</td>"
+      + "<td>" + catTag(p.cat) + "</td>"
+      + '<td>' + (p.kptl ? '<span class="code-chip">' + escapeHtml(p.kptl) + "</span>" : '<span class="muted small">belum</span>') + "</td>"
+      + "<td>" + verifiedTag(p.verified) + "</td>"
+      + "<td>" + (p.used > 0 ? p.used + " tx" : '<span class="muted small">Belum</span>') + "</td>"
+      + '<td class="small muted">' + (p.used > 0 ? "Lihat transaksi" : "&mdash;") + "</td>"
+      + '<td style="text-align:right;"><button type="button" class="btn" style="padding:2px 8px;font-size:11px;" onclick="openProcDetail(\'' + p.code + '\')">Detail</button></td>';
+    tbody.appendChild(tr);
+  });
+
+  if (shown.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:18px;">Tidak ada kode pada filter ini.</td></tr>';
+  }
+
+  updateProcListMetrics(shown);
+}
+
+function updateProcListMetrics(shown) {
+  var verified = procs.filter(function (p) { return p.verified; }).length;
+  var used = procs.filter(function (p) { return p.used > 0; }).length;
+  var noKptl = procs.filter(function (p) { return !p.kptl; }).length;
+  var cats = [];
+  procs.forEach(function (p) { if (cats.indexOf(p.cat) === -1) cats.push(p.cat); });
+
+  document.getElementById("mProcShown").textContent = shown.length;
+  document.getElementById("mProcVerified").textContent = verified;
+  document.getElementById("mProcUsed").textContent = used;
+  document.getElementById("mProcNoKptl").textContent = noKptl;
+  document.getElementById("segProc").textContent = procs.length;
+  document.getElementById("segProcVerified").textContent = verified;
+  document.getElementById("segProcDraft").textContent = procs.length - verified;
+  document.getElementById("segProcCat").textContent = cats.length;
+  document.getElementById("profileProcCount").textContent = procs.length + " kode contoh";
+}
+
+function resetFilterProc() {
+  document.getElementById("cariProc").value = "";
+  document.getElementById("filterProcCat").value = "";
+  document.getElementById("filterProcVal").value = "";
+  document.getElementById("filterProcUse").value = "";
+  renderProcs();
+}
+
+function fillProcSelect() {
+  var sel = document.getElementById("detailProcSelect");
+  sel.innerHTML = procs.map(function (p) {
+    return '<option value="' + p.code + '">' + p.code + " &middot; " + escapeHtml(p.title) + "</option>";
+  }).join("");
+  sel.value = selectedProc;
+}
+
+function openDetailByInput() {
+  switchTab("tab-detail");
+  renderProcDetail();
+}
+
+function openProcDetail(code) {
+  selectedProc = code;
+  document.getElementById("detailProcSelect").value = code;
+  switchTab("tab-detail");
+  renderProcDetail();
+}
+
+function renderProcDetail() {
+  var code = document.getElementById("detailProcSelect").value;
+  if (!code) return;
+  selectedProc = code;
+  var p = procs.filter(function (x) { return x.code === code; })[0];
+  if (!p) return;
+
+  var badge = document.getElementById("detailProcBadge");
+  badge.textContent = p.kptl ? (p.verified ? "Terverifikasi [V]" : "Menunggu review") : "Tanpa KPTL";
+  badge.className = "status " + (p.verified ? "dark" : "");
+
+  var body = document.getElementById("detailProcBody");
+  body.innerHTML = '<div class="detail-box">'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">'
+    + "<div><h3>" + escapeHtml(p.code) + " &mdash; " + escapeHtml(p.title) + "</h3>"
+    + '<p>' + (p.indo ? escapeHtml(p.indo) : "Istilah Indonesia belum tersedia.") + "</p></div>"
+    + verifiedTag(p.verified) + "</div>"
+    + '<div class="sum-line"><span>Kategori</span><span>' + escapeHtml(p.cat) + "</span></div>"
+    + '<div class="sum-line"><span>Sistem asal</span><span>' + escapeHtml(p.version) + "</span></div>"
+    + '<div class="sum-line"><span>KPTL</span><span>' + (p.kptl ? '<span class="code-chip">' + escapeHtml(p.kptl) + "</span>" : "Belum dipetakan") + "</span></div>"
+    + '<div class="sum-line"><span>Status</span><span>' + (p.active ? "Aktif" : "Nonaktif") + "</span></div>"
+    + '<div class="sum-line"><span>Pemakaian</span><span>' + (p.used > 0 ? p.used + " transaksi" : "Belum pernah dipakai") + "</span></div>"
+    + "</div>";
+
+  body.innerHTML += '<div class="detail-box" style="margin-top:10px;"><b style="font-size:12px;">Catatan Tindakan</b>'
+    + '<ul class="term-list"><li>' + escapeHtml(p.note) + "</li></ul></div>";
+
+  var rows = [
+    ["Sistem", "KPTL"],
+    ["Kode KPTL", p.kptl || "Belum dipetakan"],
+    ["Kode ICD-9-CM", p.code],
+    ["Versi", p.version],
+    ["Kategori", p.cat],
+    ["Status validasi", p.verified ? "Terverifikasi [V]" : "Menunggu review koder"],
+    ["Dipakai transaksi", p.used > 0 ? p.used + " transaksi" : "Belum"],
+    ["Kesiapan klaim", p.kptl && p.verified ? "Siap" : "Belum lengkap"]
+  ];
+  document.getElementById("mapProcBody").innerHTML = rows.map(function (r) {
+    var status = r[0] === "Status validasi"
+      ? (p.verified ? '<span class="status dark">OK</span>' : '<span class="status">Review</span>')
+      : (r[0] === "Kesiapan klaim"
+        ? (p.kptl && p.verified ? '<span class="status dark">Siap</span>' : '<span class="status">Tertunda</span>')
+        : '<span class="muted small">&mdash;</span>');
+    return "<tr><td><b>" + escapeHtml(r[0]) + "</b></td><td>" + escapeHtml(r[1]) + "</td><td>" + status + "</td></tr>";
+  }).join("");
+
+  document.getElementById("snapshotProcBody").innerHTML =
+    "<div><b>service.coding.code</b> = <span class='code-chip'>" + escapeHtml(p.kptl || p.code) + "</span></div>"
+    + "<div><b>service.coding.display</b> = " + escapeHtml(p.title) + "</div>"
+    + "<div><b>icd9_code</b> = " + escapeHtml(p.code) + "</div>"
+    + "<div><b>tariff_snapshot</b> = diambil dari katalog tarif saat transaksi</div>"
+    + "<div><b>snapshot_at</b> = 2026-11-17T09:20:00+07:00</div>"
+    + '<div class="small muted" style="margin-top:6px;">Snapshot menyimpan pemetaan yang berlaku saat transaksi, sehingga perubahan KPTL tidak mengubah klaim lama.</div>';
+}
+
+function renderServiceTx() {
+  var tbody = document.getElementById("svcBody");
+  tbody.innerHTML = "";
+  serviceTx.forEach(function (s) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + escapeHtml(s.tx) + "</b></td>"
+      + "<td>" + escapeHtml(s.patient) + "</td>"
+      + '<td><span class="proc-code">' + escapeHtml(s.code) + "</span></td>"
+      + "<td>" + escapeHtml(s.title) + "</td>"
+      + '<td style="text-align:right;font-weight:600;">' + formatRupiah(s.tariff) + "</td>"
+      + '<td><span class="status ' + (s.claim === "Lengkap" ? "dark" : "") + '">' + escapeHtml(s.claim) + "</span></td>";
+    tbody.appendChild(tr);
+  });
+
+  var used = procs.filter(function (p) { return p.used > 0; }).length;
+  var noKptl = procs.filter(function (p) { return !p.kptl; }).length;
+  document.getElementById("procUsageUsed").textContent = used;
+  document.getElementById("procUsageUnused").textContent = procs.length - used;
+  document.getElementById("procUsageNoKptl").textContent = noKptl;
+  document.getElementById("procUsageRisk").textContent = serviceTx.filter(function (s) { return s.claim !== "Lengkap"; }).length;
+}
+
+function renderProcDistribution() {
+  var wrap = document.getElementById("procDistBody");
+  var sorted = procs.filter(function (p) { return p.used > 0; }).slice().sort(function (a, b) { return b.used - a.used; });
+  var max = sorted.length ? sorted[0].used : 1;
+  wrap.innerHTML = sorted.map(function (p) {
+    var pct = Math.round(p.used / max * 100);
+    return '<div class="chapter-bar"><span style="width:74px;"><span class="proc-code">' + escapeHtml(p.code) + "</span></span>"
+      + '<span class="bar-bg"><span class="bar-fill" style="width:' + pct + '%;"></span></span>'
+      + '<span class="bar-label">' + p.used + "x</span></div>";
+  }).join("");
+}
+
+function renderProcVersions() {
+  var wrap = document.getElementById("procVersionList");
+  wrap.innerHTML = procVersions.map(function (v) {
+    var status = v.status === "Aktif" ? '<span class="status dark">Aktif</span>' : '<span class="status">Arsip</span>';
+    return '<div class="ver-row"><div class="ver-name"><b>' + escapeHtml(v.version) + "</b>"
+      + '<div class="small muted">' + escapeHtml(v.source) + " &middot; " + v.codes.toLocaleString("id-ID") + " kode</div>"
+      + '<div class="small muted">Impor ' + escapeHtml(v.imported) + " &middot; " + escapeHtml(v.note) + "</div></div>"
+      + status + "</div>";
+  }).join("");
+}
+
+function renderProcCoverage() {
+  var wrap = document.getElementById("procCatCoverage");
+  var counts = {};
+  procs.forEach(function (p) { counts[p.cat] = (counts[p.cat] || 0) + 1; });
+  var keys = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+  var max = 1;
+  keys.forEach(function (k) { if (counts[k] > max) max = counts[k]; });
+  wrap.innerHTML = keys.map(function (k) {
+    var pct = Math.round(counts[k] / max * 100);
+    return '<div class="chapter-bar"><span style="width:96px;">' + escapeHtml(k) + "</span>"
+      + '<span class="bar-bg"><span class="bar-fill" style="width:' + pct + '%;"></span></span>'
+      + '<span class="bar-label">' + counts[k] + " kode</span></div>";
+  }).join("");
+}
+
+function updateProcValidation() {
+  var verified = procs.filter(function (p) { return p.verified; }).length;
+  var noKptl = procs.filter(function (p) { return !p.kptl; }).length;
+  document.getElementById("procValTotal").textContent = procs.length;
+  document.getElementById("procValVerified").textContent = verified;
+  document.getElementById("procValDraft").textContent = procs.length - verified;
+  document.getElementById("procValNoKptl").textContent = noKptl;
+
+  var mark = document.getElementById("markKptl");
+  if (noKptl > 0) {
+    mark.textContent = "!";
+    mark.className = "rule-mark rule-warn";
+  } else {
+    mark.textContent = "OK";
+    mark.className = "rule-mark rule-ok";
+  }
+}
+
+fillProcSelect();
+renderProcs();
+renderProcDetail();
+renderServiceTx();
+renderProcDistribution();
+renderProcVersions();
+renderProcCoverage();
+updateProcValidation();
+</script>
+</body>
+</html>

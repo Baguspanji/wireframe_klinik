@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Data Obat - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.segment-card {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  font-size: 11px;
+}
+.segment-card b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+.gol-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 1px 6px;
+  border: 1px solid #dde1e6;
+  background: #f1f2f4;
+  color: #444;
+}
+.gol-narkotika { background: #fde8e8; border-color: #f3c1c1; color: #9b1c1c; }
+.gol-psikotropika { background: #fff3d6; border-color: #f0d7a0; color: #8a5a00; }
+.gol-prekursor { background: #e8eefb; border-color: #c3d2f0; color: #2b4b8a; }
+
+tr.inactive-row td { color: #9aa0a6; }
+tr.inactive-row td .product-name { text-decoration: line-through; }
+
+.batch-expired { color: #9b1c1c; font-weight: bold; }
+.batch-near { color: #8a5a00; font-weight: bold; }
+.batch-ok { color: #276749; }
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+
+.fefo-out {
+  font-size: 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px;
+  background: #fafbfc;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MASTER DATA</div>
+  <div class="nav-group open" id="nav-master">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
+      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview Master</span></a>
+      <a class="nav-item nav-sub active" href="obat.html"><span>Data Obat</span></a>
+      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
+      <a class="nav-item nav-sub" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
+      <a class="nav-item nav-sub" href="tarif.html"><span>Tarif Layanan</span></a>
+      <a class="nav-item nav-sub" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
+      <a class="nav-item nav-sub" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Master Data <span style="margin:0 8px">/</span> Farmasi <span style="margin:0 8px">/</span> <b>Data Obat</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">A</span>
+      <span>Apoteker Penanggung Jawab</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Master Data</a> <span>/</span> Data Obat</div>
+        <h1>Master Data Obat &amp; Produk Farmasi</h1>
+        <p>Katalog produk, satuan, golongan khusus, pemetaan KFA, dan kebijakan batch. Batch fisik tetap berada di gudang melalui <span class="code-chip">inventory_batches</span>; Farmasi hanya merujuk.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Master</a>
+        <button class="btn primary" onclick="formBaru()">+ Obat Baru</button>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a5 5 0 0 0-7-7l-10 10a5 5 0 0 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+            <h2>Profil Katalog Produk</h2>
+          </div>
+          <span class="status dark" id="profileCount">12 produk</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Entitas:</b> PT Sehat Nusantara</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Sumber Katalog:</b> <span class="code-chip">medication_catalogs</span></div>
+          <div><b>Satuan:</b> <span class="code-chip">product_units</span></div>
+          <div><b>Kategori:</b> <span class="code-chip">product_categories</span></div>
+          <div><b>Versi KFA:</b> 2026.1 <span class="muted">(sinkron 12 Nov 2026)</span></div>
+          <div><b>Gudang Default:</b> GD-FARM-01</div>
+          <div><b>Kebijakan Keluar:</b> FEFO <span class="muted">(First Expired First Out)</span></div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;">
+          <div class="segment-card"><b id="segTotal">12</b>Total produk</div>
+          <div class="segment-card"><b id="segActive">11</b>Aktif</div>
+          <div class="segment-card"><b id="segControlled">3</b>Golongan khusus</div>
+          <div class="segment-card"><b id="segNoKfa">1</b>Belum ada KFA</div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Produk yang sudah dipakai resep, dispensing, atau pembelian tidak boleh dihapus. Nonaktifkan produk agar
+          referensi historis tetap valid. Kode produk tidak berubah setelah dipakai transaksi.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Perubahan Obat Terakhir</h2>
+          </div>
+          <span class="muted small">Audit Trail</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 10:22 WIB</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Aktif</span>
+          </div>
+          <div class="history-diag">Tambah produk Amoxicillin 500 mg (OB-0013)</div>
+          <div class="history-notes">Oleh Apoteker &middot; Kategori Antibiotik &middot; KFA 93001234 &middot; PPN BKP</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 09:40 WIB</span>
+            <span class="status dark">Diperbarui</span>
+          </div>
+          <div class="history-diag">Ubah kekuatan Codein 10 mg &rarr; Codein 15 mg</div>
+          <div class="history-notes">Oleh Apoteker &middot; Alasan: penyesuaian kemasan pemasok &middot; Golongan narkotika tetap</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>16 Nov 2026 &middot; 15:10 WIB</span>
+            <span class="status">Nonaktif</span>
+          </div>
+          <div class="history-diag">Nonaktifkan produk PCT-LAMA Paracetamol sirup 60 ml</div>
+          <div class="history-notes">Oleh Apoteker &middot; Alasan: produk tidak lagi dipasok &middot; Riwayat resep tetap tersimpan</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-daftar" onclick="switchTab('tab-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar Obat
+      </button>
+      <button class="exam-top-tab" data-tab="tab-form" onclick="switchTab('tab-form')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+        2. Tambah / Ubah Obat
+      </button>
+      <button class="exam-top-tab" data-tab="tab-batch" onclick="switchTab('tab-batch')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        3. Batch &amp; FEFO
+      </button>
+      <button class="exam-top-tab" data-tab="tab-kebijakan" onclick="switchTab('tab-kebijakan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        4. Klasifikasi &amp; Kebijakan
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR OBAT -->
+    <div class="tab-pane active" id="tab-daftar">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="card"><div class="metric-label">Total Produk</div><div class="metric-value" id="mTotal">12</div><div class="metric-note">Termasuk nonaktif</div></div>
+        <div class="card"><div class="metric-label">Produk Aktif</div><div class="metric-value" id="mActive">11</div><div class="metric-note">Dapat diresepkan</div></div>
+        <div class="card"><div class="metric-label">Golongan Khusus</div><div class="metric-value" id="mControlled">3</div><div class="metric-note">Narkotika, psikotropika, prekursor</div></div>
+        <div class="card"><div class="metric-label">Batch Mendekati ED</div><div class="metric-value" id="mNearExpiry">2</div><div class="metric-note">Kurang dari 90 hari</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Katalog Produk Obat</h2>
+          <span class="muted small">Klik Ubah untuk membuka form</span>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <input type="text" id="cariObat" class="field" placeholder="Cari kode, nama dagang, atau nama generik" oninput="renderProducts()" style="min-width:240px;">
+          <select id="filterKategori" class="field" onchange="renderProducts()">
+            <option value="">Semua Kategori</option>
+            <option>Antibiotik</option>
+            <option>Analgesik</option>
+            <option>Vitamin</option>
+            <option>Psikotropika</option>
+            <option>Dekongestan</option>
+            <option>Bronkodilator</option>
+            <option>Cairan Infus</option>
+            <option>Antijamur</option>
+            <option>PPI</option>
+            <option>Anestesi Lokal</option>
+          </select>
+          <select id="filterGolongan" class="field" onchange="renderProducts()">
+            <option value="">Semua Golongan</option>
+            <option>Biasa</option>
+            <option>Narkotika</option>
+            <option>Psikotropika</option>
+            <option>Prekursor</option>
+          </select>
+          <select id="filterStatus" class="field" onchange="renderProducts()">
+            <option value="">Semua Status</option>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+          <button class="btn" onclick="resetFilterObat()">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:90px;">Kode</th>
+                <th>Nama Produk</th>
+                <th style="width:90px;">Kekuatan</th>
+                <th style="width:110px;">Bentuk Sediaan</th>
+                <th style="width:90px;">Satuan</th>
+                <th style="width:120px;">Kategori</th>
+                <th style="width:120px;">Golongan</th>
+                <th style="width:100px;">KFA</th>
+                <th style="width:90px;">Status</th>
+                <th style="width:110px;text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="productBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          <b>Aturan katalog:</b> satu produk = satu kombinasi nama, kekuatan, dan bentuk sediaan. Satuan dasar dipakai
+          untuk stok dan resep; satuan pembelian dikonversi melalui <span class="code-chip">product_uom_conversions</span>.
+          Produk golongan khusus wajib memiliki register dan mengikuti surat pesanan khusus.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: FORM -->
+    <div class="tab-pane" id="tab-form">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Form Produk Obat</h2><span class="status dark" id="formMode">Produk Baru</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Kode Produk <span class="req">*</span></label>
+              <input type="text" id="obatKode" class="field" placeholder="OB-0013" maxlength="12">
+              <p class="small muted" style="margin-top:4px;">Unik, tidak berubah setelah dipakai transaksi.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Dagang <span class="req">*</span></label>
+              <input type="text" id="obatNama" class="field" placeholder="Contoh: Amoxicillin 500 mg">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Generik</label>
+              <input type="text" id="obatGenerik" class="field" placeholder="Contoh: Amoxicillin">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kekuatan / Konsentrasi</label>
+              <input type="text" id="obatKekuatan" class="field" placeholder="500 mg / 2% / 100 mcg">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bentuk Sediaan <span class="req">*</span></label>
+              <select id="obatBentuk" class="field">
+                <option>Tablet</option>
+                <option>Kapsul</option>
+                <option>Sirup</option>
+                <option>Injeksi</option>
+                <option>Krim</option>
+                <option>Salep</option>
+                <option>Inhaler</option>
+                <option>Cairan Infus</option>
+                <option>Tetes Mata</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Satuan Dasar <span class="req">*</span></label>
+              <select id="obatSatuan" class="field">
+                <option>Tablet</option>
+                <option>Kapsul</option>
+                <option>Botol</option>
+                <option>Ampul</option>
+                <option>Tube</option>
+                <option>Inhaler</option>
+                <option>Bag</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori Produk <span class="req">*</span></label>
+              <select id="obatKategori" class="field">
+                <option>Antibiotik</option>
+                <option>Analgesik</option>
+                <option>Vitamin</option>
+                <option>Psikotropika</option>
+                <option>Dekongestan</option>
+                <option>Bronkodilator</option>
+                <option>Cairan Infus</option>
+                <option>Antijamur</option>
+                <option>PPI</option>
+                <option>Anestesi Lokal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Golongan <span class="req">*</span></label>
+              <select id="obatGolongan" class="field" onchange="syncGolongan()">
+                <option value="Biasa">Biasa / OTC</option>
+                <option value="Narkotika">Narkotika</option>
+                <option value="Psikotropika">Psikotropika</option>
+                <option value="Prekursor">Prekursor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Produsen / Pemasok Utama</label>
+              <input type="text" id="obatProdusen" class="field" placeholder="Contoh: PT Kimia Farma">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kode KFA (SATUSEHAT)</label>
+              <input type="text" id="obatKfa" class="field" placeholder="Diisi bila tersedia">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kode Pajak</label>
+              <select id="obatPajak" class="field">
+                <option value="PPN_BKP">PPN_BKP (barang kena pajak)</option>
+                <option value="NON_BKP">NON_BKP</option>
+                <option value="PPN_DIBEBASKAN">PPN_DIBEBASKAN</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Dari</label>
+              <input type="date" id="obatEfektif" class="field" value="2026-11-17">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="obatStatus" class="field">
+                <option value="aktif">Aktif</option>
+                <option value="nonaktif">Nonaktif</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Catatan / Alasan Perubahan <span class="req">*</span></label>
+            <textarea id="obatCatatan" class="field" rows="2" placeholder="Wajib diisi untuk audit trail perubahan master"></textarea>
+          </div>
+
+          <div id="obatError" class="alert info" style="display:none;margin-bottom:10px;"></div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button type="button" class="btn" onclick="formBaru()">Bersihkan Form</button>
+            <button type="button" class="btn primary" onclick="simpanObat()">Simpan Produk</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Validasi &amp; Batasan</h2><span class="status dark">Kontrol Master</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode produk unik dan tidak berubah.</b><div class="small muted">Kode dipakai pada resep, dispensing, pembelian, dan billing.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Nama, bentuk sediaan, satuan, dan kategori wajib.</b><div class="small muted">Produk tanpa satuan dasar tidak dapat dipakai pada transaksi stok.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Golongan khusus wajib register.</b><div class="small muted">Narkotika, psikotropika, dan prekursor memerlukan register mutasi, penyimpanan terkunci, dan pelaporan SIPNAP.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode pajak wajib dipilih.</b><div class="small muted">Obat umumnya BKP; jasa medis dibebaskan. Perubahan kode pajak tidak mengubah invoice lama.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Batch tidak disimpan di master produk.</b><div class="small muted">Batch, tanggal kedaluwarsa, dan biaya berada di <span class="code-chip">inventory_batches</span> pada gudang.</div></div>
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Pratinjau Produk</div>
+            <div class="metric-value" id="obatPreview" style="font-size:17px;">Belum ada produk</div>
+            <p class="small muted" id="obatPreviewNote" style="margin-top:4px;">Isi form untuk melihat ringkasan produk yang akan disimpan.</p>
+            <div id="obatRegisterNote" class="note-band" style="display:none;margin-top:10px;">
+              <b>Produk golongan khusus:</b> wajib register mutasi, surat pesanan khusus, dan pelaporan SIPNAP. Pastikan
+              kewenangan peresepan sesuai regulasi sebelum mengaktifkan produk.
+            </div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            <b>KFA &amp; SATUSEHAT:</b> pemetaan KFA memakai <span class="code-chip">medication_catalogs</span> dan
+            <span class="code-chip">terminology_codes</span> sistem KFA. Produk tanpa KFA tetap dapat dipakai internal,
+            tetapi tidak dapat dikirim pada pertukaran data yang mewajibkan coding KFA.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: BATCH & FEFO -->
+    <div class="tab-pane" id="tab-batch">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Batch &amp; Kedaluwarsa</h2><span class="status dark">inventory_batches</span></div>
+
+          <div class="filters" style="margin-bottom:12px;">
+            <select id="filterBatchProduk" class="field" onchange="renderBatches()">
+              <option value="">Semua Produk</option>
+            </select>
+            <label class="small muted" style="display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" id="hanyaLayak" onchange="renderBatches()"> Hanya batch layak keluar
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:85px;">Batch</th>
+                  <th>Produk</th>
+                  <th style="width:105px;">Kedaluwarsa</th>
+                  <th style="width:90px;text-align:right;">Qty</th>
+                  <th style="width:95px;">Lokasi</th>
+                  <th style="width:130px;">Status ED</th>
+                </tr>
+              </thead>
+              <tbody id="batchBody"></tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Batch dengan tanggal kedaluwarsa lewat tidak boleh dipakai dispensing dan harus dikarantina. Sistem memilih
+            batch keluar secara FEFO: kedaluwarsa terdekat lebih dulu, dengan tetap memeriksa kualitas dan status karantina.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Simulasi FEFO</h2><span class="muted small">Alokasi batch keluar</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Produk</label>
+              <select id="fefoProduk" class="field" onchange="hitungFefo()"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jumlah Diminta</label>
+              <input type="number" id="fefoQty" class="field" value="200" min="1" oninput="hitungFefo()">
+            </div>
+          </div>
+
+          <div id="fefoHasil" class="fefo-out"></div>
+
+          <div id="fefoBox" class="balance-box balance-ok" style="margin-top:12px;">
+            <span>Status Alokasi:</span>
+            <span id="fefoStatus">CUKUP</span>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Alokasi FEFO hanya usulan. Dispensing tetap memerlukan verifikasi apoteker dan pencatatan
+            <span class="code-chip">pharmacy_dispense_items.batch_id</span> agar penelusuran batch dapat diaudit.
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Ringkasan Stok Layak</div>
+            <div class="sum-line"><span>Total batch layak</span><span id="fefoBatchLayak">0</span></div>
+            <div class="sum-line"><span>Total qty layak</span><span id="fefoTotalLayak">0</span></div>
+            <div class="sum-line"><span>Batch kedaluwarsa / karantina</span><span id="fefoBatchTidakLayak">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: KEBIIJAKAN -->
+    <div class="tab-pane" id="tab-kebijakan">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Pemetaan KFA</h2><span class="muted small">SATUSEHAT</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:90px;">Kode Produk</th><th>Produk</th><th style="width:120px;">Kode KFA</th><th style="width:110px;">Status</th></tr></thead>
+              <tbody id="kfaBody"></tbody>
+            </table>
+          </div>
+          <div class="note-band" style="margin-top:12px;">
+            Pemetaan KFA bersifat rujukan eksternal. Bila kode berubah, simpan versi lama sebagai snapshot pada dokumen
+            klinis; jangan menulis ulang riwayat.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Golongan Khusus &amp; Register</h2><span class="status dark">SIPNAP</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:120px;">Golongan</th><th>Kewajiban</th><th style="width:120px;">Register</th><th style="width:100px;">SIPNAP</th></tr></thead>
+              <tbody>
+                <tr><td><span class="gol-badge gol-narkotika">Narkotika</span></td><td>Surat pesanan khusus satu item per surat, lemari terkunci, register mutasi, berita acara pemusnahan</td><td><span class="status dark">Wajib</span></td><td><span class="status dark">Wajib</span></td></tr>
+                <tr><td><span class="gol-badge gol-psikotropika">Psikotropika</span></td><td>Surat pesanan khusus, penyimpanan terpisah, register mutasi, pelaporan berkala</td><td><span class="status dark">Wajib</span></td><td><span class="status dark">Wajib</span></td></tr>
+                <tr><td><span class="gol-badge gol-prekursor">Prekursor</span></td><td>Pencatatan pembelian dan penjualan, verifikasi pembeli, pelaporan sesuai ketentuan</td><td><span class="status dark">Wajib</span></td><td><span class="status dark">Wajib</span></td></tr>
+                <tr><td><span class="gol-badge">Biasa / OTC</span></td><td>Tidak memerlukan register khusus; tetap tercatat pada mutasi persediaan</td><td><span class="muted">Tidak</span></td><td><span class="muted">Tidak</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Kewajiban register dan pelaporan mengikuti regulasi yang berlaku dan harus diverifikasi sebelum produksi.
+            Modul ini menyediakan penanda kebijakan, bukan pengganti kepatuhan operasional apotek.
+          </div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title"><h2>Kebijakan Pajak &amp; Harga Obat</h2><span class="status dark">Ilustrasi</span></div>
+        <div class="grid grid-3">
+          <div class="segment-card"><b>PPN_BKP</b>Penyerahan obat oleh PKP umumnya barang kena pajak. Tarif pada wireframe 11% dan wajib dikonfigurasi ber-tanggal-berlaku.</div>
+          <div class="segment-card"><b>PPN_DIBEBASKAN</b>Jasa pelayanan kesehatan medis dibebaskan dari PPN (PP 49/2022). Tidak berlaku untuk penyerahan obat.</div>
+          <div class="segment-card"><b>NON_BKP</b>Dipakai untuk item yang secara kebijakan bukan objek PPN. Wajib dasar hukum dan persetujuan konsultan pajak.</div>
+        </div>
+        <div class="note-band" style="margin-top:12px;">
+          Tarif pajak tidak boleh dikunci di kode. Simpan sebagai konfigurasi ber-tanggal-berlaku dan petakan ke akun
+          <span class="code-chip">2200 Utang PPN</span> melalui <span class="code-chip">account_mapping_rules</span>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var TODAY = "2026-11-17";
+
+var products = [
+  { code: "OB-0001", name: "Amoxicillin 500 mg", generic: "Amoxicillin", strength: "500 mg", form: "Kapsul", unit: "Kapsul", category: "Antibiotik", group: "Biasa", kfa: "93000123", tax: "PPN_BKP", active: true },
+  { code: "OB-0002", name: "Paracetamol 500 mg", generic: "Paracetamol", strength: "500 mg", form: "Tablet", unit: "Tablet", category: "Analgesik", group: "Biasa", kfa: "93000456", tax: "PPN_BKP", active: true },
+  { code: "OB-0003", name: "Vitamin C 500 mg", generic: "Ascorbic Acid", strength: "500 mg", form: "Tablet", unit: "Tablet", category: "Vitamin", group: "Biasa", kfa: "93000789", tax: "PPN_BKP", active: true },
+  { code: "OB-0004", name: "Codein 15 mg", generic: "Codeine", strength: "15 mg", form: "Tablet", unit: "Tablet", category: "Analgesik", group: "Narkotika", kfa: "93001122", tax: "PPN_BKP", active: true },
+  { code: "OB-0005", name: "Diazepam 5 mg", generic: "Diazepam", strength: "5 mg", form: "Tablet", unit: "Tablet", category: "Psikotropika", group: "Psikotropika", kfa: "93001334", tax: "PPN_BKP", active: true },
+  { code: "OB-0006", name: "Pseudoephedrine 60 mg", generic: "Pseudoephedrine", strength: "60 mg", form: "Tablet", unit: "Tablet", category: "Dekongestan", group: "Prekursor", kfa: "93001456", tax: "PPN_BKP", active: true },
+  { code: "OB-0007", name: "Salbutamol Inhaler 100 mcg", generic: "Salbutamol", strength: "100 mcg", form: "Inhaler", unit: "Inhaler", category: "Bronkodilator", group: "Biasa", kfa: "93001789", tax: "PPN_BKP", active: true },
+  { code: "OB-0008", name: "NaCl 0,9% 500 ml", generic: "Sodium Chloride", strength: "0,9%", form: "Cairan Infus", unit: "Bag", category: "Cairan Infus", group: "Biasa", kfa: "93002011", tax: "PPN_BKP", active: true },
+  { code: "OB-0009", name: "Ketoconazole 2% Cream 10 g", generic: "Ketoconazole", strength: "2%", form: "Krim", unit: "Tube", category: "Antijamur", group: "Biasa", kfa: "93002233", tax: "PPN_BKP", active: true },
+  { code: "OB-0010", name: "Ibuprofen 400 mg", generic: "Ibuprofen", strength: "400 mg", form: "Tablet", unit: "Tablet", category: "Analgesik", group: "Biasa", kfa: "93002455", tax: "PPN_BKP", active: true },
+  { code: "OB-0011", name: "Omeprazole 20 mg", generic: "Omeprazole", strength: "20 mg", form: "Kapsul", unit: "Kapsul", category: "PPI", group: "Biasa", kfa: "93002677", tax: "PPN_BKP", active: true },
+  { code: "OB-0012", name: "Lidocaine 2% Injeksi 2 ml", generic: "Lidocaine", strength: "2%", form: "Injeksi", unit: "Ampul", category: "Anestesi Lokal", group: "Biasa", kfa: "", tax: "PPN_BKP", active: false }
+];
+
+var batches = [
+  { batch: "AMX2401", code: "OB-0001", product: "Amoxicillin 500 mg", exp: "2026-12-31", qty: 120, loc: "Rak A-01", quarantine: false },
+  { batch: "AMX2405", code: "OB-0001", product: "Amoxicillin 500 mg", exp: "2027-06-30", qty: 400, loc: "Rak A-01", quarantine: false },
+  { batch: "PCT2312", code: "OB-0002", product: "Paracetamol 500 mg", exp: "2026-11-30", qty: 80, loc: "Rak A-02", quarantine: false },
+  { batch: "PCT2404", code: "OB-0002", product: "Paracetamol 500 mg", exp: "2027-09-30", qty: 600, loc: "Rak A-02", quarantine: false },
+  { batch: "CDN2401", code: "OB-0004", product: "Codein 15 mg", exp: "2027-03-31", qty: 30, loc: "Lemari Narkotika", quarantine: false },
+  { batch: "DZP2402", code: "OB-0005", product: "Diazepam 5 mg", exp: "2027-01-31", qty: 45, loc: "Lemari Psikotropika", quarantine: false },
+  { batch: "SLB2311", code: "OB-0007", product: "Salbutamol Inhaler 100 mcg", exp: "2026-10-31", qty: 5, loc: "Rak B-01", quarantine: true },
+  { batch: "NAC2402", code: "OB-0008", product: "NaCl 0,9% 500 ml", exp: "2027-12-31", qty: 60, loc: "Rak C-01", quarantine: false },
+  { batch: "IBU2403", code: "OB-0010", product: "Ibuprofen 400 mg", exp: "2027-05-31", qty: 300, loc: "Rak A-03", quarantine: false },
+  { batch: "OMP2404", code: "OB-0011", product: "Omeprazole 20 mg", exp: "2027-08-31", qty: 240, loc: "Rak A-04", quarantine: false }
+];
+
+var editingCode = null;
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function golonganBadge(g) {
+  var cls = g === "Narkotika" ? "gol-narkotika" : (g === "Psikotropika" ? "gol-psikotropika" : (g === "Prekursor" ? "gol-prekursor" : ""));
+  return '<span class="gol-badge ' + cls + '">' + escapeHtml(g) + "</span>";
+}
+
+function renderProducts() {
+  var q = (document.getElementById("cariObat").value || "").toLowerCase();
+  var kategori = document.getElementById("filterKategori").value;
+  var golongan = document.getElementById("filterGolongan").value;
+  var status = document.getElementById("filterStatus").value;
+  var tbody = document.getElementById("productBody");
+  tbody.innerHTML = "";
+
+  var shown = products.filter(function (p) {
+    if (q && p.code.toLowerCase().indexOf(q) === -1 && p.name.toLowerCase().indexOf(q) === -1 && (p.generic || "").toLowerCase().indexOf(q) === -1) return false;
+    if (kategori && p.category !== kategori) return false;
+    if (golongan && p.group !== golongan) return false;
+    if (status === "aktif" && !p.active) return false;
+    if (status === "nonaktif" && p.active) return false;
+    return true;
+  });
+
+  shown.forEach(function (p) {
+    var tr = document.createElement("tr");
+    if (!p.active) tr.className = "inactive-row";
+    tr.innerHTML = "<td><b>" + escapeHtml(p.code) + "</b></td>"
+      + '<td><span class="product-name">' + escapeHtml(p.name) + "</span>"
+      + (p.generic ? '<div class="small muted">' + escapeHtml(p.generic) + "</div>" : "") + "</td>"
+      + "<td>" + escapeHtml(p.strength || "-") + "</td>"
+      + "<td>" + escapeHtml(p.form) + "</td>"
+      + "<td>" + escapeHtml(p.unit) + "</td>"
+      + "<td>" + escapeHtml(p.category) + "</td>"
+      + "<td>" + golonganBadge(p.group) + "</td>"
+      + "<td>" + (p.kfa ? '<span class="code-chip">' + escapeHtml(p.kfa) + "</span>" : '<span class="muted small">belum</span>') + "</td>"
+      + '<td><span class="status ' + (p.active ? "dark" : "") + '">' + (p.active ? "Aktif" : "Nonaktif") + "</span></td>"
+      + '<td style="text-align:right;white-space:nowrap;">'
+      + '<button type="button" class="btn" style="padding:2px 7px;font-size:11px;" onclick="editObat(\'' + p.code + '\')">Ubah</button> '
+      + '<button type="button" class="btn secondary" style="padding:2px 7px;font-size:11px;" onclick="toggleObat(\'' + p.code + '\')">' + (p.active ? "Nonaktif" : "Aktifkan") + "</button>"
+      + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  if (shown.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" class="muted" style="text-align:center;padding:18px;">Tidak ada produk yang cocok dengan filter.</td></tr>';
+  }
+
+  updateMetrics();
+}
+
+function updateMetrics() {
+  var active = products.filter(function (p) { return p.active; }).length;
+  var controlled = products.filter(function (p) { return p.group !== "Biasa" && p.active; }).length;
+  var noKfa = products.filter(function (p) { return !p.kfa && p.active; }).length;
+  var near = batches.filter(function (b) { return statusEd(b.exp, b.quarantine) === "near"; }).length;
+
+  document.getElementById("mTotal").textContent = products.length;
+  document.getElementById("mActive").textContent = active;
+  document.getElementById("mControlled").textContent = controlled;
+  document.getElementById("mNearExpiry").textContent = near;
+  document.getElementById("segTotal").textContent = products.length;
+  document.getElementById("segActive").textContent = active;
+  document.getElementById("segControlled").textContent = controlled;
+  document.getElementById("segNoKfa").textContent = noKfa;
+  document.getElementById("profileCount").textContent = products.length + " produk";
+}
+
+function resetFilterObat() {
+  document.getElementById("cariObat").value = "";
+  document.getElementById("filterKategori").value = "";
+  document.getElementById("filterGolongan").value = "";
+  document.getElementById("filterStatus").value = "";
+  renderProducts();
+}
+
+function syncGolongan() {
+  var g = document.getElementById("obatGolongan").value;
+  var note = document.getElementById("obatRegisterNote");
+  note.style.display = g === "Biasa" ? "none" : "block";
+  updateObatPreview();
+}
+
+function updateObatPreview() {
+  var kode = document.getElementById("obatKode").value || "____";
+  var nama = document.getElementById("obatNama").value || "Nama produk belum diisi";
+  var bentuk = document.getElementById("obatBentuk").value;
+  var satuan = document.getElementById("obatSatuan").value;
+  var gol = document.getElementById("obatGolongan").value;
+  document.getElementById("obatPreview").textContent = kode + " - " + nama;
+  document.getElementById("obatPreviewNote").textContent = bentuk + " · satuan " + satuan + " · golongan " + gol;
+}
+
+function formBaru() {
+  editingCode = null;
+  document.getElementById("formMode").textContent = "Produk Baru";
+  document.getElementById("obatKode").value = "";
+  document.getElementById("obatKode").removeAttribute("readonly");
+  document.getElementById("obatNama").value = "";
+  document.getElementById("obatGenerik").value = "";
+  document.getElementById("obatKekuatan").value = "";
+  document.getElementById("obatBentuk").value = "Tablet";
+  document.getElementById("obatSatuan").value = "Tablet";
+  document.getElementById("obatKategori").value = "Antibiotik";
+  document.getElementById("obatGolongan").value = "Biasa";
+  document.getElementById("obatProdusen").value = "";
+  document.getElementById("obatKfa").value = "";
+  document.getElementById("obatPajak").value = "PPN_BKP";
+  document.getElementById("obatEfektif").value = TODAY;
+  document.getElementById("obatStatus").value = "aktif";
+  document.getElementById("obatCatatan").value = "";
+  document.getElementById("obatError").style.display = "none";
+  document.getElementById("obatRegisterNote").style.display = "none";
+  updateObatPreview();
+  switchTab("tab-form");
+}
+
+function editObat(code) {
+  var p = products.filter(function (x) { return x.code === code; })[0];
+  if (!p) return;
+  editingCode = code;
+  document.getElementById("formMode").textContent = "Ubah " + code;
+  document.getElementById("obatKode").value = p.code;
+  document.getElementById("obatKode").setAttribute("readonly", "readonly");
+  document.getElementById("obatNama").value = p.name;
+  document.getElementById("obatGenerik").value = p.generic || "";
+  document.getElementById("obatKekuatan").value = p.strength || "";
+  document.getElementById("obatBentuk").value = p.form;
+  document.getElementById("obatSatuan").value = p.unit;
+  document.getElementById("obatKategori").value = p.category;
+  document.getElementById("obatGolongan").value = p.group;
+  document.getElementById("obatPajak").value = p.tax;
+  document.getElementById("obatStatus").value = p.active ? "aktif" : "nonaktif";
+  document.getElementById("obatCatatan").value = "";
+  document.getElementById("obatError").style.display = "none";
+  syncGolongan();
+  updateObatPreview();
+  switchTab("tab-form");
+}
+
+function showObatError(msg) {
+  var box = document.getElementById("obatError");
+  box.textContent = msg;
+  box.style.display = "block";
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function simpanObat() {
+  var kode = (document.getElementById("obatKode").value || "").trim().toUpperCase();
+  var nama = (document.getElementById("obatNama").value || "").trim();
+  var satuan = document.getElementById("obatSatuan").value;
+  var golongan = document.getElementById("obatGolongan").value;
+  var catatan = (document.getElementById("obatCatatan").value || "").trim();
+  var status = document.getElementById("obatStatus").value;
+  var kfa = (document.getElementById("obatKfa").value || "").trim();
+
+  document.getElementById("obatError").style.display = "none";
+
+  if (!/^[A-Z0-9-]{4,12}$/.test(kode)) {
+    return showObatError("Kode produk wajib 4-12 karakter, hanya huruf, angka, dan tanda hubung.");
+  }
+  if (!nama) return showObatError("Nama produk wajib diisi.");
+  if (!satuan) return showObatError("Satuan dasar wajib dipilih agar produk dapat dipakai pada transaksi stok.");
+  if (!catatan) return showObatError("Catatan atau alasan perubahan wajib diisi untuk audit trail.");
+  if (kfa && !/^\d{6,}$/.test(kfa)) return showObatError("Kode KFA harus berupa angka minimal 6 digit.");
+  if (golongan !== "Biasa" && status === "nonaktif") {
+    return showObatError("Produk golongan khusus tidak dapat dinonaktifkan tanpa berita acara dan persetujuan apoteker penanggung jawab.");
+  }
+
+  var existing = products.filter(function (p) { return p.code === kode; })[0];
+
+  if (editingCode === null) {
+    if (existing) return showObatError("Kode produk " + kode + " sudah dipakai.");
+    products.push({
+      code: kode,
+      name: nama,
+      generic: (document.getElementById("obatGenerik").value || "").trim(),
+      strength: (document.getElementById("obatKekuatan").value || "").trim(),
+      form: document.getElementById("obatBentuk").value,
+      unit: satuan,
+      category: document.getElementById("obatKategori").value,
+      group: golongan,
+      kfa: kfa,
+      tax: document.getElementById("obatPajak").value,
+      active: status === "aktif"
+    });
+    products.sort(function (a, b) { return a.code.localeCompare(b.code); });
+  } else if (existing) {
+    existing.name = nama;
+    existing.generic = (document.getElementById("obatGenerik").value || "").trim();
+    existing.strength = (document.getElementById("obatKekuatan").value || "").trim();
+    existing.form = document.getElementById("obatBentuk").value;
+    existing.unit = satuan;
+    existing.category = document.getElementById("obatKategori").value;
+    existing.group = golongan;
+    existing.kfa = kfa;
+    existing.tax = document.getElementById("obatPajak").value;
+    existing.active = status === "aktif";
+  }
+
+  renderProducts();
+  renderBatches();
+  renderKfa();
+  fillBatchProductSelect();
+  fillFefoProductSelect();
+  formBaru();
+  switchTab("tab-daftar");
+}
+
+function toggleObat(code) {
+  var p = products.filter(function (x) { return x.code === code; })[0];
+  if (!p) return;
+  if (p.active && p.group !== "Biasa") {
+    alert("Produk golongan khusus tidak dapat dinonaktifkan langsung. Wajib berita acara dan persetujuan apoteker penanggung jawab.");
+    return;
+  }
+  if (!confirm((p.active ? "Nonaktifkan" : "Aktifkan kembali") + " produk " + code + " - " + p.name + "?")) return;
+  p.active = !p.active;
+  renderProducts();
+}
+
+function daysBetween(a, b) {
+  return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / 86400000);
+}
+
+function statusEd(exp, quarantine) {
+  if (quarantine) return "quarantine";
+  var d = daysBetween(TODAY, exp);
+  if (d < 0) return "expired";
+  if (d <= 90) return "near";
+  return "ok";
+}
+
+function edLabel(exp, quarantine) {
+  var st = statusEd(exp, quarantine);
+  var d = daysBetween(TODAY, exp);
+  if (st === "quarantine") return '<span class="batch-expired">Karantina</span>';
+  if (st === "expired") return '<span class="batch-expired">Kedaluwarsa ' + Math.abs(d) + " hari</span>";
+  if (st === "near") return '<span class="batch-near">ED dalam ' + d + " hari</span>";
+  return '<span class="batch-ok">Layak (' + d + " hari)</span>";
+}
+
+function renderBatches() {
+  var filterCode = document.getElementById("filterBatchProduk").value;
+  var onlyOk = document.getElementById("hanyaLayak").checked;
+  var tbody = document.getElementById("batchBody");
+  tbody.innerHTML = "";
+
+  var rows = batches.slice().sort(function (a, b) { return a.exp.localeCompare(b.exp); });
+  var shown = rows.filter(function (b) {
+    if (filterCode && b.code !== filterCode) return false;
+    if (onlyOk && statusEd(b.exp, b.quarantine) !== "ok") return false;
+    return true;
+  });
+
+  shown.forEach(function (b) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + escapeHtml(b.batch) + "</b></td>"
+      + "<td>" + escapeHtml(b.product) + '<div class="small muted">' + escapeHtml(b.code) + "</div></td>"
+      + "<td>" + escapeHtml(b.exp) + "</td>"
+      + '<td style="text-align:right;">' + b.qty.toLocaleString("id-ID") + "</td>"
+      + "<td>" + escapeHtml(b.loc) + "</td>"
+      + "<td>" + edLabel(b.exp, b.quarantine) + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  if (shown.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="muted" style="text-align:center;padding:18px;">Tidak ada batch pada filter ini.</td></tr>';
+  }
+
+  updateMetrics();
+  hitungFefo();
+}
+
+function fillBatchProductSelect() {
+  var sel = document.getElementById("filterBatchProduk");
+  var current = sel.value;
+  sel.innerHTML = '<option value="">Semua Produk</option>' + products.map(function (p) {
+    return '<option value="' + p.code + '">' + p.code + " - " + escapeHtml(p.name) + "</option>";
+  }).join("");
+  if (current) sel.value = current;
+}
+
+function fillFefoProductSelect() {
+  var sel = document.getElementById("fefoProduk");
+  var current = sel.value;
+  var codes = [];
+  batches.forEach(function (b) { if (codes.indexOf(b.code) === -1) codes.push(b.code); });
+  sel.innerHTML = codes.map(function (code) {
+    var p = products.filter(function (x) { return x.code === code; })[0];
+    return '<option value="' + code + '">' + code + " - " + escapeHtml(p ? p.name : code) + "</option>";
+  }).join("");
+  if (current) sel.value = current;
+  hitungFefo();
+}
+
+function hitungFefo() {
+  var code = document.getElementById("fefoProduk").value;
+  var qty = Number(document.getElementById("fefoQty").value) || 0;
+  var rows = batches.filter(function (b) { return b.code === code; });
+  var layak = rows.filter(function (b) { return statusEd(b.exp, b.quarantine) === "ok" || statusEd(b.exp, b.quarantine) === "near"; })
+    .sort(function (a, b) { return a.exp.localeCompare(b.exp); });
+
+  var need = qty;
+  var lines = [];
+  layak.forEach(function (b) {
+    if (need <= 0) return;
+    var take = Math.min(need, b.qty);
+    if (take <= 0) return;
+    lines.push({ batch: b.batch, exp: b.exp, take: take, remain: b.qty - take });
+    need -= take;
+  });
+
+  var totalLayak = layak.reduce(function (s, b) { return s + b.qty; }, 0);
+  var tidakLayak = rows.length - layak.length;
+
+  var html = "";
+  if (!code) {
+    html = '<div class="muted">Pilih produk untuk melihat alokasi batch.</div>';
+  } else if (lines.length === 0) {
+    html = '<div class="muted">Tidak ada batch layak untuk produk ini.</div>';
+  } else {
+    html = '<table style="font-size:11px;width:100%;"><thead><tr><th>Batch</th><th>ED</th><th style="text-align:right;">Diambil</th><th style="text-align:right;">Sisa Batch</th></tr></thead><tbody>'
+      + lines.map(function (l) {
+        return "<tr><td><b>" + escapeHtml(l.batch) + "</b></td><td>" + escapeHtml(l.exp) + "</td>"
+          + '<td style="text-align:right;">' + l.take.toLocaleString("id-ID") + "</td>"
+          + '<td style="text-align:right;">' + l.remain.toLocaleString("id-ID") + "</td></tr>";
+      }).join("") + "</tbody></table>";
+  }
+  document.getElementById("fefoHasil").innerHTML = html;
+
+  document.getElementById("fefoBatchLayak").textContent = layak.length + " batch";
+  document.getElementById("fefoTotalLayak").textContent = totalLayak.toLocaleString("id-ID");
+  document.getElementById("fefoBatchTidakLayak").textContent = tidakLayak + " batch";
+
+  var box = document.getElementById("fefoBox");
+  var status = document.getElementById("fefoStatus");
+  if (need > 0) {
+    box.className = "balance-box balance-warn";
+    status.textContent = "KURANG " + need.toLocaleString("id-ID") + " unit - tidak boleh keluar sebagian tanpa persetujuan";
+  } else {
+    box.className = "balance-box balance-ok";
+    status.textContent = "CUKUP - kebutuhan " + qty.toLocaleString("id-ID") + " unit terpenuhi FEFO";
+  }
+}
+
+function renderKfa() {
+  var tbody = document.getElementById("kfaBody");
+  tbody.innerHTML = "";
+  products.forEach(function (p) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + escapeHtml(p.code) + "</b></td>"
+      + "<td>" + escapeHtml(p.name) + "</td>"
+      + "<td>" + (p.kfa ? '<span class="code-chip">' + escapeHtml(p.kfa) + "</span>" : '<span class="muted small">belum dipetakan</span>') + "</td>"
+      + '<td><span class="status ' + (p.kfa ? "dark" : "") + '">' + (p.kfa ? "Terpetakan" : "Perlu review") + "</span></td>";
+    tbody.appendChild(tr);
+  });
+}
+
+["obatKode", "obatNama", "obatBentuk", "obatSatuan", "obatGolongan", "obatKategori"].forEach(function (id) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("input", updateObatPreview);
+    el.addEventListener("change", updateObatPreview);
+  }
+});
+
+fillBatchProductSelect();
+fillFefoProductSelect();
+renderProducts();
+renderBatches();
+renderKfa();
+updateObatPreview();
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Data - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.module-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.module-card:hover { border-color: #c9ced4; }
+.module-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: #eef1f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+.module-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.module-card h3 { margin: 0; font-size: 13px; }
+.module-card p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.5; }
+.module-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  font-size: 11px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MASTER DATA</div>
+  <div class="nav-group open" id="nav-master">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
+      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub active" href="index.html"><span>Overview Master</span></a>
+      <a class="nav-item nav-sub" href="obat.html"><span>Data Obat</span></a>
+      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
+      <a class="nav-item nav-sub" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
+      <a class="nav-item nav-sub" href="tarif.html"><span>Tarif Layanan</span></a>
+      <a class="nav-item nav-sub" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
+      <a class="nav-item nav-sub" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Master Data <span style="margin:0 8px">/</span> <b>Overview</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">A</span>
+      <span>Administrator</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb">Master Data <span>/</span> Overview</div>
+        <h1>Master Data Klinik</h1>
+        <p>Sumber kebenaran tunggal untuk produk obat, satuan, praktisi, tarif, dan terminologi klinis. Setiap perubahan wajib ber-tanggal-berlaku dan tercatat pada audit trail.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="../../index.html">Kembali ke Dashboard</a>
+      </div>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card"><div class="metric-label">Produk Obat</div><div class="metric-value">428</div><div class="metric-note">312 aktif · 12 golongan khusus</div></div>
+      <div class="card"><div class="metric-label">Tarif Layanan</div><div class="metric-value">312</div><div class="metric-note">3 price list aktif</div></div>
+      <div class="card"><div class="metric-label">Praktisi</div><div class="metric-value">24</div><div class="metric-note">2 SIP segera berakhir</div></div>
+      <div class="card"><div class="metric-label">Kode Terminologi</div><div class="metric-value">18.024</div><div class="metric-note">ICD-10, ICD-9, KFA</div></div>
+    </div>
+
+    <div class="grid grid-3 section">
+      <div class="module-card">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a5 5 0 0 0-7-7l-10 10a5 5 0 0 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></div>
+        <h3>Data Obat</h3>
+        <p>Katalog produk, kekuatan, bentuk sediaan, golongan khusus, pemetaan KFA, batch, dan kebijakan FEFO.</p>
+        <div class="module-foot"><span class="muted">428 produk</span><a class="btn" href="obat.html">Buka Modul</a></div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M3 14h7v7H3z"/><path d="M17.5 14v7"/><path d="M14 17.5h7"/></svg></div>
+        <h3>Satuan &amp; Jenis</h3>
+        <p>Satuan dasar dan pembelian, konversi boks-strip-tablet, kategori produk, serta tipe BHP dan alkes.</p>
+        <div class="module-foot"><span class="muted">24 satuan · 18 kategori</span><a class="btn" href="satuan-jenis.html">Buka Modul</a></div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h3>Dokter &amp; Pengguna</h3>
+        <p>Praktisi, akun login, STR/SIP/SIPA, penugasan unit, jadwal dan kuota, serta perjanjian jasa medis.</p>
+        <div class="module-foot"><span class="muted">24 praktisi</span><a class="btn" href="dokter.html">Buka Modul</a></div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Tarif Layanan</h3>
+        <p>Katalog layanan, tarif ber-tanggal-berlaku, price list per pembayar, kode pajak, dan riwayat harga.</p>
+        <div class="module-foot"><span class="muted">312 layanan</span><a class="btn" href="tarif.html">Buka Modul</a></div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg></div>
+        <h3>ICD-10 Diagnosis</h3>
+        <p>Terminologi diagnosis untuk encounter, kode rujukan SATUSEHAT, snapshot pada rekam medis, dan versi kode.</p>
+        <div class="module-foot"><span class="muted">14.382 kode</span><a class="btn" href="icd-10.html">Buka Modul</a></div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>ICD-9 Tindakan</h3>
+        <p>Kode tindakan/prosedur, pemetaan ke KPTL, penggunaan pada rekam medis, dan verifikasi versi resmi.</p>
+        <div class="module-foot"><span class="muted">3.642 kode</span><a class="btn" href="icd-9.html">Buka Modul</a></div>
+      </div>
+    </div>
+
+    <div class="grid grid-2 section">
+      <div class="card">
+        <div class="card-title"><h2>Prinsip Tata Kelola Master Data</h2><span class="status dark">Kontrol Perubahan</span></div>
+
+        <div class="rule-row">
+          <span class="rule-mark rule-ok">OK</span>
+          <div><b>Parameter ber-tanggal-berlaku.</b><div class="small muted">Tarif, mapping akun, kode pajak, dan perjanjian jasa medis memakai <span class="code-chip">effective_from</span> dan <span class="code-chip">effective_to</span>.</div></div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-mark rule-ok">OK</span>
+          <div><b>Perubahan tidak menulis ulang transaksi lama.</b><div class="small muted">Invoice, jurnal, dan rekam medis menyimpan snapshot nilai saat transaksi terjadi.</div></div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-mark rule-ok">OK</span>
+          <div><b>Jangan hapus master yang sudah dipakai.</b><div class="small muted">Gunakan status nonaktif agar referensi historis tetap valid.</div></div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-mark rule-ok">OK</span>
+          <div><b>Audit trail lengkap.</b><div class="small muted">Pengguna, waktu, nilai sebelum dan sesudah, alasan perubahan, dan referensi persetujuan.</div></div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-mark rule-ok">OK</span>
+          <div><b>Terminologi eksternal diverifikasi.</b><div class="small muted">ICD-10, ICD-9-CM/KPTL, KFA, dan LOINC mengikuti versi resmi dan ditandai <span class="code-chip">[V]</span> sebelum dikunci.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><h2>Perubahan Master Terakhir</h2><span class="muted small">Audit Trail</span></div>
+
+        <div class="history-item">
+          <div class="history-date"><span>17 Nov 2026 &middot; 10:22 WIB</span><span class="status dark" style="background:#d4edda;color:#155724;">Aktif</span></div>
+          <div class="history-diag">Tambah tarif Nebulisasi Rp 85.000</div>
+          <div class="history-notes">Oleh Manajer Keuangan &middot; Price list Tarif Umum 2026 &middot; Berlaku 01 Nov 2026</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date"><span>17 Nov 2026 &middot; 09:12 WIB</span><span class="status dark">Diperbarui</span></div>
+          <div class="history-diag">Perpanjang SIP drg. Maya Sari</div>
+          <div class="history-notes">Oleh Admin SDM &middot; Masa berlaku 31 Des 2026 &middot; Berkas SIP terlampir</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date"><span>16 Nov 2026 &middot; 15:40 WIB</span><span class="status dark">Import</span></div>
+          <div class="history-diag">Impor 1.204 kode ICD-10</div>
+          <div class="history-notes">Oleh Administrator &middot; Versi 2019 &middot; Status validasi: menunggu review koder</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-band section">
+      <b>Catatan implementasi:</b> angka pada halaman ini adalah data contoh untuk wireframe. Seluruh master harus dapat dikonfigurasi per organisasi dan fasilitas,
+      tidak dikunci di kode, serta diverifikasi ke sumber resmi sebelum dipakai pada produksi.
+    </div>
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+</body>
+</html>

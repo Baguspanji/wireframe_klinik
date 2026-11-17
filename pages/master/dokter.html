@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Dokter &amp; Pengguna - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.segment-card {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  font-size: 11px;
+}
+.segment-card b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+.lic-ok { color: #276749; font-weight: bold; }
+.lic-near { color: #8a5a00; font-weight: bold; }
+.lic-expired { color: #9b1c1c; font-weight: bold; }
+
+tr.inactive-row td { color: #9aa0a6; }
+tr.inactive-row td .prac-name { text-decoration: line-through; }
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+
+.avatar-chip {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #eef1f4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: #333;
+  margin-right: 6px;
+}
+
+.prof-tag {
+  display: inline-block;
+  font-size: 10px;
+  border: 1px solid #dde1e6;
+  background: #f1f2f4;
+  border-radius: 3px;
+  padding: 1px 6px;
+  color: #444;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MASTER DATA</div>
+  <div class="nav-group open" id="nav-master">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
+      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview Master</span></a>
+      <a class="nav-item nav-sub" href="obat.html"><span>Data Obat</span></a>
+      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
+      <a class="nav-item nav-sub active" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
+      <a class="nav-item nav-sub" href="tarif.html"><span>Tarif Layanan</span></a>
+      <a class="nav-item nav-sub" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
+      <a class="nav-item nav-sub" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Master Data <span style="margin:0 8px">/</span> SDM <span style="margin:0 8px">/</span> <b>Dokter &amp; Pengguna</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">H</span>
+      <span>Admin SDM</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Master Data</a> <span>/</span> Dokter &amp; Pengguna</div>
+        <h1>Master Praktisi &amp; Pengguna</h1>
+        <p>Memisahkan orang yang bertugas dari akun login. Jadwal dan penugasan hanya dapat dibuat bila terdapat SIP aktif pada fasilitas yang sesuai.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Master</a>
+        <button class="btn primary" onclick="formBaruPraktisi()">+ Praktisi Baru</button>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Profil Praktisi &amp; Fasilitas</h2>
+          </div>
+          <span class="status dark" id="profilePracCount">6 praktisi</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Entitas:</b> PT Sehat Nusantara</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Tabel:</b> <span class="code-chip">practitioners</span></div>
+          <div><b>Lisensi:</b> <span class="code-chip">practitioner_licenses</span></div>
+          <div><b>Penugasan:</b> <span class="code-chip">practitioner_assignments</span></div>
+          <div><b>Jadwal:</b> <span class="code-chip">practitioner_schedules</span></div>
+          <div><b>Perjanjian Jasa:</b> <span class="code-chip">fee_agreements</span></div>
+          <div><b>Kebijakan:</b> SIP aktif wajib</div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;">
+          <div class="segment-card"><b id="segPrac">6</b>Total praktisi</div>
+          <div class="segment-card"><b id="segSipAktif">4</b>SIP aktif</div>
+          <div class="segment-card"><b id="segSipSegera">1</b>Segera berakhir</div>
+          <div class="segment-card"><b id="segTanpaAkun">2</b>Tanpa akun login</div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Praktisi mitra dapat ada tanpa akun login. Akun login hanya diperlukan bila praktisi mengakses sistem.
+          STR berlaku seumur hidup menurut UU 17/2023; SIP berlaku per tempat praktik dengan urutan 1 sampai 3.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Perubahan Terakhir</h2>
+          </div>
+          <span class="muted small">Audit Trail</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 09:12 WIB</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Aktif</span>
+          </div>
+          <div class="history-diag">Perpanjang SIP drg. Maya Sari</div>
+          <div class="history-notes">SIP-2026-002 &middot; berlaku sampai 31 Des 2026 &middot; berkas terlampir</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>16 Nov 2026 &middot; 14:05 WIB</span>
+            <span class="status dark">Diperbarui</span>
+          </div>
+          <div class="history-diag">Ubah kuota jadwal dr. Andi Wijaya hari Senin</div>
+          <div class="history-notes">Kuota 20 &rarr; 24 pasien &middot; berlaku 01 Des 2026</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>15 Nov 2026 &middot; 11:30 WIB</span>
+            <span class="status">Ditangguhkan</span>
+          </div>
+          <div class="history-diag">Jadwal dr. Citra Dewi dinonaktifkan</div>
+          <div class="history-notes">SIP kedaluwarsa 31 Okt 2026 &middot; jadwal baru ditolak sampai SIP diperpanjang</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-praktisi" onclick="switchTab('tab-praktisi')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        1. Daftar Praktisi
+      </button>
+      <button class="exam-top-tab" data-tab="tab-form" onclick="switchTab('tab-form')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+        2. Tambah / Ubah &amp; Lisensi
+      </button>
+      <button class="exam-top-tab" data-tab="tab-jadwal" onclick="switchTab('tab-jadwal')">
+        <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+        3. Jadwal &amp; Kuota
+      </button>
+      <button class="exam-top-tab" data-tab="tab-jasa" onclick="switchTab('tab-jasa')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        4. Jasa Medis &amp; Pajak
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR -->
+    <div class="tab-pane active" id="tab-praktisi">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="card"><div class="metric-label">Praktisi Aktif</div><div class="metric-value" id="mPrac">6</div><div class="metric-note">Dapat ditugaskan</div></div>
+        <div class="card"><div class="metric-label">SIP Aktif</div><div class="metric-value" id="mSip">4</div><div class="metric-note">Sesuai fasilitas</div></div>
+        <div class="card"><div class="metric-label">Jadwal Aktif</div><div class="metric-value" id="mJadwal">12</div><div class="metric-note">Mingguan</div></div>
+        <div class="card"><div class="metric-label">Perjanjian Jasa</div><div class="metric-value" id="mFee">6</div><div class="metric-note">Ber-tanggal-berlaku</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Daftar Praktisi (practitioners)</h2>
+          <span class="muted small">Klik Ubah untuk membuka lisensi</span>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <input type="text" id="cariPrac" class="field" placeholder="Cari nama atau nomor STR/SIP" oninput="renderPractitioners()" style="min-width:230px;">
+          <select id="filterProfesi" class="field" onchange="renderPractitioners()">
+            <option value="">Semua Profesi</option>
+            <option>Dokter Umum</option>
+            <option>Dokter Spesialis</option>
+            <option>Dokter Gigi</option>
+            <option>Bidan</option>
+            <option>Apoteker</option>
+            <option>Perawat</option>
+          </select>
+          <select id="filterUnit" class="field" onchange="renderPractitioners()">
+            <option value="">Semua Unit</option>
+            <option>Poli Umum</option>
+            <option>Poli Gigi</option>
+            <option>KIA</option>
+            <option>IGD</option>
+            <option>Farmasi</option>
+          </select>
+          <select id="filterStatusPrac" class="field" onchange="renderPractitioners()">
+            <option value="">Semua Status</option>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+          <button class="btn" onclick="resetFilterPrac()">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Praktisi</th>
+                <th style="width:135px;">Profesi</th>
+                <th style="width:115px;">Unit Utama</th>
+                <th style="width:150px;">STR</th>
+                <th style="width:165px;">SIP</th>
+                <th style="width:80px;">Jadwal</th>
+                <th style="width:95px;">Akun</th>
+                <th style="width:85px;">Status</th>
+                <th style="width:105px;text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pracBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          <b>Guard legalitas:</b> penugasan dan jadwal ditolak bila tidak ada SIP aktif untuk fasilitas tersebut.
+          SIP kedaluwarsa tidak menghapus histori pelayanan, tetapi menghentikan pembuatan jadwal baru.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: FORM -->
+    <div class="tab-pane" id="tab-form">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Identitas &amp; Lisensi Praktisi</h2><span class="status dark" id="formModePrac">Praktisi Baru</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Kode Praktisi <span class="req">*</span></label>
+              <input type="text" id="pracKode" class="field" placeholder="PR-007" maxlength="10">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Lengkap <span class="req">*</span></label>
+              <input type="text" id="pracNama" class="field" placeholder="dr. Nama Lengkap, Sp.X">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Profesi <span class="req">*</span></label>
+              <select id="pracProfesi" class="field">
+                <option>Dokter Umum</option>
+                <option>Dokter Spesialis</option>
+                <option>Dokter Gigi</option>
+                <option>Bidan</option>
+                <option>Apoteker</option>
+                <option>Perawat</option>
+                <option>Analis Laboratorium</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unit Utama</label>
+              <select id="pracUnit" class="field">
+                <option>Poli Umum</option>
+                <option>Poli Gigi</option>
+                <option>KIA</option>
+                <option>IGD</option>
+                <option>Farmasi</option>
+                <option>Laboratorium</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">NIK (terenkripsi)</label>
+              <input type="text" id="pracNik" class="field" placeholder="16 digit, disimpan terenkripsi">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Akun Login (user_id)</label>
+              <input type="text" id="pracUser" class="field" placeholder="Kosongkan bila praktisi mitra">
+            </div>
+          </div>
+
+          <div style="border-top:1px dashed var(--line);margin:10px 0 12px;padding-top:10px;">
+            <div class="card-title" style="margin-bottom:8px;"><h3 style="font-size:12px;margin:0;">Dokumen Legalitas</h3><span class="muted small">STR / SIP / SIPA</span></div>
+
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Nomor STR <span class="req">*</span></label>
+                <input type="text" id="pracStr" class="field" placeholder="Nomor STR">
+              </div>
+              <div class="form-group">
+                <label class="form-label">STR Berlaku Sampai</label>
+                <input type="text" class="field" value="Seumur hidup (UU 17/2023)" readonly style="background:#f4f5f6;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nomor SIP <span class="req">*</span></label>
+                <input type="text" id="pracSip" class="field" placeholder="Nomor SIP fasilitas ini">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SIP Urutan Ke-</label>
+                <select id="pracSipSeq" class="field">
+                  <option value="1">SIP ke-1</option>
+                  <option value="2">SIP ke-2</option>
+                  <option value="3">SIP ke-3</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">SIP Berlaku Dari</label>
+                <input type="date" id="pracSipFrom" class="field" value="2026-01-01">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SIP Berlaku Sampai <span class="req">*</span></label>
+                <input type="date" id="pracSipUntil" class="field" value="2026-12-31">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Fasilitas SIP</label>
+                <input type="text" class="field" value="Klinik Utama Kemang (FAC-KMG-01)" readonly style="background:#f4f5f6;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nomor SIPA (Apoteker)</label>
+                <input type="text" id="pracSipa" class="field" placeholder="Diisi untuk apoteker">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Status</label>
+                <select id="pracStatus" class="field">
+                  <option value="aktif">Aktif</option>
+                  <option value="nonaktif">Nonaktif</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Berkas Lisensi</label>
+                <input type="text" class="field" value="ATT-SIP-2026-001.pdf" readonly style="background:#f4f5f6;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Catatan / Alasan Perubahan <span class="req">*</span></label>
+              <textarea id="pracCatatan" class="field" rows="2" placeholder="Wajib diisi untuk audit trail"></textarea>
+            </div>
+          </div>
+
+          <div id="pracError" class="alert info" style="display:none;margin-bottom:10px;"></div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button type="button" class="btn" onclick="formBaruPraktisi()">Bersihkan Form</button>
+            <button type="button" class="btn primary" onclick="simpanPraktisi()">Simpan Praktisi</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Validasi Legalitas</h2><span class="status dark">Kontrol</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Nama dan profesi wajib diisi.</b><div class="small muted">Profesi menentukan kewenangan klinis dan tarif jasa medis.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>STR wajib ada.</b><div class="small muted">STR berlaku seumur hidup; nomor tetap disimpan untuk audit.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>SIP wajib untuk setiap fasilitas tempat praktik.</b><div class="small muted">Urutan SIP 1-3, dilengkapi nomor, tanggal berlaku, dan berkas.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok" id="markSipForm">OK</span>
+            <div><b>SIP harus aktif pada tanggal penugasan.</b><div class="small muted">SIP kedaluwarsa menolak pembuatan jadwal baru dan penugasan unit.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Praktisi mitra boleh tanpa akun login.</b><div class="small muted">Akun login bersifat opsional; identitas praktisi tetap wajib.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>NIK disimpan terenkripsi.</b><div class="small muted">Akses NIK dibatasi dan dicatat pada audit trail.</div></div>
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Status Lisensi</div>
+            <div class="metric-value" id="pracLicPreview" style="font-size:17px;">Belum ada data</div>
+            <p class="small muted" id="pracLicNote" style="margin-top:4px;">Isi nomor SIP dan tanggal berlaku untuk melihat status.</p>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            <b>Catatan regulasi:</b> ketentuan STR, SIP, dan SIPA mengikuti peraturan yang berlaku dan wajib diverifikasi
+            ke sumber resmi. Wireframe ini menampilkan mekanisme kontrol, bukan nasihat hukum.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: JADWAL -->
+    <div class="tab-pane" id="tab-jadwal">
+      <div class="grid grid-3">
+        <div class="card" style="grid-column:span 2;">
+          <div class="card-title">
+            <h2>Jadwal Praktik (practitioner_schedules)</h2>
+            <span class="muted small">Pilih praktisi untuk memeriksa SIP</span>
+          </div>
+
+          <div class="filters" style="margin-bottom:12px;">
+            <select id="filterJadwalPrac" class="field" onchange="renderSchedules();syncSipStatus()" style="min-width:240px;">
+              <option value="">Semua Praktisi</option>
+            </select>
+            <select id="filterJadwalHari" class="field" onchange="renderSchedules()">
+              <option value="">Semua Hari</option>
+              <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Praktisi</th>
+                  <th style="width:100px;">Hari</th>
+                  <th style="width:120px;">Jam</th>
+                  <th style="width:115px;">Unit</th>
+                  <th style="width:75px;text-align:right;">Kuota</th>
+                  <th style="width:185px;">Berlaku</th>
+                  <th style="width:75px;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleBody"></tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Kuota adalah batas pendaftaran per sesi. Cuti dan pengganti dicatat pada
+            <span class="code-chip">schedule_exceptions</span>, bukan dengan mengubah jadwal historis.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Tambah Jadwal</h2><span class="status dark">Guard SIP</span></div>
+
+          <div class="form-group">
+            <label class="form-label">Praktisi <span class="req">*</span></label>
+            <select id="jadwalPrac" class="field" onchange="syncSipStatus()"></select>
+          </div>
+
+          <div id="sipBox" class="balance-box balance-ok" style="margin-bottom:10px;font-size:11px;">
+            <span>SIP:</span>
+            <span id="sipStatus">Aktif</span>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Hari</label>
+              <select id="jadwalHari" class="field">
+                <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unit</label>
+              <select id="jadwalUnit" class="field">
+                <option>Poli Umum</option>
+                <option>Poli Gigi</option>
+                <option>KIA</option>
+                <option>IGD</option>
+                <option>Farmasi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jam Mulai</label>
+              <input type="time" id="jadwalMulai" class="field" value="08:00">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jam Selesai</label>
+              <input type="time" id="jadwalSelesai" class="field" value="12:00">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kuota</label>
+              <input type="number" id="jadwalKuota" class="field" value="20" min="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Dari</label>
+              <input type="date" id="jadwalFrom" class="field" value="2026-12-01">
+            </div>
+            <div class="form-group" style="grid-column:span 2;">
+              <label class="form-label">Berlaku Sampai</label>
+              <input type="date" id="jadwalTo" class="field" value="2026-12-31">
+            </div>
+          </div>
+
+          <div id="jadwalError" class="alert info" style="display:none;margin-bottom:10px;"></div>
+
+          <button type="button" class="btn primary" style="width:100%;" onclick="simpanJadwal()">Tambah Jadwal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: JASA MEDIS -->
+    <div class="tab-pane" id="tab-jasa">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Perjanjian Jasa Medis</h2><span class="status dark">fee_agreements</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Praktisi</th><th style="width:95px;">Basis</th><th style="width:90px;text-align:right;">Nilai</th><th style="width:130px;">Cakupan</th><th style="width:150px;">Berlaku</th></tr>
+              </thead>
+              <tbody id="feeBody"></tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Jasa medis diakui saat layanan diberikan (<span class="code-chip">fee_accruals</span>), dapat ditahan sampai
+            pembayaran diterima sesuai kebijakan, lalu dibayar melalui <span class="code-chip">fee_payout_batches</span>.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Simulasi Jasa Medis &amp; Pajak</h2><span class="muted small">Ilustrasi</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Praktisi</label>
+              <select id="simPrac" class="field" onchange="hitungJasa()"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nilai Layanan (Rp)</label>
+              <input type="number" id="simNilai" class="field" value="150000" step="1000" oninput="hitungJasa()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jenis Pembayar</label>
+              <select id="simPayer" class="field" onchange="hitungJasa()">
+                <option value="self">Mandiri</option>
+                <option value="bpjs">BPJS / JKN</option>
+                <option value="insurer">Asuransi</option>
+                <option value="corporate">Perusahaan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tarif PPh 21 (ilustrasi)</label>
+              <input type="number" id="simPph" class="field" value="5" min="0" max="100" oninput="hitungJasa()">
+            </div>
+          </div>
+
+          <div class="card" style="padding:12px;background:#fafbfc;">
+            <div class="sum-line"><span>Nilai layanan</span><span id="jasaNilai">Rp 150.000</span></div>
+            <div class="sum-line"><span>Basis jasa medis</span><span id="jasaBasis">25%</span></div>
+            <div class="sum-line"><span>Jasa medis bruto</span><span id="jasaBruto">Rp 37.500</span></div>
+            <div class="sum-line"><span>Potongan PPh 21</span><span id="jasaPph">Rp 1.875</span></div>
+            <div class="sum-line"><span><b>Jasa medis bersih</b></span><span><b id="jasaNet">Rp 35.625</b></span></div>
+          </div>
+
+          <div id="jasaBox" class="balance-box balance-ok" style="margin-top:12px;">
+            <span>Status Akrual:</span>
+            <span id="jasaStatus">ACCRUED - diakui saat layanan diberikan</span>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            PPh 21 dan perlakuan pajak jasa medis wajib dikonfirmasi ke konsultan pajak. Nilai pada simulasi ini hanya
+            ilustrasi dan tidak boleh dianggap tarif final.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var TODAY = "2026-11-17";
+
+var practitioners = [
+  { code: "PR-001", name: "dr. Andi Wijaya, Sp.PD", profession: "Dokter Spesialis", unit: "Poli Umum", user: "andi.wijaya", str: "STR-3311-2019-001", sip: "SIP-2026-001", sipSeq: 1, sipFrom: "2026-01-01", sipUntil: "2026-12-31", sipa: "", active: true },
+  { code: "PR-002", name: "drg. Maya Sari", profession: "Dokter Gigi", unit: "Poli Gigi", user: "maya.sari", str: "STR-3311-2020-014", sip: "SIP-2026-002", sipSeq: 1, sipFrom: "2026-01-01", sipUntil: "2026-11-30", sipa: "", active: true },
+  { code: "PR-003", name: "dr. Budi Santoso", profession: "Dokter Umum", unit: "Poli Umum", user: "budi.santoso", str: "STR-3311-2021-022", sip: "SIP-2026-003", sipSeq: 2, sipFrom: "2026-01-01", sipUntil: "2027-06-30", sipa: "", active: true },
+  { code: "PR-004", name: "Bidan Rina Kusuma", profession: "Bidan", unit: "KIA", user: "", str: "STR-3311-2018-031", sip: "SIP-2026-004", sipSeq: 1, sipFrom: "2026-01-01", sipUntil: "2027-03-31", sipa: "", active: true },
+  { code: "PR-005", name: "Apt. Dewi Anggraini", profession: "Apoteker", unit: "Farmasi", user: "dewi.apt", str: "STR-3311-2017-005", sip: "SIP-2026-005", sipSeq: 1, sipFrom: "2026-01-01", sipUntil: "2026-12-31", sipa: "SIPA-2026-005", active: true },
+  { code: "PR-006", name: "dr. Citra Dewi", profession: "Dokter Umum", unit: "IGD", user: "citra.dewi", str: "STR-3311-2019-044", sip: "SIP-2026-006", sipSeq: 1, sipFrom: "2025-11-01", sipUntil: "2026-10-31", sipa: "", active: true }
+];
+
+var schedules = [
+  { id: "SCH-001", code: "PR-001", day: "Senin", start: "08:00", end: "12:00", unit: "Poli Umum", quota: 24, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-002", code: "PR-001", day: "Rabu", start: "08:00", end: "12:00", unit: "Poli Umum", quota: 24, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-003", code: "PR-001", day: "Jumat", start: "13:00", end: "16:00", unit: "Poli Umum", quota: 16, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-004", code: "PR-002", day: "Selasa", start: "09:00", end: "14:00", unit: "Poli Gigi", quota: 20, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-005", code: "PR-002", day: "Kamis", start: "09:00", end: "14:00", unit: "Poli Gigi", quota: 20, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-006", code: "PR-003", day: "Senin", start: "13:00", end: "18:00", unit: "Poli Umum", quota: 25, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-007", code: "PR-003", day: "Kamis", start: "13:00", end: "18:00", unit: "Poli Umum", quota: 25, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-008", code: "PR-004", day: "Selasa", start: "08:00", end: "12:00", unit: "KIA", quota: 18, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-009", code: "PR-004", day: "Kamis", start: "08:00", end: "12:00", unit: "KIA", quota: 18, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-010", code: "PR-005", day: "Senin", start: "08:00", end: "17:00", unit: "Farmasi", quota: 0, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-011", code: "PR-005", day: "Sabtu", start: "08:00", end: "14:00", unit: "Farmasi", quota: 0, from: "2026-11-01", to: "2026-12-31" },
+  { id: "SCH-012", code: "PR-006", day: "Rabu", start: "14:00", end: "20:00", unit: "IGD", quota: 0, from: "2026-10-01", to: "2026-10-31" }
+];
+
+var feeRules = [
+  { code: "PR-001", basis: "percent", value: 25, coverage: "Semua pembayar", from: "2026-01-01", to: "" },
+  { code: "PR-002", basis: "percent", value: 30, coverage: "Mandiri", from: "2026-01-01", to: "" },
+  { code: "PR-002", basis: "percent", value: 20, coverage: "Asuransi / BPJS", from: "2026-01-01", to: "" },
+  { code: "PR-003", basis: "percent", value: 20, coverage: "Semua pembayar", from: "2026-01-01", to: "" },
+  { code: "PR-004", basis: "fixed", value: 50000, coverage: "Per kunjungan ANC", from: "2026-01-01", to: "" },
+  { code: "PR-005", basis: "fixed", value: 35000, coverage: "Per sesi dispensing", from: "2026-01-01", to: "" }
+];
+
+var editingPrac = null;
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  if (tabId === "tab-jadwal") { renderSchedules(); syncSipStatus(); }
+  if (tabId === "tab-jasa") { renderFees(); hitungJasa(); }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function daysBetween(a, b) {
+  return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / 86400000);
+}
+
+function sipState(p) {
+  if (!p || !p.sip) return "none";
+  var d = daysBetween(TODAY, p.sipUntil);
+  if (d < 0) return "expired";
+  if (d <= 30) return "near";
+  return "active";
+}
+
+function sipLabel(p) {
+  var st = sipState(p);
+  if (st === "none") return '<span class="lic-expired">Belum ada SIP</span>';
+  var d = daysBetween(TODAY, p.sipUntil);
+  if (st === "expired") return '<span class="lic-expired">Kedaluwarsa ' + Math.abs(d) + " hari</span>";
+  if (st === "near") return '<span class="lic-near">Aktif, ' + d + " hari lagi</span>";
+  return '<span class="lic-ok">Aktif s.d. ' + escapeHtml(p.sipUntil) + "</span>";
+}
+
+function isSipActive(p) {
+  return sipState(p) === "active" || sipState(p) === "near";
+}
+
+function renderPractitioners() {
+  var q = (document.getElementById("cariPrac").value || "").toLowerCase();
+  var prof = document.getElementById("filterProfesi").value;
+  var unit = document.getElementById("filterUnit").value;
+  var status = document.getElementById("filterStatusPrac").value;
+  var tbody = document.getElementById("pracBody");
+  tbody.innerHTML = "";
+
+  var shown = practitioners.filter(function (p) {
+    if (q && p.name.toLowerCase().indexOf(q) === -1 && p.str.toLowerCase().indexOf(q) === -1 && p.sip.toLowerCase().indexOf(q) === -1) return false;
+    if (prof && p.profession !== prof) return false;
+    if (unit && p.unit !== unit) return false;
+    if (status === "aktif" && !p.active) return false;
+    if (status === "nonaktif" && p.active) return false;
+    return true;
+  });
+
+  shown.forEach(function (p) {
+    var tr = document.createElement("tr");
+    if (!p.active) tr.className = "inactive-row";
+    var initials = p.name.replace(/^(dr\.|drg\.|Apt\.|Bidan)\s*/i, "").split(" ").map(function (w) { return w.charAt(0); }).join("").slice(0, 2).toUpperCase();
+    var jadwal = schedules.filter(function (s) { return s.code === p.code; }).length;
+    tr.innerHTML = "<td><span class='avatar-chip'>" + escapeHtml(initials) + "</span><b class='prac-name'>" + escapeHtml(p.name) + "</b></td>"
+      + '<td><span class="prof-tag">' + escapeHtml(p.profession) + "</span></td>"
+      + "<td>" + escapeHtml(p.unit) + "</td>"
+      + '<td><span class="code-chip">' + escapeHtml(p.str) + "</span></td>"
+      + "<td>" + sipLabel(p) + '<div class="small muted">' + escapeHtml(p.sip) + " &middot; SIP ke-" + p.sipSeq + "</div></td>"
+      + "<td>" + jadwal + " sesi</td>"
+      + "<td>" + (p.user ? '<span class="status dark">Ada</span>' : '<span class="muted small">Mitra</span>') + "</td>"
+      + '<td><span class="status ' + (p.active ? "dark" : "") + '">' + (p.active ? "Aktif" : "Nonaktif") + "</span></td>"
+      + '<td style="text-align:right;white-space:nowrap;">'
+      + '<button type="button" class="btn" style="padding:2px 7px;font-size:11px;" onclick="editPraktisi(\'' + p.code + '\')">Ubah</button> '
+      + '<button type="button" class="btn secondary" style="padding:2px 7px;font-size:11px;" onclick="togglePraktisi(\'' + p.code + '\')">' + (p.active ? "Nonaktif" : "Aktifkan") + "</button>"
+      + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  if (shown.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" class="muted" style="text-align:center;padding:18px;">Tidak ada praktisi pada filter ini.</td></tr>';
+  }
+
+  updatePracMetrics();
+}
+
+function updatePracMetrics() {
+  var active = practitioners.filter(function (p) { return p.active; }).length;
+  var sipActive = practitioners.filter(function (p) { return p.active && sipState(p) === "active"; }).length;
+  var near = practitioners.filter(function (p) { return sipState(p) === "near"; }).length;
+  var noUser = practitioners.filter(function (p) { return !p.user; }).length;
+
+  document.getElementById("mPrac").textContent = active;
+  document.getElementById("mSip").textContent = sipActive;
+  document.getElementById("mJadwal").textContent = schedules.length;
+  document.getElementById("mFee").textContent = feeRules.length;
+  document.getElementById("segPrac").textContent = practitioners.length;
+  document.getElementById("segSipAktif").textContent = sipActive;
+  document.getElementById("segSipSegera").textContent = near;
+  document.getElementById("segTanpaAkun").textContent = noUser;
+  document.getElementById("profilePracCount").textContent = practitioners.length + " praktisi";
+}
+
+function resetFilterPrac() {
+  document.getElementById("cariPrac").value = "";
+  document.getElementById("filterProfesi").value = "";
+  document.getElementById("filterUnit").value = "";
+  document.getElementById("filterStatusPrac").value = "";
+  renderPractitioners();
+}
+
+function updatePracLicPreview() {
+  var sip = document.getElementById("pracSip").value;
+  var until = document.getElementById("pracSipUntil").value;
+  var el = document.getElementById("pracLicPreview");
+  var note = document.getElementById("pracLicNote");
+  var mark = document.getElementById("markSipForm");
+
+  if (!sip || !until) {
+    el.textContent = "Belum ada data";
+    note.textContent = "Isi nomor SIP dan tanggal berlaku untuk melihat status.";
+    mark.textContent = "OK";
+    mark.className = "rule-mark rule-ok";
+    return;
+  }
+
+  var d = daysBetween(TODAY, until);
+  if (d < 0) {
+    el.textContent = "SIP kedaluwarsa";
+    el.style.color = "#9b1c1c";
+    note.textContent = "Kedaluwarsa " + Math.abs(d) + " hari. Jadwal dan penugasan baru akan ditolak.";
+    mark.textContent = "X";
+    mark.className = "rule-mark rule-warn";
+  } else if (d <= 30) {
+    el.textContent = "SIP segera berakhir";
+    el.style.color = "#8a5a00";
+    note.textContent = "Berlaku " + d + " hari lagi. Segera proses perpanjangan.";
+    mark.textContent = "OK";
+    mark.className = "rule-mark rule-ok";
+  } else {
+    el.textContent = "SIP aktif";
+    el.style.color = "#276749";
+    note.textContent = "Berlaku sampai " + until + " (" + d + " hari).";
+    mark.textContent = "OK";
+    mark.className = "rule-mark rule-ok";
+  }
+}
+
+function formBaruPraktisi() {
+  editingPrac = null;
+  document.getElementById("formModePrac").textContent = "Praktisi Baru";
+  document.getElementById("pracKode").value = "";
+  document.getElementById("pracKode").removeAttribute("readonly");
+  document.getElementById("pracNama").value = "";
+  document.getElementById("pracProfesi").value = "Dokter Umum";
+  document.getElementById("pracUnit").value = "Poli Umum";
+  document.getElementById("pracNik").value = "";
+  document.getElementById("pracUser").value = "";
+  document.getElementById("pracStr").value = "";
+  document.getElementById("pracSip").value = "";
+  document.getElementById("pracSipSeq").value = "1";
+  document.getElementById("pracSipFrom").value = "2026-01-01";
+  document.getElementById("pracSipUntil").value = "2026-12-31";
+  document.getElementById("pracSipa").value = "";
+  document.getElementById("pracStatus").value = "aktif";
+  document.getElementById("pracCatatan").value = "";
+  document.getElementById("pracError").style.display = "none";
+  updatePracLicPreview();
+  switchTab("tab-form");
+}
+
+function editPraktisi(code) {
+  var p = practitioners.filter(function (x) { return x.code === code; })[0];
+  if (!p) return;
+  editingPrac = code;
+  document.getElementById("formModePrac").textContent = "Ubah " + code;
+  document.getElementById("pracKode").value = p.code;
+  document.getElementById("pracKode").setAttribute("readonly", "readonly");
+  document.getElementById("pracNama").value = p.name;
+  document.getElementById("pracProfesi").value = p.profession;
+  document.getElementById("pracUnit").value = p.unit;
+  document.getElementById("pracUser").value = p.user;
+  document.getElementById("pracStr").value = p.str;
+  document.getElementById("pracSip").value = p.sip;
+  document.getElementById("pracSipSeq").value = String(p.sipSeq);
+  document.getElementById("pracSipFrom").value = p.sipFrom;
+  document.getElementById("pracSipUntil").value = p.sipUntil;
+  document.getElementById("pracSipa").value = p.sipa || "";
+  document.getElementById("pracStatus").value = p.active ? "aktif" : "nonaktif";
+  document.getElementById("pracCatatan").value = "";
+  document.getElementById("pracError").style.display = "none";
+  updatePracLicPreview();
+  switchTab("tab-form");
+}
+
+function showPracError(msg) {
+  var box = document.getElementById("pracError");
+  box.textContent = msg;
+  box.style.display = "block";
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function simpanPraktisi() {
+  var kode = (document.getElementById("pracKode").value || "").trim().toUpperCase();
+  var nama = (document.getElementById("pracNama").value || "").trim();
+  var profesi = document.getElementById("pracProfesi").value;
+  var unit = document.getElementById("pracUnit").value;
+  var str = (document.getElementById("pracStr").value || "").trim();
+  var sip = (document.getElementById("pracSip").value || "").trim();
+  var sipUntil = document.getElementById("pracSipUntil").value;
+  var sipFrom = document.getElementById("pracSipFrom").value;
+  var sipSeq = Number(document.getElementById("pracSipSeq").value);
+  var status = document.getElementById("pracStatus").value;
+  var catatan = (document.getElementById("pracCatatan").value || "").trim();
+  var nik = (document.getElementById("pracNik").value || "").trim();
+
+  document.getElementById("pracError").style.display = "none";
+
+  if (!/^PR-\d{3}$/.test(kode)) return showPracError("Kode praktisi harus berformat PR-XXX (tiga digit).");
+  if (!nama) return showPracError("Nama lengkap wajib diisi.");
+  if (!str) return showPracError("Nomor STR wajib diisi.");
+  if (!sip) return showPracError("Nomor SIP wajib diisi untuk fasilitas ini.");
+  if (!sipUntil) return showPracError("Tanggal berlaku SIP wajib diisi.");
+  if (sipFrom && sipUntil < sipFrom) return showPracError("Tanggal berlaku SIP tidak boleh lebih awal dari tanggal mulai.");
+  if (sipSeq < 1 || sipSeq > 3) return showPracError("Urutan SIP harus 1 sampai 3.");
+  if (nik && !/^\d{16}$/.test(nik)) return showPracError("NIK harus tepat 16 digit angka.");
+  if (!catatan) return showPracError("Catatan atau alasan perubahan wajib diisi untuk audit trail.");
+
+  if (status === "aktif" && daysBetween(TODAY, sipUntil) < 0) {
+    return showPracError("Praktisi aktif harus memiliki SIP yang masih berlaku. Perpanjang SIP atau ubah status menjadi nonaktif.");
+  }
+  if (profesi === "Apoteker" && !(document.getElementById("pracSipa").value || "").trim()) {
+    return showPracError("Apoteker wajib memiliki nomor SIPA.");
+  }
+
+  var existing = practitioners.filter(function (p) { return p.code === kode; })[0];
+
+  if (editingPrac === null) {
+    if (existing) return showPracError("Kode praktisi " + kode + " sudah dipakai.");
+    practitioners.push({
+      code: kode, name: nama, profession: profesi, unit: unit,
+      user: (document.getElementById("pracUser").value || "").trim(),
+      str: str, sip: sip, sipSeq: sipSeq, sipFrom: sipFrom, sipUntil: sipUntil,
+      sipa: (document.getElementById("pracSipa").value || "").trim(),
+      active: status === "aktif"
+    });
+    practitioners.sort(function (a, b) { return a.code.localeCompare(b.code); });
+  } else if (existing) {
+    existing.name = nama;
+    existing.profession = profesi;
+    existing.unit = unit;
+    existing.user = (document.getElementById("pracUser").value || "").trim();
+    existing.str = str;
+    existing.sip = sip;
+    existing.sipSeq = sipSeq;
+    existing.sipFrom = sipFrom;
+    existing.sipUntil = sipUntil;
+    existing.sipa = (document.getElementById("pracSipa").value || "").trim();
+    existing.active = status === "aktif";
+  }
+
+  renderPractitioners();
+  fillPracSelects();
+  renderFees();
+  formBaruPraktisi();
+  switchTab("tab-praktisi");
+}
+
+function togglePraktisi(code) {
+  var p = practitioners.filter(function (x) { return x.code === code; })[0];
+  if (!p) return;
+  if (p.active && !isSipActive(p)) {
+    alert("SIP praktisi " + code + " tidak aktif. Perpanjang SIP terlebih dahulu.");
+    return;
+  }
+  if (!confirm((p.active ? "Nonaktifkan" : "Aktifkan kembali") + " praktisi " + code + " - " + p.name + "?")) return;
+  p.active = !p.active;
+  renderPractitioners();
+  fillPracSelects();
+}
+
+function fillPracSelects() {
+  var opts = practitioners.map(function (p) {
+    return '<option value="' + p.code + '">' + escapeHtml(p.name) + "</option>";
+  }).join("");
+
+  var f = document.getElementById("filterJadwalPrac");
+  var cur = f.value;
+  f.innerHTML = '<option value="">Semua Praktisi</option>' + opts;
+  if (cur) f.value = cur;
+
+  var j = document.getElementById("jadwalPrac");
+  var curJ = j.value;
+  j.innerHTML = opts;
+  if (curJ) j.value = curJ;
+
+  var s = document.getElementById("simPrac");
+  var curS = s.value;
+  s.innerHTML = opts;
+  if (curS) s.value = curS;
+}
+
+function syncSipStatus() {
+  var code = document.getElementById("jadwalPrac").value;
+  var p = practitioners.filter(function (x) { return x.code === code; })[0];
+  var box = document.getElementById("sipBox");
+  var label = document.getElementById("sipStatus");
+
+  if (!p) {
+    box.className = "balance-box balance-warn";
+    label.textContent = "Praktisi tidak ditemukan";
+    return;
+  }
+  if (!isSipActive(p)) {
+    box.className = "balance-box balance-warn";
+    label.textContent = "TIDAK AKTIF - " + p.sip + " (jadwal ditolak)";
+  } else if (sipState(p) === "near") {
+    box.className = "balance-box balance-warn";
+    label.textContent = "SEGERA BERAKHIR - " + p.sip + " s.d. " + p.sipUntil;
+  } else {
+    box.className = "balance-box balance-ok";
+    label.textContent = "AKTIF - " + p.sip + " s.d. " + p.sipUntil;
+  }
+}
+
+function renderSchedules() {
+  var prac = document.getElementById("filterJadwalPrac").value;
+  var hari = document.getElementById("filterJadwalHari").value;
+  var tbody = document.getElementById("scheduleBody");
+  tbody.innerHTML = "";
+
+  var rows = schedules.filter(function (s) {
+    if (prac && s.code !== prac) return false;
+    if (hari && s.day !== hari) return false;
+    return true;
+  });
+
+  rows.forEach(function (s) {
+    var p = practitioners.filter(function (x) { return x.code === s.code; })[0];
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + escapeHtml(p ? p.name : s.code) + "</b>" + (p && !p.active ? ' <span class="status">Nonaktif</span>' : "") + "</td>"
+      + "<td>" + escapeHtml(s.day) + "</td>"
+      + "<td>" + escapeHtml(s.start) + " - " + escapeHtml(s.end) + "</td>"
+      + "<td>" + escapeHtml(s.unit) + "</td>"
+      + '<td style="text-align:right;">' + (s.quota > 0 ? s.quota : "&mdash;") + "</td>"
+      + '<td class="small muted">' + escapeHtml(s.from) + " s.d. " + escapeHtml(s.to) + "</td>"
+      + '<td><button type="button" class="btn secondary" style="padding:2px 7px;font-size:11px;" onclick="hapusJadwal(\'' + s.id + '\')">Hapus</button></td>';
+    tbody.appendChild(tr);
+  });
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="muted" style="text-align:center;padding:18px;">Tidak ada jadwal pada filter ini.</td></tr>';
+  }
+}
+
+function hapusJadwal(id) {
+  var s = schedules.filter(function (x) { return x.id === id; })[0];
+  if (!s) return;
+  if (!confirm("Hapus jadwal " + s.day + " " + s.start + "-" + s.end + "? Jadwal historis sebaiknya dinonaktifkan, bukan dihapus.")) return;
+  schedules = schedules.filter(function (x) { return x.id !== id; });
+  renderSchedules();
+  updatePracMetrics();
+}
+
+function simpanJadwal() {
+  var code = document.getElementById("jadwalPrac").value;
+  var p = practitioners.filter(function (x) { return x.code === code; })[0];
+  var day = document.getElementById("jadwalHari").value;
+  var start = document.getElementById("jadwalMulai").value;
+  var end = document.getElementById("jadwalSelesai").value;
+  var unit = document.getElementById("jadwalUnit").value;
+  var quota = Number(document.getElementById("jadwalKuota").value) || 0;
+  var from = document.getElementById("jadwalFrom").value;
+  var to = document.getElementById("jadwalTo").value;
+  var err = document.getElementById("jadwalError");
+  err.style.display = "none";
+
+  if (!p) return showJadwalError("Praktisi wajib dipilih.");
+  if (!p.active) return showJadwalError("Praktisi " + p.name + " berstatus nonaktif.");
+  if (!isSipActive(p)) return showJadwalError("Jadwal ditolak: SIP " + p.sip + " tidak aktif untuk fasilitas ini. Perpanjang SIP terlebih dahulu.");
+  if (!start || !end || start >= end) return showJadwalError("Jam selesai harus lebih besar dari jam mulai.");
+  if (quota < 0) return showJadwalError("Kuota tidak boleh negatif.");
+  if (!from || !to || from > to) return showJadwalError("Tanggal berlaku jadwal tidak valid.");
+
+  var unitAllowed = unit === p.unit || (p.profession === "Apoteker" && unit === "Farmasi") || (p.profession === "Bidan" && unit === "KIA");
+  if (!unitAllowed) {
+    return showJadwalError("Unit " + unit + " tidak sesuai penugasan praktisi. Tambahkan penugasan unit terlebih dahulu.");
+  }
+
+  schedules.push({
+    id: "SCH-" + String(schedules.length + 1).padStart(3, "0"),
+    code: code, day: day, start: start, end: end, unit: unit, quota: quota, from: from, to: to
+  });
+  renderSchedules();
+  updatePracMetrics();
+  err.style.display = "none";
+}
+
+function showJadwalError(msg) {
+  var err = document.getElementById("jadwalError");
+  err.textContent = msg;
+  err.style.display = "block";
+  err.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function renderFees() {
+  var tbody = document.getElementById("feeBody");
+  tbody.innerHTML = "";
+  feeRules.forEach(function (f) {
+    var p = practitioners.filter(function (x) { return x.code === f.code; })[0];
+    var nilai = f.basis === "percent" ? f.value + "%" : "Rp " + f.value.toLocaleString("id-ID");
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + escapeHtml(p ? p.name : f.code) + "</b></td>"
+      + "<td>" + escapeHtml(f.basis) + "</td>"
+      + '<td style="text-align:right;">' + escapeHtml(nilai) + "</td>"
+      + "<td>" + escapeHtml(f.coverage) + "</td>"
+      + '<td class="small muted">' + escapeHtml(f.from) + (f.to ? " s.d. " + escapeHtml(f.to) : " &rarr; seterusnya") + "</td>";
+    tbody.appendChild(tr);
+  });
+}
+
+function hitungJasa() {
+  var code = document.getElementById("simPrac").value;
+  var p = practitioners.filter(function (x) { return x.code === code; })[0];
+  var nilai = Number(document.getElementById("simNilai").value) || 0;
+  var payer = document.getElementById("simPayer").value;
+  var pphRate = Number(document.getElementById("simPph").value) || 0;
+
+  var rule = feeRules.filter(function (f) {
+    if (f.code !== code) return false;
+    if (f.coverage === "Semua pembayar") return true;
+    if (f.coverage === "Mandiri" && payer === "self") return true;
+    if (f.coverage === "Asuransi / BPJS" && (payer === "insurer" || payer === "bpjs")) return true;
+    return false;
+  })[0];
+
+  var basisLabel = "Tidak ada perjanjian";
+  var bruto = 0;
+
+  if (rule) {
+    if (rule.basis === "percent") {
+      basisLabel = rule.value + "% dari nilai layanan";
+      bruto = Math.round(nilai * rule.value / 100);
+    } else {
+      basisLabel = "Nominal tetap Rp " + rule.value.toLocaleString("id-ID");
+      bruto = Math.min(rule.value, nilai);
+    }
+  }
+
+  var pph = Math.round(bruto * pphRate / 100);
+  var net = bruto - pph;
+
+  document.getElementById("jasaNilai").textContent = formatRupiah(nilai);
+  document.getElementById("jasaBasis").textContent = basisLabel;
+  document.getElementById("jasaBruto").textContent = formatRupiah(bruto);
+  document.getElementById("jasaPph").textContent = formatRupiah(pph);
+  document.getElementById("jasaNet").textContent = formatRupiah(net);
+
+  var box = document.getElementById("jasaBox");
+  var status = document.getElementById("jasaStatus");
+  if (!rule) {
+    box.className = "balance-box balance-warn";
+    status.textContent = "TIDAK ADA PERJANJIAN JASA MEDIS";
+  } else {
+    box.className = "balance-box balance-ok";
+    status.textContent = "ACCRUED - diakui saat layanan diberikan";
+  }
+}
+
+function formatRupiah(n) {
+  return "Rp " + Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+}
+
+["pracSip", "pracSipUntil"].forEach(function (id) {
+  document.getElementById(id).addEventListener("input", updatePracLicPreview);
+  document.getElementById(id).addEventListener("change", updatePracLicPreview);
+});
+
+fillPracSelects();
+renderPractitioners();
+renderSchedules();
+renderFees();
+syncSipStatus();
+hitungJasa();
+updatePracLicPreview();
+</script>
+</body>
+</html>

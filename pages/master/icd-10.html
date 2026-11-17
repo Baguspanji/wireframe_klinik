@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master ICD-10 Diagnosis - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.segment-card {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  font-size: 11px;
+}
+.segment-card b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+tr.inactive-row td { color: #9aa0a6; }
+tr.inactive-row td .code-name { text-decoration: line-through; }
+
+.diag-code {
+  font-family: ui-monospace, Menlo, monospace;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.v-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 1px 5px;
+  border: 1px solid #c8e6cf;
+  background: #eaf7ec;
+  color: #276749;
+}
+.draft-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 1px 5px;
+  border: 1px solid #f0d7a0;
+  background: #fff3d6;
+  color: #8a5a00;
+}
+.dep-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 1px 5px;
+  border: 1px solid #e2e4e8;
+  background: #f1f2f4;
+  color: #777;
+}
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+
+.detail-box {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  padding: 12px;
+  font-size: 12px;
+}
+.detail-box h3 { margin: 0 0 4px; font-size: 15px; }
+.detail-box p { margin: 0 0 8px; font-size: 11px; color: var(--muted); line-height: 1.55; }
+
+.term-list {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #444;
+}
+.term-list li { margin-bottom: 2px; }
+
+.chapter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 11px;
+}
+.chapter-bar .bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #eef0f3;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.chapter-bar .bar-fill {
+  height: 100%;
+  background: #6c757d;
+  border-radius: 4px;
+}
+.chapter-bar .bar-label { width: 42px; text-align: right; font-size: 10px; color: #555; }
+
+.ver-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 11px;
+}
+.ver-row:last-child { border-bottom: 0; }
+.ver-row .ver-name { flex: 1; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MASTER DATA</div>
+  <div class="nav-group open" id="nav-master">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
+      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview Master</span></a>
+      <a class="nav-item nav-sub" href="obat.html"><span>Data Obat</span></a>
+      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
+      <a class="nav-item nav-sub" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
+      <a class="nav-item nav-sub" href="tarif.html"><span>Tarif Layanan</span></a>
+      <a class="nav-item nav-sub active" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
+      <a class="nav-item nav-sub" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Master Data <span style="margin:0 8px">/</span> Terminologi <span style="margin:0 8px">/</span> <b>ICD-10</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Koder Rekam Medis</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Master Data</a> <span>/</span> ICD-10 Diagnosis</div>
+        <h1>Master ICD-10 Diagnosis</h1>
+        <p>Terminologi diagnosis untuk encounter, kode rujukan SATUSEHAT, dan basis klaim. Rekam medis menyimpan snapshot kode dan judul saat diagnosis ditegakkan.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Master</a>
+        <button class="btn primary" onclick="openDetailByInput()">Buka Detail Kode</button>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <h2>Profil Terminologi</h2>
+          </div>
+          <span class="status dark" id="profileCodeCount">18 kode contoh</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Entitas:</b> PT Sehat Nusantara</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Tabel:</b> <span class="code-chip">terminology_codes</span></div>
+          <div><b>Sistem:</b> <span class="code-chip">ICD10</span></div>
+          <div><b>Versi Aktif:</b> ICD-10 2019 (WHO)</div>
+          <div><b>Bahasa:</b> Inggris + istilah Indonesia</div>
+          <div><b>Dipakai Pada:</b> Encounter &amp; klaim</div>
+          <div><b>Status Validasi:</b> Wajib <span class="code-chip">[V]</span></div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;">
+          <div class="segment-card"><b id="segCodes">18</b>Kode contoh</div>
+          <div class="segment-card"><b id="segVerified">12</b>Terverifikasi [V]</div>
+          <div class="segment-card"><b id="segDraft">6</b>Menunggu review</div>
+          <div class="segment-card"><b id="segChapters">8</b>Chapter terpakai</div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Kode ICD-10 yang dipakai pada encounter tidak boleh dihapus. Perubahan judul atau versi hanya berlaku untuk
+          encounter baru; dokumen lama tetap menyimpan snapshot kode dan judul saat diagnosis dicatat.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Perubahan Terakhir</h2>
+          </div>
+          <span class="muted small">Audit Trail</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 08:45 WIB</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">[V]</span>
+          </div>
+          <div class="history-diag">Verifikasi J06.9 Acute upper respiratory infection</div>
+          <div class="history-notes">Oleh Koder Rekam Medis &middot; rujukan WHO ICD-10 2019 &middot; siap dipakai encounter</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>16 Nov 2026 &middot; 16:20 WIB</span>
+            <span class="status dark">Diperbarui</span>
+          </div>
+          <div class="history-diag">Tambah istilah Indonesia untuk E11.9</div>
+          <div class="history-notes">Oleh Koder Rekam Medis &middot; &ldquo;Diabetes melitus tipe 2 tanpa komplikasi&rdquo; &middot; kode Inggris tetap</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>15 Nov 2026 &middot; 11:05 WIB</span>
+            <span class="status">Impor</span>
+          </div>
+          <div class="history-diag">Impor 240 kode chapter IX &amp; X</div>
+          <div class="history-notes">Oleh Administrator &middot; status menunggu review koder &middot; belum dapat dipakai encounter</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-daftar" onclick="switchTab('tab-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar Kode
+      </button>
+      <button class="exam-top-tab" data-tab="tab-detail" onclick="switchTab('tab-detail')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        2. Detail &amp; Pemetaan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-penggunaan" onclick="switchTab('tab-penggunaan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        3. Penggunaan Encounter
+      </button>
+      <button class="exam-top-tab" data-tab="tab-versi" onclick="switchTab('tab-versi')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        4. Versi &amp; Validasi
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR -->
+    <div class="tab-pane active" id="tab-daftar">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="card"><div class="metric-label">Kode Ditampilkan</div><div class="metric-value" id="mShown">18</div><div class="metric-note">Sesuai filter aktif</div></div>
+        <div class="card"><div class="metric-label">Terverifikasi</div><div class="metric-value" id="mVerified">12</div><div class="metric-note">Siap dipakai encounter</div></div>
+        <div class="card"><div class="metric-label">Pernah Dipakai</div><div class="metric-value" id="mUsed">9</div><div class="metric-note">Terkunci histori</div></div>
+        <div class="card"><div class="metric-label">Tanpa Istilah ID</div><div class="metric-value" id="mNoIndo">3</div><div class="metric-note">Perlu penerjemahan</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Katalog Kode ICD-10</h2>
+          <span class="muted small">Klik Detail untuk membuka tab pemetaan</span>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <input type="text" id="cariKode" class="field" placeholder="Cari kode atau judul diagnosis" oninput="renderCodes()" style="min-width:240px;">
+          <select id="filterChapter" class="field" onchange="renderCodes()">
+            <option value="">Semua Chapter</option>
+          </select>
+          <select id="filterValidasi" class="field" onchange="renderCodes()">
+            <option value="">Semua Status</option>
+            <option value="verified">Terverifikasi [V]</option>
+            <option value="draft">Menunggu review</option>
+          </select>
+          <select id="filterPemakaian" class="field" onchange="renderCodes()">
+            <option value="">Semua Pemakaian</option>
+            <option value="used">Pernah dipakai</option>
+            <option value="unused">Belum dipakai</option>
+          </select>
+          <button class="btn" onclick="resetFilterKode()">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:95px;">Kode</th>
+                <th>Judul Diagnosis</th>
+                <th style="width:95px;">Chapter</th>
+                <th style="width:80px;">Blok</th>
+                <th style="width:95px;">Validasi</th>
+                <th style="width:105px;">Dipakai</th>
+                <th style="width:110px;">Berlaku</th>
+                <th style="width:85px;text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="codeBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          <b>Kunci katalog:</b> kombinasi <span class="code-chip">system</span> + <span class="code-chip">code</span> +
+          <span class="code-chip">version</span> unik. Kode dengan status menunggu review tidak dapat dipilih pada
+          encounter sampai diverifikasi oleh koder.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DETAIL -->
+    <div class="tab-pane" id="tab-detail">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">
+            <h2>Detail Kode</h2>
+            <span class="status dark" id="detailBadge">Pilih kode</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cari &amp; pilih kode</label>
+            <select id="detailSelect" class="field" onchange="renderDetail()"></select>
+          </div>
+
+          <div id="detailBody"></div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Atribut <span class="code-chip">includes</span> dan <span class="code-chip">excludes</span> adalah bagian dari
+            definisi kode. Jangan menambahkan sinonim yang mengubah makna klinis tanpa persetujuan koder.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Pemetaan &amp; Snapshot</h2><span class="muted small">SATUSEHAT</span></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Atribut</th><th>Nilai</th><th style="width:110px;">Status</th></tr></thead>
+              <tbody id="mappingBody"></tbody>
+            </table>
+          </div>
+
+          <div class="rule-row" style="margin-top:10px;">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Snapshot saat diagnosis disimpan.</b><div class="small muted">Encounter menyimpan kode, judul, versi, dan waktu pemilihan. Perubahan master tidak mengubah dokumen lama.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Diagnosis utama wajib satu.</b><div class="small muted">Diagnosis sekunder boleh lebih dari satu, dengan urutan sesuai signifikansi klinis.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-warn">!</span>
+            <div><b>Kode eksternal diverifikasi.</b><div class="small muted">Pemetaan ke sistem eksternal harus merujuk versi resmi dan ditandai <span class="code-chip">[V]</span> sebelum dipakai klaim atau interoperabilitas.</div></div>
+          </div>
+
+          <div class="detail-box" style="margin-top:12px;">
+            <div class="metric-label">Pratinjau Snapshot Encounter</div>
+            <div id="snapshotBody" class="small" style="margin-top:6px;line-height:1.75;">Pilih kode untuk melihat contoh snapshot.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PENGGUNAAN -->
+    <div class="tab-pane" id="tab-penggunaan">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Penggunaan pada Encounter</h2><span class="status dark">Snapshot</span></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th style="width:120px;">Encounter</th><th>Pasien</th><th style="width:90px;">Kode</th><th>Judul Saat Dicatat</th><th style="width:90px;">Peran</th><th style="width:110px;">Waktu</th></tr>
+              </thead>
+              <tbody id="usageBody"></tbody>
+            </table>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Tabel ini menunjukkan bahwa encounter menyimpan judul kode saat dicatat. Bila judul master berubah, baris
+            historis tidak ikut berubah.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Distribusi Diagnosis</h2><span class="muted small">Contoh 30 hari</span></div>
+          <div id="distBody"></div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Kontrol Pemakaian</div>
+            <div class="sum-line"><span>Kode dipakai encounter</span><span id="usageUsed">9</span></div>
+            <div class="sum-line"><span>Kode belum pernah dipakai</span><span id="usageUnused">9</span></div>
+            <div class="sum-line"><span>Kode menunggu review</span><span id="usageDraft">6</span></div>
+            <div class="sum-line"><span>Kode dipakai tetapi belum [V]</span><span id="usageRisk">0</span></div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Kode yang sudah dipakai tidak dapat dihapus. Bila kode terbukti tidak valid, nonaktifkan dan gunakan kode
+            pengganti; koreksi rekam medis mengikuti prosedur retifikasi, bukan penulisan ulang langsung.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: VERSI -->
+    <div class="tab-pane" id="tab-versi">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Versi Terminologi</h2><span class="muted small">Append-only</span></div>
+          <div id="versionList"></div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Satu kode hanya boleh memiliki satu versi aktif pada satu tanggal. Impor versi baru tidak menimpa versi lama;
+            kode baru ditambahkan, kode yang tidak lagi berlaku ditandai nonaktif.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Validasi &amp; Kelengkapan</h2><span class="status dark">Kontrol</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Format kode sesuai pola ICD-10.</b><div class="small muted">Huruf kapital, titik pada posisi yang benar, dan panjang sesuai level kode.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Judul wajib ada dan tidak kosong.</b><div class="small muted">Judul asli berbahasa Inggris disimpan; istilah Indonesia bersifat tambahan.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok" id="markDraftGuard">OK</span>
+            <div><b>Status review wajib sebelum dipakai.</b><div class="small muted">Kode hasil impor berstatus menunggu review dan tidak muncul pada pilihan encounter.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode terpakai tidak dapat dihapus.</b><div class="small muted">Gunakan status nonaktif agar referensi historis tetap dapat ditelusuri.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Pemetaan eksternal bertanda versi.</b><div class="small muted">Setiap pemetaan menyimpan sistem tujuan, versi, dan tanggal verifikasi.</div></div>
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Ringkasan Validasi</div>
+            <div class="sum-line"><span>Total kode contoh</span><span id="valTotal">18</span></div>
+            <div class="sum-line"><span>Terverifikasi [V]</span><span id="valVerified">12</span></div>
+            <div class="sum-line"><span>Menunggu review</span><span id="valDraft">6</span></div>
+            <div class="sum-line"><span>Tanpa istilah Indonesia</span><span id="valNoIndo">3</span></div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            <b>Catatan implementasi:</b> katalog ICD-10 lengkap berjumlah lebih dari 14.000 kode. Halaman ini memuat
+            contoh terbatas untuk wireframe; impor produksi harus memakai berkas resmi dan melalui proses validasi koder.
+          </div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title"><h2>Cakupan Chapter</h2><span class="muted small">Kode contoh per chapter</span></div>
+        <div class="grid grid-2" id="chapterCoverage"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var TODAY = "2026-11-17";
+
+var chapters = {
+  "I": "Certain infectious and parasitic diseases (A00-B99)",
+  "IV": "Endocrine, nutritional and metabolic diseases (E00-E90)",
+  "V": "Mental and behavioural disorders (F00-F99)",
+  "VI": "Diseases of the nervous system (G00-G99)",
+  "VII": "Diseases of the eye and adnexa (H00-H59)",
+  "IX": "Diseases of the circulatory system (I00-I99)",
+  "X": "Diseases of the respiratory system (J00-J99)",
+  "XI": "Diseases of the digestive system (K00-K93)",
+  "XII": "Diseases of the skin and subcutaneous tissue (L00-L99)",
+  "XIII": "Diseases of the musculoskeletal system (M00-M99)",
+  "XIV": "Diseases of the genitourinary system (N00-N99)",
+  "XV": "Pregnancy, childbirth and the puerperium (O00-O99)",
+  "XVIII": "Symptoms, signs and abnormal findings (R00-R99)",
+  "XIX": "Injury, poisoning and external causes (S00-T98)",
+  "XXI": "Factors influencing health status (Z00-Z99)"
+};
+
+var codes = [
+  { code: "A09", chapter: "I", block: "A00-A09", title: "Diarrhoea and gastroenteritis of presumed infectious origin", indo: "Diare dan gastroenteritis diduga infeksi", verified: true, used: 14, version: "2019", active: true, includes: ["Diare infeksi", "Gastroenteritis infeksi"], excludes: ["Diare noninfeksi (K52.9)"] },
+  { code: "A15.0", chapter: "I", block: "A15-A19", title: "Tuberculosis of lung, confirmed by sputum microscopy", indo: "Tuberkulosis paru terkonfirmasi mikroskopik", verified: true, used: 6, version: "2019", active: true, includes: ["TB paru BTA positif"], excludes: ["TB paru tanpa konfirmasi (A16.2)"] },
+  { code: "E11.9", chapter: "IV", block: "E10-E14", title: "Type 2 diabetes mellitus without complications", indo: "Diabetes melitus tipe 2 tanpa komplikasi", verified: true, used: 22, version: "2019", active: true, includes: ["DM tipe 2", "Diabetes mellitus tipe II"], excludes: ["DM tipe 1 (E10)", "DM gestasional (O24.4)"] },
+  { code: "E78.5", chapter: "IV", block: "E70-E90", title: "Hyperlipidaemia, unspecified", indo: "", verified: true, used: 8, version: "2019", active: true, includes: ["Dislipidemia"], excludes: [] },
+  { code: "F41.1", chapter: "V", block: "F40-F48", title: "Generalized anxiety disorder", indo: "Gangguan ansietas menyeluruh", verified: true, used: 3, version: "2019", active: true, includes: ["Gangguan cemas menyeluruh"], excludes: ["Serangan panik (F41.0)"] },
+  { code: "G43.9", chapter: "VI", block: "G40-G47", title: "Migraine, unspecified", indo: "Migrain tidak spesifik", verified: false, used: 0, version: "2019", active: true, includes: [], excludes: ["Nyeri kepala tension (G44.2)"] },
+  { code: "H10.9", chapter: "VII", block: "H10-H13", title: "Conjunctivitis, unspecified", indo: "Konjungtivitis tidak spesifik", verified: true, used: 5, version: "2019", active: true, includes: ["Mata merah"], excludes: ["Konjungtivitis neonatorum (P39.1)"] },
+  { code: "I10", chapter: "IX", block: "I10-I15", title: "Essential (primary) hypertension", indo: "Hipertensi esensial (primer)", verified: true, used: 31, version: "2019", active: true, includes: ["Hipertensi primer"], excludes: ["Hipertensi sekunder (I15)"] },
+  { code: "I25.9", chapter: "IX", block: "I20-I25", title: "Chronic ischaemic heart disease, unspecified", indo: "Penyakit jantung iskemik kronik", verified: false, used: 0, version: "2019", active: true, includes: [], excludes: ["Infark miokard akut (I21)"] },
+  { code: "J06.9", chapter: "X", block: "J00-J06", title: "Acute upper respiratory infection, unspecified", indo: "Infeksi saluran napas atas akut", verified: true, used: 27, version: "2019", active: true, includes: ["ISPA", "Common cold"], excludes: ["Faringitis streptokokus (J02.0)"] },
+  { code: "J18.9", chapter: "X", block: "J09-J18", title: "Pneumonia, unspecified organism", indo: "Pneumonia tidak spesifik", verified: true, used: 4, version: "2019", active: true, includes: ["Bronkopneumonia"], excludes: ["Pneumonia neonatal (P23)"] },
+  { code: "K29.7", chapter: "XI", block: "K20-K31", title: "Gastritis, unspecified", indo: "Gastritis tidak spesifik", verified: true, used: 11, version: "2019", active: true, includes: ["Dispepsia dengan gastritis"], excludes: ["Ulkus peptikum (K27)"] },
+  { code: "L30.9", chapter: "XII", block: "L20-L30", title: "Dermatitis, unspecified", indo: "", verified: false, used: 0, version: "2019", active: true, includes: [], excludes: ["Dermatitis kontak (L23-L25)"] },
+  { code: "M54.5", chapter: "XIII", block: "M50-M54", title: "Low back pain", indo: "Nyeri punggung bawah", verified: true, used: 7, version: "2019", active: true, includes: ["Lumbalgia"], excludes: ["Nyeri punggung dengan radikulopati (M54.1)"] },
+  { code: "N39.0", chapter: "XIV", block: "N30-N39", title: "Urinary tract infection, site not specified", indo: "Infeksi saluran kemih", verified: true, used: 9, version: "2019", active: true, includes: ["ISK"], excludes: ["Pielonefritis (N10)"] },
+  { code: "O80", chapter: "XV", block: "O80-O84", title: "Single spontaneous delivery", indo: "Persalinan spontan tunggal", verified: false, used: 0, version: "2019", active: true, includes: ["Persalinan normal"], excludes: ["Persalinan dengan komplikasi (O81-O84)"] },
+  { code: "R50.9", chapter: "XVIII", block: "R50-R69", title: "Fever, unspecified", indo: "Demam tidak spesifik", verified: true, used: 12, version: "2019", active: true, includes: ["Febris", "Hipertermia NOS"], excludes: ["Demam berdarah (A91)", "Demam dengan kelainan sistem lain"] },
+  { code: "S52.5", chapter: "XIX", block: "S50-S59", title: "Fracture of lower end of radius", indo: "", verified: false, used: 0, version: "2019", active: true, includes: [], excludes: ["Fraktur radius bagian atas (S52.1)"] },
+  { code: "Z00.0", chapter: "XXI", block: "Z00-Z13", title: "General adult medical examination", indo: "Pemeriksaan medis umum dewasa", verified: true, used: 2, version: "2019", active: true, includes: ["MCU dewasa"], excludes: ["Pemeriksaan khusus (Z01)"] },
+  { code: "Z27.0", chapter: "XXI", block: "Z20-Z29", title: "Need inmunization against cholera", indo: "", verified: false, used: 0, version: "2019", active: false, includes: [], excludes: [] }
+];
+
+var usages = [
+  { encounter: "ENC-2026-1041", patient: "Tn. Bagus Pratama", code: "I10", title: "Essential (primary) hypertension", role: "Utama", at: "17 Nov 2026 09:20" },
+  { encounter: "ENC-2026-1041", patient: "Tn. Bagus Pratama", code: "E78.5", title: "Hyperlipidaemia, unspecified", role: "Sekunder", at: "17 Nov 2026 09:20" },
+  { encounter: "ENC-2026-1040", patient: "Ny. Siti Aminah", code: "E11.9", title: "Type 2 diabetes mellitus without complications", role: "Utama", at: "17 Nov 2026 08:55" },
+  { encounter: "ENC-2026-1039", patient: "An. Raka Wijaya", code: "J06.9", title: "Acute upper respiratory infection, unspecified", role: "Utama", at: "17 Nov 2026 08:30" },
+  { encounter: "ENC-2026-1039", patient: "An. Raka Wijaya", code: "R50.9", title: "Fever, unspecified", role: "Sekunder", at: "17 Nov 2026 08:30" },
+  { encounter: "ENC-2026-0388", patient: "Ny. Dewi Lestari", code: "K29.7", title: "Gastritis, unspecified", role: "Utama", at: "16 Nov 2026 14:10" },
+  { encounter: "ENC-2026-0387", patient: "Tn. Hendra Saputra", code: "M54.5", title: "Low back pain", role: "Utama", at: "16 Nov 2026 11:40" },
+  { encounter: "ENC-2026-0386", patient: "Ny. Rina Marlina", code: "N39.0", title: "Urinary tract infection, site not specified", role: "Utama", at: "16 Nov 2026 10:25" },
+  { encounter: "ENC-2026-0385", patient: "An. Nadia Putri", code: "A09", title: "Diarrhoea and gastroenteritis of presumed infectious origin", role: "Utama", at: "16 Nov 2026 09:05" }
+];
+
+var versions = [
+  { version: "2019", source: "WHO ICD-10 Volume 1 & 3", codes: 14400, imported: "10 Jan 2026", status: "Aktif", note: "Versi dasar yang dipakai fasilitas" },
+  { version: "2016", source: "WHO ICD-10", codes: 14100, imported: "10 Jan 2026", status: "Arsip", note: "Disimpan untuk membaca dokumen lama" },
+  { version: "ID-2026.1", source: "Katalog inisiatif internal", codes: 240, imported: "16 Nov 2026", status: "Review", note: "Istilah Indonesia, menunggu validasi koder" }
+];
+
+var selectedDetail = "J06.9";
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  if (tabId === "tab-detail") renderDetail();
+  if (tabId === "tab-penggunaan") { renderUsage(); renderDistribution(); }
+  if (tabId === "tab-versi") { renderVersions(); renderChapterCoverage(); updateValidation(); }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function verifiedTag(ok) {
+  return ok ? '<span class="v-tag">[V]</span>' : '<span class="draft-tag">Review</span>';
+}
+
+function activeTag(ok) {
+  return ok ? '<span class="status dark">Aktif</span>' : '<span class="status">Nonaktif</span>';
+}
+
+function chapterKeyOf(code) {
+  var found = codes.filter(function (c) { return c.code === code; })[0];
+  return found ? found.chapter : "";
+}
+
+function fillChapterFilter() {
+  var sel = document.getElementById("filterChapter");
+  var used = [];
+  codes.forEach(function (c) { if (used.indexOf(c.chapter) === -1) used.push(c.chapter); });
+  used.sort(function (a, b) { return a.localeCompare(b); });
+  sel.innerHTML = '<option value="">Semua Chapter</option>' + used.map(function (ch) {
+    return '<option value="' + ch + '">Chapter ' + ch + " &middot; " + escapeHtml(chapters[ch]) + "</option>";
+  }).join("");
+}
+
+function renderCodes() {
+  var q = (document.getElementById("cariKode").value || "").toLowerCase();
+  var chapter = document.getElementById("filterChapter").value;
+  var validasi = document.getElementById("filterValidasi").value;
+  var pemakaian = document.getElementById("filterPemakaian").value;
+  var tbody = document.getElementById("codeBody");
+  tbody.innerHTML = "";
+
+  var shown = codes.filter(function (c) {
+    if (q && c.code.toLowerCase().indexOf(q) === -1 && c.title.toLowerCase().indexOf(q) === -1 && (c.indo || "").toLowerCase().indexOf(q) === -1) return false;
+    if (chapter && c.chapter !== chapter) return false;
+    if (validasi === "verified" && !c.verified) return false;
+    if (validasi === "draft" && c.verified) return false;
+    if (pemakaian === "used" && c.used <= 0) return false;
+    if (pemakaian === "unused" && c.used > 0) return false;
+    return true;
+  });
+
+  shown.forEach(function (c) {
+    var tr = document.createElement("tr");
+    if (!c.active) tr.className = "inactive-row";
+    tr.innerHTML = "<td><span class='diag-code'>" + escapeHtml(c.code) + "</span></td>"
+      + '<td><span class="code-name"><b>' + escapeHtml(c.title) + "</b></span>"
+      + (c.indo ? '<div class="small muted">' + escapeHtml(c.indo) + "</div>" : '<div class="small muted">Belum ada istilah Indonesia</div>')
+      + "</td>"
+      + "<td>Chapter " + escapeHtml(c.chapter) + "</td>"
+      + '<td><span class="code-chip">' + escapeHtml(c.block) + "</span></td>"
+      + "<td>" + verifiedTag(c.verified) + "</td>"
+      + "<td>" + (c.used > 0 ? c.used + " encounter" : '<span class="muted small">Belum</span>') + "</td>"
+      + '<td class="small muted">ICD-10 ' + escapeHtml(c.version) + "</td>"
+      + '<td style="text-align:right;"><button type="button" class="btn" style="padding:2px 8px;font-size:11px;" onclick="openDetail(\'' + c.code + '\')">Detail</button></td>';
+    tbody.appendChild(tr);
+  });
+
+  if (shown.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:18px;">Tidak ada kode pada filter ini.</td></tr>';
+  }
+
+  updateListMetrics(shown);
+}
+
+function updateListMetrics(shown) {
+  var verified = codes.filter(function (c) { return c.verified; }).length;
+  var used = codes.filter(function (c) { return c.used > 0; }).length;
+  var noIndo = codes.filter(function (c) { return !c.indo; }).length;
+  var chapterUsed = [];
+  codes.forEach(function (c) { if (chapterUsed.indexOf(c.chapter) === -1) chapterUsed.push(c.chapter); });
+
+  document.getElementById("mShown").textContent = shown.length;
+  document.getElementById("mVerified").textContent = verified;
+  document.getElementById("mUsed").textContent = used;
+  document.getElementById("mNoIndo").textContent = noIndo;
+  document.getElementById("segCodes").textContent = codes.length;
+  document.getElementById("segVerified").textContent = verified;
+  document.getElementById("segDraft").textContent = codes.length - verified;
+  document.getElementById("segChapters").textContent = chapterUsed.length;
+  document.getElementById("profileCodeCount").textContent = codes.length + " kode contoh";
+}
+
+function resetFilterKode() {
+  document.getElementById("cariKode").value = "";
+  document.getElementById("filterChapter").value = "";
+  document.getElementById("filterValidasi").value = "";
+  document.getElementById("filterPemakaian").value = "";
+  renderCodes();
+}
+
+function fillDetailSelect() {
+  var sel = document.getElementById("detailSelect");
+  sel.innerHTML = codes.map(function (c) {
+    return '<option value="' + c.code + '">' + c.code + " &middot; " + escapeHtml(c.title) + "</option>";
+  }).join("");
+  sel.value = selectedDetail;
+}
+
+function openDetailByInput() {
+  switchTab("tab-detail");
+  renderDetail();
+}
+
+function openDetail(code) {
+  selectedDetail = code;
+  document.getElementById("detailSelect").value = code;
+  switchTab("tab-detail");
+  renderDetail();
+}
+
+function renderDetail() {
+  var code = document.getElementById("detailSelect").value;
+  if (!code) return;
+  selectedDetail = code;
+  var c = codes.filter(function (x) { return x.code === code; })[0];
+  if (!c) return;
+
+  var badge = document.getElementById("detailBadge");
+  badge.textContent = c.verified ? "Terverifikasi [V]" : "Menunggu review";
+  badge.className = "status " + (c.verified ? "dark" : "");
+
+  var body = document.getElementById("detailBody");
+  body.innerHTML = '<div class="detail-box">'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">'
+    + "<div><h3>" + escapeHtml(c.code) + " &mdash; " + escapeHtml(c.title) + "</h3>"
+    + '<p>' + (c.indo ? escapeHtml(c.indo) : "Istilah Indonesia belum tersedia.") + "</p></div>"
+    + verifiedTag(c.verified) + "</div>"
+    + '<div class="sum-line"><span>Chapter</span><span>' + escapeHtml(c.chapter) + " &middot; " + escapeHtml(chapters[c.chapter] || "-") + "</span></div>"
+    + '<div class="sum-line"><span>Blok</span><span><span class="code-chip">' + escapeHtml(c.block) + "</span></span></div>"
+    + '<div class="sum-line"><span>Versi</span><span>ICD-10 ' + escapeHtml(c.version) + "</span></div>"
+    + '<div class="sum-line"><span>Status</span><span>' + (c.active ? "Aktif" : "Nonaktif") + "</span></div>"
+    + '<div class="sum-line"><span>Pemakaian</span><span>' + (c.used > 0 ? c.used + " encounter" : "Belum pernah dipakai") + "</span></div>"
+    + "</div>";
+
+  if (c.includes.length) {
+    body.innerHTML += '<div class="detail-box" style="margin-top:10px;"><b style="font-size:12px;">Includes</b><ul class="term-list">'
+      + c.includes.map(function (i) { return "<li>" + escapeHtml(i) + "</li>"; }).join("") + "</ul></div>";
+  }
+  if (c.excludes.length) {
+    body.innerHTML += '<div class="detail-box" style="margin-top:10px;"><b style="font-size:12px;">Excludes</b><ul class="term-list">'
+      + c.excludes.map(function (i) { return "<li>" + escapeHtml(i) + "</li>"; }).join("") + "</ul></div>";
+  }
+
+  var mapBody = document.getElementById("mappingBody");
+  var rows = [
+    ["Sistem", "ICD10"],
+    ["Kode", c.code],
+    ["Versi", "2019"],
+    ["Chapter", "Chapter " + c.chapter],
+    ["Blok", c.block],
+    ["Status validasi", c.verified ? "Terverifikasi [V]" : "Menunggu review koder"],
+    ["Dipakai encounter", c.used > 0 ? c.used + " encounter" : "Belum"],
+    ["Pemetaan SATUSEHAT", c.verified ? "Siap (condition.code)" : "Ditahan sampai [V]"]
+  ];
+  mapBody.innerHTML = rows.map(function (r) {
+    var status = r[0] === "Status validasi"
+      ? (c.verified ? '<span class="status dark">OK</span>' : '<span class="status">Review</span>')
+      : (r[0] === "Pemetaan SATUSEHAT"
+        ? (c.verified ? '<span class="status dark">Siap</span>' : '<span class="status">Tertunda</span>')
+        : '<span class="muted small">&mdash;</span>');
+    return "<tr><td><b>" + escapeHtml(r[0]) + "</b></td><td>" + escapeHtml(r[1]) + "</td><td>" + status + "</td></tr>";
+  }).join("");
+
+  document.getElementById("snapshotBody").innerHTML =
+    "<div><b>condition.code</b> = <span class='code-chip'>" + escapeHtml(c.code) + "</span></div>"
+    + "<div><b>condition.display</b> = " + escapeHtml(c.title) + "</div>"
+    + "<div><b>system</b> = http://hl7.org/fhir/sid/icd-10</div>"
+    + "<div><b>snapshot_at</b> = 2026-11-17T09:20:00+07:00</div>"
+    + "<div><b>version</b> = ICD-10 " + escapeHtml(c.version) + "</div>"
+    + '<div class="small muted" style="margin-top:6px;">Judul disimpan sebagai snapshot, sehingga perubahan master tidak mengubah encounter ini.</div>';
+}
+
+function renderUsage() {
+  var tbody = document.getElementById("usageBody");
+  tbody.innerHTML = "";
+  usages.forEach(function (u) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + escapeHtml(u.encounter) + "</b></td>"
+      + "<td>" + escapeHtml(u.patient) + "</td>"
+      + '<td><span class="diag-code">' + escapeHtml(u.code) + "</span></td>"
+      + "<td>" + escapeHtml(u.title) + "</td>"
+      + '<td><span class="status ' + (u.role === "Utama" ? "dark" : "") + '">' + escapeHtml(u.role) + "</span></td>"
+      + '<td class="small muted">' + escapeHtml(u.at) + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  var used = codes.filter(function (c) { return c.used > 0; }).length;
+  var draft = codes.filter(function (c) { return !c.verified; }).length;
+  document.getElementById("usageUsed").textContent = used;
+  document.getElementById("usageUnused").textContent = codes.length - used;
+  document.getElementById("usageDraft").textContent = draft;
+  document.getElementById("usageRisk").textContent = codes.filter(function (c) { return c.used > 0 && !c.verified; }).length;
+}
+
+function renderDistribution() {
+  var wrap = document.getElementById("distBody");
+  var sorted = codes.filter(function (c) { return c.used > 0; }).slice().sort(function (a, b) { return b.used - a.used; });
+  var max = sorted.length ? sorted[0].used : 1;
+  wrap.innerHTML = sorted.map(function (c) {
+    var pct = Math.round(c.used / max * 100);
+    return '<div class="chapter-bar"><span style="width:78px;"><span class="diag-code">' + escapeHtml(c.code) + "</span></span>"
+      + '<span class="bar-bg"><span class="bar-fill" style="width:' + pct + '%;"></span></span>'
+      + '<span class="bar-label">' + c.used + "x</span></div>";
+  }).join("");
+}
+
+function renderVersions() {
+  var wrap = document.getElementById("versionList");
+  wrap.innerHTML = versions.map(function (v) {
+    var status = v.status === "Aktif" ? '<span class="status dark">Aktif</span>'
+      : (v.status === "Review" ? '<span class="status">Review</span>' : '<span class="status">Arsip</span>');
+    return '<div class="ver-row"><div class="ver-name"><b>' + escapeHtml(v.version) + "</b>"
+      + '<div class="small muted">' + escapeHtml(v.source) + " &middot; " + v.codes.toLocaleString("id-ID") + " kode</div>"
+      + '<div class="small muted">Impor ' + escapeHtml(v.imported) + " &middot; " + escapeHtml(v.note) + "</div></div>"
+      + status + "</div>";
+  }).join("");
+}
+
+function renderChapterCoverage() {
+  var wrap = document.getElementById("chapterCoverage");
+  var counts = {};
+  codes.forEach(function (c) { counts[c.chapter] = (counts[c.chapter] || 0) + 1; });
+  var keys = Object.keys(counts).sort(function (a, b) { return a.localeCompare(b); });
+  var max = 1;
+  keys.forEach(function (k) { if (counts[k] > max) max = counts[k]; });
+  wrap.innerHTML = keys.map(function (k) {
+    var pct = Math.round(counts[k] / max * 100);
+    return '<div class="chapter-bar"><span style="width:66px;">Chapter ' + escapeHtml(k) + "</span>"
+      + '<span class="bar-bg"><span class="bar-fill" style="width:' + pct + '%;"></span></span>'
+      + '<span class="bar-label">' + counts[k] + " kode</span></div>";
+  }).join("");
+}
+
+function updateValidation() {
+  var verified = codes.filter(function (c) { return c.verified; }).length;
+  var noIndo = codes.filter(function (c) { return !c.indo; }).length;
+  document.getElementById("valTotal").textContent = codes.length;
+  document.getElementById("valVerified").textContent = verified;
+  document.getElementById("valDraft").textContent = codes.length - verified;
+  document.getElementById("valNoIndo").textContent = noIndo;
+}
+
+fillChapterFilter();
+fillDetailSelect();
+renderCodes();
+renderDetail();
+renderUsage();
+renderDistribution();
+renderVersions();
+renderChapterCoverage();
+updateValidation();
+</script>
+</body>
+</html>
