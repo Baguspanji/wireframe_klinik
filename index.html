@@ -1,0 +1,818 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinic ERP - Wireframe</title>
+<style>
+:root {
+  --bg: #f4f5f6;
+  --surface: #fff;
+  --line: #dedfe2;
+  --text: #292d32;
+  --muted: #777e87;
+  --soft: #f7f7f8;
+  --active: #e9eaec;
+  --sidebar: 245px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px Arial, sans-serif;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.app { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar);
+  background: #fff;
+  border-right: 1px solid var(--line);
+  position: fixed;
+  inset: 0 auto 0 0;
+  overflow-y: auto;
+  padding: 18px 12px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 9px 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+.brand-icon {
+  width: 34px; height: 34px;
+  border: 1px solid #aaa;
+  border-radius: 7px;
+  display: grid; place-items: center;
+  font-weight: bold;
+}
+.brand strong { font-size: 14px; }
+.brand small { display: block; color: var(--muted); margin-top: 3px; }
+.nav-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: .7px;
+  padding: 15px 10px 7px;
+}
+.nav-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #555b62;
+  margin: 2px 0;
+}
+.nav-item:hover, .nav-item.active { background: var(--active); color: #222; }
+.nav-icon {
+  width: 17px; height: 17px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.nav-sub { padding-left: 36px; font-size: 12px; }
+
+/* Main */
+.main { margin-left: var(--sidebar); width: calc(100% - var(--sidebar)); }
+.topbar {
+  height: 58px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 26px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.topbar-left { color: var(--muted); }
+.topbar-right { display: flex; align-items: center; gap: 18px; }
+.avatar {
+  width: 30px; height: 30px;
+  border: 1px solid #aaa;
+  border-radius: 50%;
+  display: grid; place-items: center;
+}
+.content { padding: 25px 28px 50px; max-width: 1500px; margin: auto; }
+.page { display: none; }
+.page.active { display: block; }
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+h1 { font-size: 21px; margin: 0 0 7px; }
+h2 { font-size: 15px; margin: 0; }
+h3 { font-size: 13px; margin: 0; }
+p { color: var(--muted); margin: 0; line-height: 1.5; }
+.muted { color: var(--muted); }
+.small { font-size: 11px; }
+.btn {
+  background: #fff;
+  border: 1px solid #cfd1d4;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #333;
+}
+.btn.primary { background: #333; color: #fff; border-color: #333; }
+.btn + .btn { margin-left: 5px; }
+
+/* Layout components */
+.grid { display: grid; gap: 14px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 16px;
+  min-width: 0;
+}
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.metric-label { color: var(--muted); font-size: 12px; }
+.metric-value { font-size: 22px; font-weight: bold; margin: 9px 0 5px; }
+.metric-note { font-size: 11px; color: var(--muted); }
+.placeholder {
+  border: 1px dashed #c9cbd0;
+  background: #fafafa;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  color: #8a8f96;
+}
+.section { margin-top: 20px; }
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+.field, select {
+  height: 34px;
+  border: 1px solid #d5d7da;
+  border-radius: 4px;
+  background: #fff;
+  padding: 0 10px;
+  color: #444;
+}
+.field { min-width: 150px; }
+.field.search { min-width: 220px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+th {
+  background: #f7f7f8;
+  text-align: left;
+  color: #666d75;
+  font-weight: 600;
+  font-size: 11px;
+}
+th, td { padding: 11px 12px; border-bottom: 1px solid #e8e9eb; }
+td { font-size: 12px; }
+td.right, th.right { text-align: right; }
+tr:last-child td { border-bottom: 0; }
+.status {
+  display: inline-block;
+  border: 1px solid #d4d6d9;
+  border-radius: 3px;
+  padding: 4px 7px;
+  font-size: 10px;
+  color: #555;
+  background: #fafafa;
+}
+.status.dark { background: #e7e8ea; color: #333; }
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.tab {
+  border: 0;
+  background: none;
+  padding: 10px 2px;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+.tab.active { color: #222; border-color: #333; font-weight: bold; }
+.breadcrumb { color: var(--muted); font-size: 11px; margin-bottom: 12px; }
+.breadcrumb span { margin: 0 7px; }
+.report-layout { display: grid; grid-template-columns: 205px minmax(0,1fr); gap: 15px; }
+.report-menu { background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 10px; }
+.report-menu button {
+  width: 100%; border: 0; background: transparent; padding: 10px;
+  text-align: left; border-radius: 4px; color: #555;
+}
+.report-menu button.active, .report-menu button:hover { background: var(--active); color: #222; }
+.report-menu small { display: block; color: var(--muted); margin: 3px 0 0 0; }
+.report-content { min-width: 0; }
+.report-panel { display: none; }
+.report-panel.active { display: block; }
+.total-row td { font-weight: bold; background: #f7f7f8; }
+.indent { padding-left: 28px; }
+.bar-row {
+  display: grid;
+  grid-template-columns: 115px 1fr 90px;
+  gap: 10px;
+  align-items: center;
+  margin: 13px 0;
+  font-size: 11px;
+}
+.bar-track { background: #eee; height: 10px; border-radius: 2px; overflow: hidden; }
+.bar-fill { background: #999; height: 100%; }
+.flow {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.flow-box {
+  border: 1px solid #d1d3d6; background: #fafafa;
+  border-radius: 4px; padding: 12px; text-align: center; flex: 1;
+  min-width: 120px;
+}
+.flow-arrow { color: #999; font-size: 18px; }
+@media(max-width: 1000px) {
+  .grid-4 { grid-template-columns: repeat(2,1fr); }
+  .report-layout { grid-template-columns: 175px minmax(0,1fr); }
+}
+@media(max-width: 700px) {
+  .sidebar { width: 60px; padding: 12px 6px; }
+  .brand { justify-content: center; padding: 5px 0 15px; }
+  .brand div:last-child, .nav-label, .nav-item span:not(.nav-icon) { display: none; }
+  .nav-item { justify-content: center; padding: 12px 5px; }
+  .nav-sub { padding-left: 5px; }
+  .main { margin-left: 60px; width: calc(100% - 60px); }
+  .content { padding: 18px 12px; }
+  .topbar { padding: 0 12px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .page-heading { flex-direction: column; }
+  .report-layout { grid-template-columns: 1fr; }
+  .report-menu { display: flex; overflow-x: auto; }
+  .report-menu button { min-width: 130px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <button class="nav-item active" data-page="dashboard"><i class="nav-icon"></i><span>Dashboard</span></button>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <button class="nav-item" data-page="operasional"><i class="nav-icon"></i><span>Operasional Klinik</span></button>
+  <button class="nav-item" data-page="billing"><i class="nav-icon"></i><span>Billing & Kasir</span></button>
+
+  <div class="nav-label">KEUANGAN</div>
+  <button class="nav-item" data-page="accounting"><i class="nav-icon"></i><span>Accounting</span></button>
+  <button class="nav-item" data-page="reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></button>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <button class="nav-item" data-page="management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></button>
+  <button class="nav-item" data-page="settings"><i class="nav-icon"></i><span>Pengaturan</span></button>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> <b id="currentPage">Dashboard</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">A</span>
+      <span>Administrator</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <section class="page active" id="dashboard">
+      <div class="page-heading">
+        <div>
+          <div class="breadcrumb">General <span>/</span> Dashboard</div>
+          <h1>Dashboard</h1>
+          <p>Ringkasan aktivitas dan kondisi klinik hari ini.</p>
+        </div>
+        <button class="btn">17 November 2026 ▾</button>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="metric-label">Total Kunjungan Hari Ini</div>
+          <div class="metric-value">128</div>
+          <div class="metric-note">Pasien terdaftar</div>
+        </div>
+        <div class="card">
+          <div class="metric-label">Antrean Aktif</div>
+          <div class="metric-value">24</div>
+          <div class="metric-note">Menunggu pelayanan</div>
+        </div>
+        <div class="card">
+          <div class="metric-label">Pendapatan Hari Ini</div>
+          <div class="metric-value">Rp 12,8 jt</div>
+          <div class="metric-note">Dari transaksi tercatat</div>
+        </div>
+        <div class="card">
+          <div class="metric-label">Piutang Berjalan</div>
+          <div class="metric-value">Rp 8,4 jt</div>
+          <div class="metric-note">Pasien dan penjamin</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2 section">
+        <div class="card">
+          <div class="card-title"><h2>Aktivitas Pelayanan</h2><span class="muted small">Hari ini</span></div>
+          <div class="bar-row"><span>Poli Umum</span><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><b>54</b></div>
+          <div class="bar-row"><span>Poli Gigi</span><div class="bar-track"><div class="bar-fill" style="width:42%"></div></div><b>27</b></div>
+          <div class="bar-row"><span>Laboratorium</span><div class="bar-track"><div class="bar-fill" style="width:35%"></div></div><b>21</b></div>
+          <div class="bar-row"><span>IGD</span><div class="bar-track"><div class="bar-fill" style="width:18%"></div></div><b>12</b></div>
+          <div class="bar-row"><span>Rawat Inap</span><div class="bar-track"><div class="bar-fill" style="width:23%"></div></div><b>14</b></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><h2>Ringkasan Keuangan</h2><span class="muted small">Bulan ini</span></div>
+          <div class="bar-row"><span>Pendapatan</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><b>Rp 185 jt</b></div>
+          <div class="bar-row"><span>Pengeluaran</span><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><b>Rp 98 jt</b></div>
+          <div class="bar-row"><span>Piutang</span><div class="bar-track"><div class="bar-fill" style="width:25%"></div></div><b>Rp 42 jt</b></div>
+          <div class="placeholder" style="margin-top:16px">Grafik tren pendapatan dan pengeluaran</div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title"><h2>Transaksi Terbaru</h2><button class="btn" onclick="showPage('billing')">Lihat Semua</button></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>No. Transaksi</th><th>Pasien</th><th>Unit</th><th>Tanggal</th><th class="right">Total</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>INV-2026-00124</td><td>Andi Pratama</td><td>Poli Umum</td><td>17 Nov 2026</td><td class="right">Rp 150.000</td><td><span class="status dark">Lunas</span></td></tr>
+              <tr><td>INV-2026-00123</td><td>Siti Aminah</td><td>Laboratorium</td><td>17 Nov 2026</td><td class="right">Rp 275.000</td><td><span class="status">Belum Lunas</span></td></tr>
+              <tr><td>INV-2026-00122</td><td>Budi Santoso</td><td>Farmasi</td><td>17 Nov 2026</td><td class="right">Rp 85.000</td><td><span class="status dark">Lunas</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- OPERATIONAL -->
+    <section class="page" id="operasional">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Operasional <span>/</span> Overview</div><h1>Operasional Klinik</h1><p>Pengelolaan pasien dan seluruh aktivitas pelayanan klinis.</p></div>
+        <button class="btn primary">+ Registrasi Pasien</button>
+      </div>
+      <div class="grid grid-3">
+        <div class="card"><div class="metric-label">Pasien Terdaftar</div><div class="metric-value">12.480</div><p class="small">Total pasien</p></div>
+        <div class="card"><div class="metric-label">Kunjungan Bulan Ini</div><div class="metric-value">1.284</div><p class="small">Semua unit pelayanan</p></div>
+        <div class="card"><div class="metric-label">Pasien Rawat Inap</div><div class="metric-value">18</div><p class="small">Sedang dirawat</p></div>
+      </div>
+      <div class="card section">
+        <div class="card-title"><h2>Modul Pelayanan</h2></div>
+        <div class="grid grid-3">
+          <div class="placeholder">Pendaftaran & Loket</div>
+          <div class="placeholder">Poli Umum</div>
+          <div class="placeholder">Poli Gigi</div>
+          <div class="placeholder">KIA & Anak</div>
+          <div class="placeholder">IGD</div>
+          <div class="placeholder">Rawat Inap</div>
+          <div class="placeholder">Laboratorium</div>
+          <div class="placeholder">Farmasi</div>
+          <div class="placeholder">Rekam Medis</div>
+        </div>
+      </div>
+      <div class="card section">
+        <div class="card-title"><h2>Daftar Kunjungan</h2><button class="btn">Export</button></div>
+        <div class="filters"><input class="field search" placeholder="Cari pasien / nomor RM"><select><option>Semua Unit</option><option>Poli Umum</option></select><select><option>Semua Status</option></select><button class="btn">Filter</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. RM</th><th>Nama Pasien</th><th>Unit</th><th>Dokter</th><th>Waktu</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>RM-000124</td><td>Andi Pratama</td><td>Poli Umum</td><td>dr. Budi</td><td>08:15</td><td><span class="status dark">Selesai</span></td></tr>
+            <tr><td>RM-000125</td><td>Siti Aminah</td><td>Poli Gigi</td><td>drg. Rina</td><td>08:30</td><td><span class="status">Dalam Pelayanan</span></td></tr>
+            <tr><td>RM-000126</td><td>Budi Santoso</td><td>Laboratorium</td><td>Petugas Lab</td><td>09:00</td><td><span class="status">Menunggu</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- BILLING -->
+    <section class="page" id="billing">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Keuangan <span>/</span> Billing & Kasir</div><h1>Billing & Kasir</h1><p>Tagihan pelayanan, pembayaran pasien, dan piutang penjamin.</p></div>
+        <button class="btn primary">+ Input Pembayaran</button>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Total Tagihan</div><div class="metric-value">Rp 185 jt</div></div>
+        <div class="card"><div class="metric-label">Sudah Dibayar</div><div class="metric-value">Rp 143 jt</div></div>
+        <div class="card"><div class="metric-label">Piutang Pasien</div><div class="metric-value">Rp 12 jt</div></div>
+        <div class="card"><div class="metric-label">Piutang Penjamin</div><div class="metric-value">Rp 30 jt</div></div>
+      </div>
+      <div class="card section">
+        <div class="tabs">
+          <button class="tab active">Daftar Invoice</button><button class="tab">Pembayaran</button><button class="tab">Piutang</button><button class="tab">Refund</button><button class="tab">Sesi Kasir</button>
+        </div>
+        <div class="filters">
+          <input class="field search" placeholder="Cari invoice / pasien">
+          <select><option>Semua Status</option><option>Lunas</option><option>Belum Lunas</option></select>
+          <input class="field" type="date" value="2026-11-01">
+          <button class="btn">Filter</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Invoice</th><th>Pasien</th><th>Sumber</th><th>Tanggal</th><th class="right">Tagihan</th><th class="right">Dibayar</th><th class="right">Sisa</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>INV-00124</td><td>Andi Pratama</td><td>Poli Umum</td><td>17 Nov 2026</td><td class="right">150.000</td><td class="right">150.000</td><td class="right">0</td><td><span class="status dark">Lunas</span></td></tr>
+            <tr><td>INV-00123</td><td>Siti Aminah</td><td>Laboratorium</td><td>17 Nov 2026</td><td class="right">275.000</td><td class="right">100.000</td><td class="right">175.000</td><td><span class="status">Parsial</span></td></tr>
+            <tr><td>INV-00122</td><td>Budi Santoso</td><td>Farmasi</td><td>17 Nov 2026</td><td class="right">85.000</td><td class="right">0</td><td class="right">85.000</td><td><span class="status">Belum Lunas</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="card section">
+        <div class="card-title"><h2>Alur Billing dan Pembayaran</h2></div>
+        <div class="flow">
+          <div class="flow-box"><b>Service Transaction</b><p class="small">Biaya pelayanan</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Billing Engine</b><p class="small">Invoice & piutang</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Kasir</b><p class="small">Pembayaran & refund</p></div><span class="flow-arrow">→</span>
+          <div class="flow-box"><b>Accounting</b><p class="small">Jurnal transaksi</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNTING -->
+    <section class="page" id="accounting">
+      <div class="page-heading">
+        <div><div class="breadcrumb">Keuangan <span>/</span> Accounting</div><h1>Accounting</h1><p>Pengelolaan akun, jurnal, buku besar, dan periode akuntansi.</p></div>
+        <button class="btn primary">+ Buat Jurnal</button>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Total Pendapatan</div><div class="metric-value">Rp 185 jt</div><div class="metric-note">Bulan berjalan</div></div>
+        <div class="card"><div class="metric-label">Total Beban</div><div class="metric-value">Rp 98 jt</div><div class="metric-note">Bulan berjalan</div></div>
+        <div class="card"><div class="metric-label">Laba Berjalan</div><div class="metric-value">Rp 87 jt</div><div class="metric-note">Sebelum penyesuaian</div></div>
+        <div class="card"><div class="metric-label">Jurnal Menunggu</div><div class="metric-value">12</div><div class="metric-note">Belum diposting</div></div>
+      </div>
+      <div class="grid grid-2 section">
+        <div class="card">
+          <div class="card-title"><h2>Menu Accounting</h2></div>
+          <div class="table-wrap"><table>
+            <tbody>
+              <tr><td>Chart of Accounts</td><td class="right"><button class="btn">Buka</button></td></tr>
+              <tr><td>Account Mapping</td><td class="right"><button class="btn">Buka</button></td></tr>
+              <tr><td>Journal Entries</td><td class="right"><button class="btn">Buka</button></td></tr>
+              <tr><td>General Ledger</td><td class="right"><button class="btn">Buka</button></td></tr>
+              <tr><td>Trial Balance</td><td class="right"><button class="btn">Buka</button></td></tr>
+              <tr><td>Accounting Period</td><td class="right"><button class="btn">Buka</button></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><h2>Status Periode Akuntansi</h2></div>
+          <p class="small">Periode November 2026</p>
+          <div style="font-size:20px;font-weight:bold;margin:12px 0">Open</div>
+          <p class="small">Periode masih terbuka untuk transaksi dan jurnal.</p>
+          <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+          <div class="metric-label">Jurnal belum diposting</div><div class="metric-value">12</div>
+          <div class="metric-label">Jurnal sudah diposting</div><div class="metric-value">348</div>
+          <button class="btn">Kelola Periode</button>
+        </div>
+      </div>
+      <div class="card section">
+        <div class="card-title"><h2>Jurnal Terbaru</h2><button class="btn">Lihat Semua</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>No. Jurnal</th><th>Tanggal</th><th>Deskripsi</th><th>Sumber</th><th class="right">Debit</th><th class="right">Kredit</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>JV-2026-0348</td><td>17 Nov 2026</td><td>Pendapatan pelayanan Poli Umum</td><td>Billing</td><td class="right">150.000</td><td class="right">150.000</td><td><span class="status dark">Posted</span></td></tr>
+            <tr><td>JV-2026-0347</td><td>17 Nov 2026</td><td>Pembelian persediaan obat</td><td>Purchasing</td><td class="right">2.500.000</td><td class="right">2.500.000</td><td><span class="status">Draft</span></td></tr>
+            <tr><td>JV-2026-0346</td><td>16 Nov 2026</td><td>Pembayaran biaya listrik</td><td>Expense</td><td class="right">850.000</td><td class="right">850.000</td><td><span class="status dark">Posted</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- FINANCIAL REPORTS -->
+    <section class="page" id="reports">
+      <div class="page-heading">
+        <div>
+          <div class="breadcrumb">Keuangan <span>/</span> Laporan Keuangan</div>
+          <h1>Laporan Keuangan</h1>
+          <p>Laporan keuangan berdasarkan jurnal yang telah diposting ke General Ledger.</p>
+        </div>
+        <div><button class="btn">Export PDF</button><button class="btn">Export Excel</button></div>
+      </div>
+
+      <div class="filters">
+        <select><option>November 2026</option><option>Oktober 2026</option></select>
+        <select><option>Semua Unit</option><option>Poli Umum</option><option>Poli Gigi</option></select>
+        <select><option>Semua Cabang</option><option>Klinik Utama</option></select>
+        <button class="btn primary">Terapkan Filter</button>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card"><div class="metric-label">Total Pendapatan</div><div class="metric-value">Rp 185,4 jt</div><div class="metric-note">Periode November 2026</div></div>
+        <div class="card"><div class="metric-label">Total Beban</div><div class="metric-value">Rp 98,2 jt</div><div class="metric-note">Periode November 2026</div></div>
+        <div class="card"><div class="metric-label">Laba Bersih</div><div class="metric-value">Rp 87,2 jt</div><div class="metric-note">Pendapatan - beban</div></div>
+        <div class="card"><div class="metric-label">Kas & Bank</div><div class="metric-value">Rp 124,8 jt</div><div class="metric-note">Saldo akhir periode</div></div>
+      </div>
+
+      <div class="report-layout section">
+        <!-- REPORT MENU -->
+        <aside class="report-menu">
+          <div class="nav-label" style="padding:7px 8px 10px">LAPORAN</div>
+          <button class="active" data-report="overview">Ringkasan Keuangan<small>Financial overview</small></button>
+          <button data-report="income">Laba Rugi<small>Income statement</small></button>
+          <button data-report="balance">Neraca<small>Balance sheet</small></button>
+          <button data-report="cashflow">Arus Kas<small>Cash flow</small></button>
+          <button data-report="ledger">Buku Besar<small>General ledger</small></button>
+          <button data-report="trial">Neraca Saldo<small>Trial balance</small></button>
+          <button data-report="unit">Pendapatan per Unit<small>Revenue by unit</small></button>
+        </aside>
+
+        <!-- REPORT CONTENT -->
+        <div class="report-content">
+
+          <!-- OVERVIEW -->
+          <div class="report-panel active" id="report-overview">
+            <div class="card">
+              <div class="card-title"><div><h2>Ringkasan Keuangan</h2><p class="small" style="margin-top:5px">Periode 1 - 30 November 2026</p></div><span class="status dark">Data Posted</span></div>
+              <div class="grid grid-2">
+                <div>
+                  <div class="metric-label">Pendapatan dan Beban</div>
+                  <div class="bar-row"><span>Pendapatan</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><b>185,4 jt</b></div>
+                  <div class="bar-row"><span>Beban</span><div class="bar-track"><div class="bar-fill" style="width:53%"></div></div><b>98,2 jt</b></div>
+                  <div class="bar-row"><span>Laba</span><div class="bar-track"><div class="bar-fill" style="width:47%"></div></div><b>87,2 jt</b></div>
+                </div>
+                <div>
+                  <div class="metric-label">Komposisi Pendapatan</div>
+                  <div class="bar-row"><span>Poli</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><b>75 jt</b></div>
+                  <div class="bar-row"><span>Farmasi</span><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><b>60 jt</b></div>
+                  <div class="bar-row"><span>Lab</span><div class="bar-track"><div class="bar-fill" style="width:35%"></div></div><b>35 jt</b></div>
+                  <div class="bar-row"><span>Rawat Inap</span><div class="bar-track"><div class="bar-fill" style="width:15%"></div></div><b>15 jt</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-2 section">
+              <div class="card"><div class="card-title"><h2>Ringkasan Aset</h2></div><div class="metric-value">Rp 485,2 jt</div><p class="small">Total aset per 30 November</p><div class="placeholder" style="margin-top:15px">Komposisi aset lancar dan aset tetap</div></div>
+              <div class="card"><div class="card-title"><h2>Ringkasan Arus Kas</h2></div><div class="metric-value">Rp 124,8 jt</div><p class="small">Saldo kas dan bank akhir periode</p><div class="placeholder" style="margin-top:15px">Grafik arus kas masuk dan keluar</div></div>
+            </div>
+            <div class="card section">
+              <div class="card-title"><h2>Aktivitas Keuangan Terbaru</h2></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Tanggal</th><th>Aktivitas</th><th>Referensi</th><th>Modul Sumber</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>17 Nov 2026</td><td>Pengakuan pendapatan konsultasi</td><td>JV-0348</td><td>Billing</td><td><span class="status dark">Posted</span></td></tr>
+                  <tr><td>17 Nov 2026</td><td>Pembelian persediaan</td><td>JV-0347</td><td>Purchasing</td><td><span class="status">Draft</span></td></tr>
+                  <tr><td>16 Nov 2026</td><td>Pembayaran biaya listrik</td><td>JV-0346</td><td>Expense</td><td><span class="status dark">Posted</span></td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </div>
+
+          <!-- INCOME STATEMENT -->
+          <div class="report-panel" id="report-income">
+            <div class="card">
+              <div class="card-title"><div><h2>Laporan Laba Rugi</h2><p class="small" style="margin-top:5px">Periode 1 - 30 November 2026</p></div><button class="btn">Cetak Laporan</button></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Kode</th><th>Nama Akun</th><th class="right">Periode Ini</th><th class="right">Periode Lalu</th></tr></thead>
+                <tbody>
+                  <tr class="total-row"><td colspan="4">PENDAPATAN</td></tr>
+                  <tr><td>4-100</td><td>Pendapatan Pelayanan</td><td class="right">Rp 125.000.000</td><td class="right">Rp 112.000.000</td></tr>
+                  <tr><td>4-200</td><td>Pendapatan Farmasi</td><td class="right">Rp 60.400.000</td><td class="right">Rp 55.000.000</td></tr>
+                  <tr class="total-row"><td colspan="2">Total Pendapatan</td><td class="right">Rp 185.400.000</td><td class="right">Rp 167.000.000</td></tr>
+                  <tr class="total-row"><td colspan="4">BEBAN POKOK</td></tr>
+                  <tr><td>5-100</td><td>Beban Pokok Obat</td><td class="right">Rp 32.000.000</td><td class="right">Rp 29.000.000</td></tr>
+                  <tr class="total-row"><td colspan="2">Laba Kotor</td><td class="right">Rp 153.400.000</td><td class="right">Rp 138.000.000</td></tr>
+                  <tr class="total-row"><td colspan="4">BEBAN OPERASIONAL</td></tr>
+                  <tr><td>6-100</td><td>Beban Gaji</td><td class="right">Rp 35.000.000</td><td class="right">Rp 33.000.000</td></tr>
+                  <tr><td>6-200</td><td>Beban Operasional</td><td class="right">Rp 18.000.000</td><td class="right">Rp 17.000.000</td></tr>
+                  <tr><td>6-300</td><td>Beban Utilitas</td><td class="right">Rp 8.200.000</td><td class="right">Rp 7.500.000</td></tr>
+                  <tr><td>6-400</td><td>Beban Penyusutan</td><td class="right">Rp 5.000.000</td><td class="right">Rp 5.000.000</td></tr>
+                  <tr class="total-row"><td colspan="2">Total Beban</td><td class="right">Rp 98.200.000</td><td class="right">Rp 91.500.000</td></tr>
+                  <tr class="total-row"><td colspan="2">LABA BERSIH</td><td class="right">Rp 87.200.000</td><td class="right">Rp 75.500.000</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </div>
+
+          <!-- BALANCE SHEET -->
+          <div class="report-panel" id="report-balance">
+            <div class="card">
+              <div class="card-title"><div><h2>Neraca</h2><p class="small" style="margin-top:5px">Posisi keuangan per 30 November 2026</p></div><button class="btn">Cetak Laporan</button></div>
+              <div class="grid grid-2">
+                <div class="table-wrap"><table>
+                  <thead><tr><th colspan="2">ASET</th></tr></thead>
+                  <tbody>
+                    <tr class="total-row"><td colspan="2">Aset Lancar</td></tr>
+                    <tr><td>Kas dan Bank</td><td class="right">Rp 124.800.000</td></tr>
+                    <tr><td>Piutang Pasien</td><td class="right">Rp 25.000.000</td></tr>
+                    <tr><td>Piutang Penjamin</td><td class="right">Rp 45.000.000</td></tr>
+                    <tr><td>Persediaan</td><td class="right">Rp 65.000.000</td></tr>
+                    <tr class="total-row"><td>Total Aset Lancar</td><td class="right">Rp 259.800.000</td></tr>
+                    <tr class="total-row"><td colspan="2">Aset Tetap</td></tr>
+                    <tr><td>Peralatan Medis</td><td class="right">Rp 250.000.000</td></tr>
+                    <tr><td>Akumulasi Penyusutan</td><td class="right">(Rp 24.600.000)</td></tr>
+                    <tr class="total-row"><td>Total Aset Tetap</td><td class="right">Rp 225.400.000</td></tr>
+                    <tr class="total-row"><td>TOTAL ASET</td><td class="right">Rp 485.200.000</td></tr>
+                  </tbody>
+                </table></div>
+                <div class="table-wrap"><table>
+                  <thead><tr><th colspan="2">LIABILITAS & EKUITAS</th></tr></thead>
+                  <tbody>
+                    <tr class="total-row"><td colspan="2">Liabilitas</td></tr>
+                    <tr><td>Utang Supplier</td><td class="right">Rp 42.000.000</td></tr>
+                    <tr><td>Utang Operasional</td><td class="right">Rp 8.000.000</td></tr>
+                    <tr class="total-row"><td>Total Liabilitas</td><td class="right">Rp 50.000.000</td></tr>
+                    <tr class="total-row"><td colspan="2">Ekuitas</td></tr>
+                    <tr><td>Modal</td><td class="right">Rp 348.000.000</td></tr>
+                    <tr><td>Laba Ditahan & Berjalan</td><td class="right">Rp 87.200.000</td></tr>
+                    <tr class="total-row"><td>Total Ekuitas</td><td class="right">Rp 435.200.000</td></tr>
+                    <tr class="total-row"><td>TOTAL LIABILITAS & EKUITAS</td><td class="right">Rp 485.200.000</td></tr>
+                  </tbody>
+                </table></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CASH FLOW -->
+          <div class="report-panel" id="report-cashflow">
+            <div class="card">
+              <div class="card-title"><div><h2>Laporan Arus Kas</h2><p class="small" style="margin-top:5px">Periode 1 - 30 November 2026</p></div><button class="btn">Cetak Laporan</button></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Uraian</th><th class="right">Nilai</th></tr></thead>
+                <tbody>
+                  <tr class="total-row"><td>ARUS KAS DARI AKTIVITAS OPERASI</td><td></td></tr>
+                  <tr><td>Penerimaan dari Pasien</td><td class="right">Rp 135.000.000</td></tr>
+                  <tr><td>Penerimaan dari Penjamin</td><td class="right">Rp 25.000.000</td></tr>
+                  <tr><td>Pembayaran Supplier</td><td class="right">(Rp 28.000.000)</td></tr>
+                  <tr><td>Pembayaran Gaji dan Operasional</td><td class="right">(Rp 45.000.000)</td></tr>
+                  <tr class="total-row"><td>Kas Bersih dari Aktivitas Operasi</td><td class="right">Rp 87.000.000</td></tr>
+                  <tr class="total-row"><td>ARUS KAS DARI AKTIVITAS INVESTASI</td><td></td></tr>
+                  <tr><td>Pembelian Peralatan Medis</td><td class="right">(Rp 15.000.000)</td></tr>
+                  <tr class="total-row"><td>Kas Bersih dari Aktivitas Investasi</td><td class="right">(Rp 15.000.000)</td></tr>
+                  <tr class="total-row"><td>ARUS KAS DARI AKTIVITAS PENDANAAN</td><td></td></tr>
+                  <tr><td>Setoran Modal</td><td class="right">Rp 10.000.000</td></tr>
+                  <tr class="total-row"><td>Kas Bersih dari Aktivitas Pendanaan</td><td class="right">Rp 10.000.000</td></tr>
+                  <tr class="total-row"><td>Kenaikan Bersih Kas</td><td class="right">Rp 82.000.000</td></tr>
+                  <tr><td>Saldo Kas Awal</td><td class="right">Rp 42.800.000</td></tr>
+                  <tr class="total-row"><td>SALDO KAS AKHIR</td><td class="right">Rp 124.800.000</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </div>
+
+          <!-- GENERAL LEDGER -->
+          <div class="report-panel" id="report-ledger">
+            <div class="card">
+              <div class="card-title"><div><h2>Buku Besar</h2><p class="small" style="margin-top:5px">Rincian mutasi setiap akun.</p></div><button class="btn">Export</button></div>
+              <div class="filters"><select><option>1101 - Kas</option><option>4101 - Pendapatan Pelayanan</option></select><input class="field" type="date" value="2026-11-01"><input class="field" type="date" value="2026-11-30"><button class="btn">Tampilkan</button></div>
+              <div class="grid grid-3" style="margin-bottom:15px">
+                <div class="card"><div class="metric-label">Saldo Awal</div><div class="metric-value">Rp 42,8 jt</div></div>
+                <div class="card"><div class="metric-label">Mutasi Debit</div><div class="metric-value">Rp 160 jt</div></div>
+                <div class="card"><div class="metric-label">Saldo Akhir</div><div class="metric-value">Rp 124,8 jt</div></div>
+              </div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Tanggal</th><th>No. Jurnal</th><th>Keterangan</th><th class="right">Debit</th><th class="right">Kredit</th><th class="right">Saldo</th></tr></thead>
+                <tbody>
+                  <tr><td>01 Nov</td><td>OPEN-001</td><td>Saldo awal</td><td class="right">42.800.000</td><td class="right">-</td><td class="right">42.800.000</td></tr>
+                  <tr><td>02 Nov</td><td>JV-0301</td><td>Penerimaan kasir</td><td class="right">15.000.000</td><td class="right">-</td><td class="right">57.800.000</td></tr>
+                  <tr><td>03 Nov</td><td>JV-0305</td><td>Pembayaran supplier</td><td class="right">-</td><td class="right">5.000.000</td><td class="right">52.800.000</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+          </div>
+
+          <!-- TRIAL BALANCE -->
+          <div class="report-panel" id="report-trial">
+            <div class="card">
+              <div class="card-title"><div><h2>Neraca Saldo</h2><p class="small" style="margin-top:5px">Periode November 2026</p></div><span class="status dark">Balance</span></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Kode Akun</th><th>Nama Akun</th><th class="right">Debit</th><th class="right">Kredit</th></tr></thead>
+                <tbody>
+                  <tr><td>1101</td><td>Kas dan Bank</td><td class="right">124.800.000</td><td class="right">-</td></tr>
+                  <tr><td>1201</td><td>Piutang Pasien</td><td class="right">25.000.000</td><td class="right">-</td></tr>
+                  <tr><td>1202</td><td>Persediaan</td><td class="right">65.000.000</td><td class="right">-</td></tr>
+                  <tr><td>2101</td><td>Utang Supplier</td><td class="right">-</td><td class="right">42.000.000</td></tr>
+                  <tr><td>3101</td><td>Modal</td><td class="right">-</td><td class="right">348.000.000</td></tr>
+                  <tr><td>4101</td><td>Pendapatan Pelayanan</td><td class="right">-</td><td class="right">125.000.000</td></tr>
+                  <tr><td>4102</td><td>Pendapatan Farmasi</td><td class="right">-</td><td class="right">60.400.000</td></tr>
+                  <tr><td>6101</td><td>Beban Gaji</td><td class="right">35.000.000</td><td class="right">-</td></tr>
+                  <tr class="total-row"><td colspan="2">TOTAL</td><td class="right">249.800.000</td><td class="right">575.400.000</td></tr>
+                </tbody>
+              </table></div>
+              <p class="small" style="margin-top:10px">Contoh struktur tampilan. Saldo neraca saldo aktual harus berasal dari seluruh akun dan jurnal terposting.</p>
+            </div>
+          </div>
+
+          <!-- UNIT REPORT -->
+          <div class="report-panel" id="report-unit">
+            <div class="card">
+              <div class="card-title"><div><h2>Pendapatan per Unit Pelayanan</h2><p class="small" style="margin-top:5px">Analisis pendapatan berdasarkan cost center.</p></div><button class="btn">Export</button></div>
+              <div class="filters"><select><option>November 2026</option></select><select><option>Semua Unit</option></select><button class="btn">Tampilkan</button></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Unit Pelayanan</th><th class="right">Pendapatan</th><th class="right">Beban</th><th class="right">Laba Kontribusi</th><th class="right">Kontribusi</th></tr></thead>
+                <tbody>
+                  <tr><td>Poli Umum</td><td class="right">Rp 45.000.000</td><td class="right">Rp 18.000.000</td><td class="right">Rp 27.000.000</td><td class="right">30%</td></tr>
+                  <tr><td>Poli Gigi</td><td class="right">Rp 30.000.000</td><td class="right">Rp 12.000.000</td><td class="right">Rp 18.000.000</td><td class="right">20%</td></tr>
+                  <tr><td>Laboratorium</td><td class="right">Rp 35.000.000</td><td class="right">Rp 17.000.000</td><td class="right">Rp 18.000.000</td><td class="right">20%</td></tr>
+                  <tr><td>Farmasi</td><td class="right">Rp 60.400.000</td><td class="right">Rp 42.000.000</td><td class="right">Rp 18.400.000</td><td class="right">20%</td></tr>
+                  <tr><td>Rawat Inap</td><td class="right">Rp 15.000.000</td><td class="right">Rp 9.200.000</td><td class="right">Rp 5.800.000</td><td class="right">10%</td></tr>
+                  <tr class="total-row"><td>TOTAL</td><td class="right">Rp 185.400.000</td><td class="right">Rp 98.200.000</td><td class="right">Rp 87.200.000</td><td class="right">100%</td></tr>
+                </tbody>
+              </table></div>
+              <div class="placeholder" style="margin-top:16px">Grafik perbandingan pendapatan dan beban setiap unit</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MANAGEMENT -->
+    <section class="page" id="management">
+      <div class="page-heading"><div><div class="breadcrumb">Manajemen</div><h1>Manajemen Bisnis</h1><p>Pengelolaan pengadaan, supplier, aset, dan biaya operasional.</p></div><button class="btn primary">+ Tambah Data</button></div>
+      <div class="grid grid-3">
+        <div class="card"><h2>Purchasing</h2><p class="small" style="margin-top:8px">Purchase request, PO, penerimaan barang.</p></div>
+        <div class="card"><h2>Supplier & AP</h2><p class="small" style="margin-top:8px">Data supplier, tagihan, pembayaran.</p></div>
+        <div class="card"><h2>Inventory</h2><p class="small" style="margin-top:8px">Stok, batch, expiry, mutasi.</p></div>
+        <div class="card"><h2>Expenses</h2><p class="small" style="margin-top:8px">Pengajuan dan realisasi biaya.</p></div>
+        <div class="card"><h2>Fixed Assets</h2><p class="small" style="margin-top:8px">Aset tetap dan penyusutan.</p></div>
+        <div class="card"><h2>Payroll</h2><p class="small" style="margin-top:8px">Penggajian dan tunjangan.</p></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" id="settings">
+      <div class="page-heading"><div><div class="breadcrumb">Pengaturan</div><h1>Pengaturan Sistem</h1><p>Konfigurasi organisasi, pengguna, hak akses, dan data referensi.</p></div></div>
+      <div class="grid grid-2">
+        <div class="card"><h2>Organisasi & Unit</h2><p class="small" style="margin-top:8px">Cabang, klinik, unit pelayanan, cost center.</p></div>
+        <div class="card"><h2>Pengguna & Hak Akses</h2><p class="small" style="margin-top:8px">User, role, permission, penugasan unit.</p></div>
+        <div class="card"><h2>Data Master</h2><p class="small" style="margin-top:8px">Pasien, layanan, tarif, obat, supplier.</p></div>
+        <div class="card"><h2>Konfigurasi Keuangan</h2><p class="small" style="margin-top:8px">COA, account mapping, periode akuntansi.</p></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+</div>
+
+<script>
+const pageNames = {
+  dashboard: "Dashboard",
+  operasional: "Operasional Klinik",
+  billing: "Billing & Kasir",
+  accounting: "Accounting",
+  reports: "Laporan Keuangan",
+  management: "Manajemen Bisnis",
+  settings: "Pengaturan"
+};
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  const page = document.getElementById(id);
+  if (page) page.classList.add("active");
+  const nav = document.querySelector('[data-page="' + id + '"]');
+  if (nav) nav.classList.add("active");
+  document.getElementById("currentPage").textContent = pageNames[id] || id;
+}
+
+document.querySelectorAll(".nav-item[data-page]").forEach(btn => {
+  btn.addEventListener("click", () => showPage(btn.dataset.page));
+});
+
+document.querySelectorAll(".report-menu button[data-report]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".report-menu button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".report-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("report-" + btn.dataset.report).classList.add("active");
+  });
+});
+</script>
+</body>
+</html>
