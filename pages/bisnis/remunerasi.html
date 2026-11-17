@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remunerasi &amp; Jasa Medis - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Manajemen Bisnis <span style="margin:0 8px">/</span> <b>Remunerasi &amp; Jasa Medis</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">D</span>
+      <span>Komite Medis &amp; Keuangan</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#management">Manajemen Bisnis</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Remunerasi Medis</div>
+        <h1>Remunerasi &amp; Jasa Medis Praktisi</h1>
+        <p>Pengelolaan hak bagi hasil layanan dokter dan tenaga medis mitra, verifikasi pelunasan billing pasien, serta pemotongan PPh 21 bukan pegawai.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Ringkasan Akrual Jasa Medis -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <h2>Total Akrual Jasa Medis</h2>
+          </div>
+          <span class="status ok">8 Praktisi Aktif</span>
+        </div>
+        <div style="font-size:18px;font-weight:bold;margin:2px 0 10px">Rp 18.450.000</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Billing Lunas (Siap Cair)</div>
+            <div style="font-weight:bold;color:#27ae60;margin-top:2px">Rp 16.200.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Tertahan Piutang Klaim</div>
+            <div style="font-weight:bold;color:#f39c12;margin-top:2px">Rp 2.250.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Estimasi PPh 21 Tenaga Ahli</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 405.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Pencairan Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Pencairan Terakhir</h2>
+          </div>
+          <span class="status">Transfer Bank</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>REM-2026-03-0008 &bull; dr. Adrian Permana, Sp.A</span>
+            <span class="status ok">Selesai</span>
+          </div>
+          <div class="history-diag">Jasa Medis Poli Anak (Rp 6.800.000 Bruto &bull; PPh 21: Rp 170.000)</div>
+          <div class="history-notes">Net Transfer: Rp 6.630.000 &bull; Mandiri 1020 &bull; Bukti Potong 21-089</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>REM-2026-03-0007 &bull; drg. Maya Santoso</span>
+            <span class="status ok">Selesai</span>
+          </div>
+          <div class="history-diag">Jasa Medis Tindakan Odontogram/Scalling (Rp 4.950.000 Bruto)</div>
+          <div class="history-notes">Net Transfer: Rp 4.826.250 &bull; Mandiri 1020 &bull; PPh 21 Bukan Pegawai</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>REM-2026-03-0006 &bull; dr. Farhan Maulana</span>
+            <span class="status ok">Selesai</span>
+          </div>
+          <div class="history-diag">Jasa Medis Konsultasi Poli Umum (Rp 3.600.000 Bruto)</div>
+          <div class="history-notes">Net Transfer: Rp 3.510.000 &bull; Mandiri 1020 &bull; 48 Pasien Selesai</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-rekap" onclick="switchTab('tab-rekap')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        1. Rekap Jasa Medis Per Dokter
+      </button>
+      <button class="exam-top-tab" data-tab="tab-transaksi" onclick="switchTab('tab-transaksi')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        2. Rincian Tindakan Pelayanan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-perjanjian" onclick="switchTab('tab-perjanjian')">
+        <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+        3. Perjanjian Tarif Fee (Agreement)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-pembayaran" onclick="switchTab('tab-pembayaran')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        4. Form Pencairan &amp; PPh 21
+      </button>
+    </nav>
+
+    <!-- TAB 1: REKAP PER DOKTER -->
+    <div id="tab-rekap" class="tab-pane active">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Rekapitulasi Hak Jasa Medis Periode Berjalan</h3>
+            <span class="small" style="color:var(--muted)">Dokter spesialis dan dokter umum mitra &bull; Tervalidasi dengan izin praktik (SIP) aktif</span>
+          </div>
+          <button class="btn primary small" onclick="switchTab('tab-pembayaran')">+ Proses Pencairan Terpilih</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Nama Praktisi</th>
+              <th>Unit / Spesialisasi</th>
+              <th>Status SIP</th>
+              <th>Jml Tindakan</th>
+              <th style="text-align:right">Total Bruto (Rp)</th>
+              <th style="text-align:right">Tertahan Piutang (Rp)</th>
+              <th style="text-align:right">Siap Cair (Rp)</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>dr. Adrian Permana, Sp.A</strong><br><small class="code-chip">PRAK-001</small></td>
+              <td>Poli Anak / Spesialis</td>
+              <td><span class="status ok">SIP Berlaku (2028)</span></td>
+              <td>34 Pasien</td>
+              <td style="text-align:right">6.800.000</td>
+              <td style="text-align:right;color:#f39c12">0</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">6.800.000</td>
+              <td><span class="status ok">Siap Bayar</span></td>
+              <td><button class="btn small primary" onclick="switchTab('tab-pembayaran')">Cairkan</button></td>
+            </tr>
+            <tr>
+              <td><strong>drg. Maya Santoso</strong><br><small class="code-chip">PRAK-002</small></td>
+              <td>Poli Gigi</td>
+              <td><span class="status ok">SIP Berlaku (2027)</span></td>
+              <td>28 Pasien</td>
+              <td style="text-align:right">4.950.000</td>
+              <td style="text-align:right;color:#f39c12">0</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">4.950.000</td>
+              <td><span class="status ok">Siap Bayar</span></td>
+              <td><button class="btn small primary" onclick="switchTab('tab-pembayaran')">Cairkan</button></td>
+            </tr>
+            <tr>
+              <td><strong>dr. Farhan Maulana</strong><br><small class="code-chip">PRAK-003</small></td>
+              <td>Poli Umum &amp; IGD</td>
+              <td><span class="status ok">SIP Berlaku (2029)</span></td>
+              <td>52 Pasien</td>
+              <td style="text-align:right">4.450.000</td>
+              <td style="text-align:right;color:#f39c12">850.000</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">3.600.000</td>
+              <td><span class="status warn">Sebagian Tertahan</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-pembayaran')">Cairkan</button></td>
+            </tr>
+            <tr>
+              <td><strong>Bdn. Siti Rahma, S.Tr.Keb</strong><br><small class="code-chip">PRAK-004</small></td>
+              <td>KIA &amp; Bersalin</td>
+              <td><span class="status ok">SIPB Berlaku (2027)</span></td>
+              <td>16 Pasien</td>
+              <td style="text-align:right">2.250.000</td>
+              <td style="text-align:right;color:#f39c12">1.400.000</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">850.000</td>
+              <td><span class="status warn">Sebagian Tertahan</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-pembayaran')">Cairkan</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: RINCIAN TINDAKAN -->
+    <div id="tab-transaksi" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Log Transaksi Layanan Pasien &bull; dr. Adrian Permana, Sp.A</h2>
+          <span class="status dark">Poli Anak</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Waktu Layanan</th>
+              <th>No. Billing / Encounter</th>
+              <th>Nama Pasien</th>
+              <th>Tindakan / Prosedur</th>
+              <th>Tarif Pasien</th>
+              <th>Jenis Pembayar</th>
+              <th>% Bagi Hasil</th>
+              <th style="text-align:right">Jasa Dokter (Rp)</th>
+              <th>Status Billing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>15 Nov 2026 10:15</td>
+              <td><span class="code-chip">BIL-2026-03-0192</span></td>
+              <td>An. Kenzo Alfarizi (4 th)</td>
+              <td>Konsultasi Spesialis Anak + Nebulisasi</td>
+              <td>Rp 250.000</td>
+              <td>Pribadi (Self-pay)</td>
+              <td>80% Konsul + 50% Tind</td>
+              <td style="text-align:right;font-weight:bold">Rp 190.000</td>
+              <td><span class="status ok">Lunas</span></td>
+            </tr>
+            <tr>
+              <td>15 Nov 2026 10:40</td>
+              <td><span class="code-chip">BIL-2026-03-0195</span></td>
+              <td>An. Michelle Aurelia (2 th)</td>
+              <td>Konsultasi Spesialis Anak + Vaksin Campak</td>
+              <td>Rp 320.000</td>
+              <td>Asuransi Prudential</td>
+              <td>80% Konsul + Fee Injeksi</td>
+              <td style="text-align:right;font-weight:bold">Rp 210.000</td>
+              <td><span class="status ok">Lunas</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: PERJANJIAN TARIF (FEE AGREEMENT) -->
+    <div id="tab-perjanjian" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Aturan Perjanjian Jasa Medis:</strong> Perjanjian jasa medis tidak boleh menimpa transaksi historis. Perubahan persentase atau nominal hanya berlaku untuk kunjungan encounter yang dibuat sejak tanggal efektif perjanjian baru.
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Matriks Perjanjian Jasa Medis Dokter Aktif</h3>
+            <span class="small" style="color:var(--muted)">Pengaturan bagi hasil antara klinik dan praktisi medis per jenis layanan &amp; pembayar</span>
+          </div>
+          <button class="btn small primary">+ Buat Perjanjian Baru</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode Perjanjian</th>
+              <th>Nama Praktisi</th>
+              <th>Layanan / Tindakan</th>
+              <th>Jenis Pembayar</th>
+              <th>Bagi Hasil Dokter</th>
+              <th>Bagi Hasil Klinik</th>
+              <th>Tanggal Berlaku</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">AGR-SPA-01</span></td>
+              <td>dr. Adrian Permana, Sp.A</td>
+              <td>Konsultasi Dokter Spesialis</td>
+              <td>Pribadi &amp; Asuransi</td>
+              <td><strong>80%</strong></td>
+              <td>20%</td>
+              <td>01 Jan 2026 - 31 Des 2026</td>
+              <td><span class="status ok">Aktif</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AGR-GIGI-02</span></td>
+              <td>drg. Maya Santoso</td>
+              <td>Tindakan Gigi &amp; Scalling</td>
+              <td>Semua Pembayar</td>
+              <td><strong>70%</strong> (Net bahan)</td>
+              <td>30%</td>
+              <td>01 Jan 2026 - 31 Des 2026</td>
+              <td><span class="status ok">Aktif</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AGR-UMUM-03</span></td>
+              <td>dr. Farhan Maulana</td>
+              <td>Konsultasi Dokter Umum</td>
+              <td>BPJS FKTP / Kapitasi</td>
+              <td><strong>Rp 8.000 / Pasien</strong></td>
+              <td>Sisa Kapitasi</td>
+              <td>01 Jan 2026 - 31 Des 2026</td>
+              <td><span class="status ok">Aktif</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: PEMBAYARAN & PPH 21 -->
+    <div id="tab-pembayaran" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Perlakuan Pajak PPh 21 Tenaga Ahli Dokter (Bukan Pegawai):</strong> Dasar Pengenaan Pajak (DPP) adalah 50% dari jumlah penghasilan bruto. Dikenakan tarif Pasal 17 UU Pajak Penghasilan (5% s.d. 35%). Dipotong saat pencairan dan disetorkan menggunakan Kode Akun Pajak 411121-100.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Form Pencairan Jasa Medis &amp; Perhitungan PPh 21 Tenaga Ahli</h2>
+          <span class="status dark">Pencairan Fee</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Pilih Praktisi Medis</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>dr. Adrian Permana, Sp.A (Hak Cair: Rp 6.800.000)</option>
+              <option>drg. Maya Santoso (Hak Cair: Rp 4.950.000)</option>
+              <option>dr. Farhan Maulana (Hak Cair: Rp 3.600.000)</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">NPWP Dokter</label>
+            <input type="text" value="08.192.831.2-014.000 (Valid)" class="input" style="width:100%;margin-top:4px;background:#f9f9f9" readonly>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Sumber Pembayaran</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>1020 - Bank Mandiri Operasional</option>
+              <option>1010 - Kas Kasir Utama</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-4" style="gap:12px;margin-top:12px">
+          <div>
+            <label class="small" style="font-weight:600">Penghasilan Bruto (Rp)</label>
+            <input type="text" value="6.800.000" class="input" style="width:100%;margin-top:4px;font-weight:bold" readonly>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">DPP PPh 21 (50% x Bruto)</label>
+            <input type="text" value="3.400.000" class="input" style="width:100%;margin-top:4px;background:#f9f9f9" readonly>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Potongan PPh 21 (5% x DPP)</label>
+            <input type="text" value="170.000" class="input" style="width:100%;margin-top:4px;color:#c0392b;font-weight:bold" readonly>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Jumlah Diterima Dokter (Net)</label>
+            <input type="text" value="6.630.000" class="input" style="width:100%;margin-top:4px;color:#27ae60;font-weight:bold" readonly>
+          </div>
+        </div>
+
+        <div style="margin-top:16px">
+          <strong style="font-size:12px">Pratinjau Jurnal Pembayaran Jasa Medis</strong>
+          <table class="table" style="font-size:11px;margin-top:6px">
+            <thead>
+              <tr>
+                <th>Kode Akun</th>
+                <th>Nama Akun COA</th>
+                <th style="text-align:right">Debit (Rp)</th>
+                <th style="text-align:right">Kredit (Rp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-chip">2130</span></td>
+                <td><strong>Utang Jasa Medis Dokter</strong> (Pembalikan Akrual)</td>
+                <td style="text-align:right;font-weight:bold">6.800.000</td>
+                <td style="text-align:right">-</td>
+              </tr>
+              <tr>
+                <td><span class="code-chip">2210</span></td>
+                <td><strong>Utang PPh 21 (Titipan Pajak Dokter)</strong></td>
+                <td style="text-align:right">-</td>
+                <td style="text-align:right;font-weight:bold">170.000</td>
+              </tr>
+              <tr>
+                <td><span class="code-chip">1020</span></td>
+                <td><strong>Bank Mandiri Operasional</strong></td>
+                <td style="text-align:right">-</td>
+                <td style="text-align:right;font-weight:bold">6.630.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn secondary">Batal</button>
+          <button class="btn primary">Posting Pembayaran Jasa Medis &amp; Terbitkan Bukti Potong</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll Staf &amp; BPJS - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Manajemen Bisnis <span style="margin:0 8px">/</span> <b>Payroll Staf &amp; BPJS</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">H</span>
+      <span>HRD &amp; Personalia</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#management">Manajemen Bisnis</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Payroll</div>
+        <h1>Payroll Karyawan &amp; Jaminan Sosial BPJS</h1>
+        <p>Penggajian staf tetap dan nakes, perhitungan tunjangan shift malam IGD/Ranap, iuran BPJS TK &amp; Kesehatan, pemotongan PPh 21 TER, dan akrual bulanan THR.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Ringkasan Penggajian Bulan Berjalan -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <h2>Total Beban Payroll Periode Ini</h2>
+          </div>
+          <span class="status warn">Jatuh Tempo: 25 Mar 2026</span>
+        </div>
+        <div style="font-size:18px;font-weight:bold;margin:2px 0 10px">Rp 76.400.000</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Total Take Home Pay</div>
+            <div style="font-weight:bold;color:#27ae60;margin-top:2px">Rp 69.850.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">BPJS Beban Klinik</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 4.750.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Akrual Bulanan THR (1/12)</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 5.200.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Pembayaran Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Payroll Terakhir</h2>
+          </div>
+          <span class="status">Auto Transfer</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>PAY-2026-02 &bull; Periode Februari</span>
+            <span class="status ok">Lunas</span>
+          </div>
+          <div class="history-diag">Gaji 24 Staf &bull; Bank Mandiri Payroll (Rp 69.120.000)</div>
+          <div class="history-notes">PPh 21 TER dan BPJS disetor &bull; Sukses transfer 25 Feb 2026</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>TAX-2026-02-21 &bull; PPh 21 Masa Februari</span>
+            <span class="status ok">Lunas</span>
+          </div>
+          <div class="history-diag">Penyetoran PPh 21 Karyawan (Rp 1.800.000)</div>
+          <div class="history-notes">NTPN Tercatat &bull; Bukti Potong 1721-VIII diterbitkan</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>BPJS-2026-02 &bull; Iuran BPJS TK &amp; Kes</span>
+            <span class="status ok">Lunas</span>
+          </div>
+          <div class="history-diag">Iuran BPJS Ketenagakerjaan &amp; BPJS Kesehatan (Rp 7.200.000)</div>
+          <div class="history-notes">Virtual Account BPJS &bull; Lunas 10 Maret 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-pay-daftar" onclick="switchTab('tab-pay-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar Penggajian Staf
+      </button>
+      <button class="exam-top-tab" data-tab="tab-pay-slip" onclick="switchTab('tab-pay-slip')">
+        <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg>
+        2. Rincian Komponen &amp; Slip Gaji
+      </button>
+      <button class="exam-top-tab" data-tab="tab-pay-bpjs" onclick="switchTab('tab-pay-bpjs')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        3. Kalkulasi BPJS &amp; PPh 21 (TER)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-pay-jurnal" onclick="switchTab('tab-pay-jurnal')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        4. Pratinjau Jurnal Payroll
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR PENGGAJIAN -->
+    <div id="tab-pay-daftar" class="tab-pane active">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Pemberitahuan Praktisi:</strong> Dokter mitra spesialis dan umum bukan merupakan subjek payroll staf ini. Jasa medis mereka dihitung dari encounter layanan lunas di modul <a href="remunerasi.html" style="font-weight:bold;color:inherit;text-decoration:underline">Remunerasi Medis</a>.
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Daftar Gaji Karyawan &amp; Nakes Tetap &bull; Periode Berjalan</h3>
+            <span class="small" style="color:var(--muted)">Termasuk perhitungan shift malam 24 jam IGD/Ranap dan lembur</span>
+          </div>
+          <button class="btn primary small" onclick="switchTab('tab-pay-jurnal')">Proses Otorisasi &amp; Jurnal Payroll</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>ID &bull; Nama Staf</th>
+              <th>Jabatan / Unit</th>
+              <th>Gaji Pokok (Rp)</th>
+              <th>Tunjangan &amp; Shift (Rp)</th>
+              <th>Pot. BPJS Staf (Rp)</th>
+              <th>PPh 21 TER (Rp)</th>
+              <th style="text-align:right">Take Home Pay (Rp)</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ns. Siti Aminah, S.Kep</strong><br><small class="code-chip">EMP-001</small></td>
+              <td>Kepala Perawat Ranap</td>
+              <td>5.200.000</td>
+              <td>1.850.000</td>
+              <td>(210.000)</td>
+              <td>(85.000)</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">6.755.000</td>
+              <td><span class="status ok">Siap Transfer</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-pay-slip')">Slip</button></td>
+            </tr>
+            <tr>
+              <td><strong>apt. Ratna Dewi, S.Farm</strong><br><small class="code-chip">EMP-002</small></td>
+              <td>Apoteker Penanggung Jawab (APJ)</td>
+              <td>6.000.000</td>
+              <td>2.200.000</td>
+              <td>(240.000)</td>
+              <td>(120.000)</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">7.840.000</td>
+              <td><span class="status ok">Siap Transfer</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-pay-slip')">Slip</button></td>
+            </tr>
+            <tr>
+              <td><strong>Budi Hartono</strong><br><small class="code-chip">EMP-003</small></td>
+              <td>Staff Administrasi &amp; IT</td>
+              <td>4.500.000</td>
+              <td>950.000</td>
+              <td>(160.000)</td>
+              <td>(40.000)</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">5.250.000</td>
+              <td><span class="status ok">Siap Transfer</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-pay-slip')">Slip</button></td>
+            </tr>
+            <tr>
+              <td><strong>Hendra Wijaya, A.Md.AK</strong><br><small class="code-chip">EMP-004</small></td>
+              <td>Analis Kesehatan (Laboratorium)</td>
+              <td>4.800.000</td>
+              <td>1.300.000</td>
+              <td>(180.000)</td>
+              <td>(55.000)</td>
+              <td style="text-align:right;font-weight:bold;color:#27ae60">5.865.000</td>
+              <td><span class="status ok">Siap Transfer</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-pay-slip')">Slip</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: SLIP GAJI -->
+    <div id="tab-pay-slip" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <div>
+            <h2 style="margin:0 0 4px">Slip Gaji Karyawan &bull; Klinik Sehat Sejahtera</h2>
+            <div class="small" style="color:var(--muted)">Nama: <strong>Ns. Siti Aminah, S.Kep</strong> (NIP: 2021-08-012) &bull; Unit: Rawat Inap</div>
+          </div>
+          <button class="btn small secondary">Cetak PDF</button>
+        </div>
+
+        <div class="grid grid-2" style="gap:14px">
+          <div>
+            <strong style="font-size:12px;color:#27ae60">Penghasilan (Penerimaan)</strong>
+            <table class="table" style="font-size:11px;margin-top:6px">
+              <tr><td>Gaji Pokok</td><td style="text-align:right">Rp 5.200.000</td></tr>
+              <tr><td>Tunjangan Jabatan Nakes</td><td style="text-align:right">Rp 800.000</td></tr>
+              <tr><td>Tunjangan Shift Malam Ranap (7 shift)</td><td style="text-align:right">Rp 700.000</td></tr>
+              <tr><td>Uang Makan &amp; Transport</td><td style="text-align:right">Rp 350.000</td></tr>
+              <tr style="font-weight:bold;background:#fafbfc"><td>Total Penghasilan Bruto</td><td style="text-align:right">Rp 7.050.000</td></tr>
+            </table>
+          </div>
+          <div>
+            <strong style="font-size:12px;color:#c0392b">Potongan (Deduction)</strong>
+            <table class="table" style="font-size:11px;margin-top:6px">
+              <tr><td>BPJS Kesehatan (1% Pekerja)</td><td style="text-align:right">Rp 52.000</td></tr>
+              <tr><td>BPJS TK JHT (2% Pekerja)</td><td style="text-align:right">Rp 104.000</td></tr>
+              <tr><td>BPJS TK Jaminan Pensiun (1%)</td><td style="text-align:right">Rp 54.000</td></tr>
+              <tr><td>PPh 21 (TER Kategori A 1.25%)</td><td style="text-align:right">Rp 85.000</td></tr>
+              <tr style="font-weight:bold;background:#fafbfc"><td>Total Potongan Staf</td><td style="text-align:right;color:#c0392b">(Rp 295.000)</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="balance-box" style="margin-top:14px">
+          <div>
+            <span>Rekening Tujuan: <strong>Bank Mandiri 142-00-19283-1</strong> a.n. Siti Aminah</span>
+          </div>
+          <div style="font-size:14px;font-weight:bold;color:#27ae60">
+            Take Home Pay: Rp 6.755.000
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: KALKULASI BPJS -->
+    <div id="tab-pay-bpjs" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Matriks Skema BPJS Ketenagakerjaan &amp; BPJS Kesehatan</h2>
+          <span class="status ok">Regulasi Ketenagakerjaan</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Program Jaminan Sosial</th>
+              <th>Dasar Perhitungan</th>
+              <th>Porsi Beban Klinik (%)</th>
+              <th>Porsi Potongan Staf (%)</th>
+              <th>Total Iuran (%)</th>
+              <th>Akun COA Klinik</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>BPJS Kesehatan</strong></td>
+              <td>Gaji Pokok + Tunjangan Tetap (Maks Rp 12 Jt)</td>
+              <td><strong>4.00%</strong></td>
+              <td>1.00%</td>
+              <td>5.00%</td>
+              <td>5220 &bull; Beban Iuran BPJS</td>
+            </tr>
+            <tr>
+              <td><strong>BPJS TK - Jaminan Kecelakaan Kerja (JKK)</strong></td>
+              <td>Tingkat Risiko Fasilitas Medis (0.89%)</td>
+              <td><strong>0.89%</strong></td>
+              <td>-</td>
+              <td>0.89%</td>
+              <td>5220 &bull; Beban Iuran BPJS</td>
+            </tr>
+            <tr>
+              <td><strong>BPJS TK - Jaminan Kematian (JKM)</strong></td>
+              <td>Gaji Pokok</td>
+              <td><strong>0.30%</strong></td>
+              <td>-</td>
+              <td>0.30%</td>
+              <td>5220 &bull; Beban Iuran BPJS</td>
+            </tr>
+            <tr>
+              <td><strong>BPJS TK - Jaminan Hari Tua (JHT)</strong></td>
+              <td>Gaji Pokok</td>
+              <td><strong>3.70%</strong></td>
+              <td>2.00%</td>
+              <td>5.70%</td>
+              <td>5220 &bull; Beban Iuran BPJS</td>
+            </tr>
+            <tr>
+              <td><strong>BPJS TK - Jaminan Pensiun (JP)</strong></td>
+              <td>Gaji Pokok (Batas Maksimal Plafon BPJS)</td>
+              <td><strong>2.00%</strong></td>
+              <td>1.00%</td>
+              <td>3.00%</td>
+              <td>5220 &bull; Beban Iuran BPJS</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: PRATINJAU JURNAL -->
+    <div id="tab-pay-jurnal" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Pencatatan Akrual Bulanan THR:</strong> Beban THR diakui dicicil setiap bulan (1/12) ke akun <em>5230 Beban Akrual THR</em> vs <em>2140 Utang Akrual THR</em>, sehingga beban tahunan tidak melonjak saat pembagian THR hari raya keagamaan.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Pratinjau Jurnal Payroll Komprehensif (PAY-2026-03)</h2>
+          <span class="status dark">Double-Entry</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode Akun</th>
+              <th>Nama Akun COA</th>
+              <th style="text-align:right">Debit (Rp)</th>
+              <th style="text-align:right">Kredit (Rp)</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">5200</span></td>
+              <td><strong>Beban Gaji, Tunjangan &amp; Upah Lembur</strong></td>
+              <td style="text-align:right;font-weight:bold">72.450.000</td>
+              <td style="text-align:right">-</td>
+              <td>Beban gaji bruto 24 staf klinik</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">5220</span></td>
+              <td><strong>Beban Iuran BPJS (Porsi Pemberi Kerja)</strong></td>
+              <td style="text-align:right;font-weight:bold">4.750.000</td>
+              <td style="text-align:right">-</td>
+              <td>BPJS Kes 4% + JKK/JKM/JHT/JP klinik</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">5230</span></td>
+              <td><strong>Beban Akrual THR Staf (1/12 Bulanan)</strong></td>
+              <td style="text-align:right;font-weight:bold">5.200.000</td>
+              <td style="text-align:right">-</td>
+              <td>Cadangan cicilan akrual THR</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">2210</span></td>
+              <td><strong>Utang PPh 21 Karyawan (Titipan Pajak)</strong></td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:bold">1.850.000</td>
+              <td>Potongan pajak penghasilan staf</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">2220</span></td>
+              <td><strong>Utang Iuran BPJS TK &amp; Kesehatan</strong></td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:bold">7.350.000</td>
+              <td>Total titipan porsi klinik + pekerja</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">2140</span></td>
+              <td><strong>Utang Akrual THR Staf</strong></td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:bold">5.200.000</td>
+              <td>Akumulasi dana cadangan THR</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">1020</span></td>
+              <td><strong>Bank Mandiri Payroll (Kas Keluar)</strong></td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:bold">68.000.000</td>
+              <td>Net transfer gaji karyawan</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#fafbfc;font-weight:bold">
+              <td colspan="2" style="text-align:right">Total Seimbang:</td>
+              <td style="text-align:right;color:#27ae60">Rp 82.400.000</td>
+              <td style="text-align:right;color:#27ae60">Rp 82.400.000</td>
+              <td><span class="status ok">&check; Seimbang</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

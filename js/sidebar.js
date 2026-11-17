@@ -96,10 +96,27 @@
       }
     },
     {
-      label: "MANAJEMEN",
+      label: "MANAJEMEN BISNIS",
+      group: {
+        id: "nav-bisnis",
+        title: "Manajemen Bisnis",
+        match: "pages/bisnis/",
+        openOnHash: ["management"],
+        items: [
+          { label: "Overview Bisnis", path: "pages/bisnis/index.html" },
+          { label: "Pengadaan (PO)", path: "pages/bisnis/purchasing.html" },
+          { label: "Supplier & Utang AP", path: "pages/bisnis/supplier-ap.html" },
+          { label: "Biaya Operasional", path: "pages/bisnis/pengeluaran.html" },
+          { label: "Aset Tetap & Depresiasi", path: "pages/bisnis/aset-tetap.html" },
+          { label: "Payroll Karyawan", path: "pages/bisnis/payroll.html" },
+          { label: "Remunerasi Medis", path: "pages/bisnis/remunerasi.html" }
+        ]
+      }
+    },
+    {
+      label: "PENGATURAN",
       items: [
-        { label: "Manajemen Bisnis", page: "management", path: "index.html#management" },
-        { label: "Pengaturan", page: "settings", path: "index.html#settings" }
+        { label: "Pengaturan Sistem", page: "settings", path: "index.html#settings" }
       ]
     }
   ];

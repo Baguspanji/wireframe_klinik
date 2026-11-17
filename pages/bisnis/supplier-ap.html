@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier &amp; Utang Usaha (AP) - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Manajemen Bisnis <span style="margin:0 8px">/</span> <b>Supplier &amp; Utang Usaha (AP)</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Kasir &amp; Akuntan AP</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#management">Manajemen Bisnis</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Supplier &amp; AP</div>
+        <h1>Supplier &amp; Utang Usaha (Accounts Payable)</h1>
+        <p>Pengelolaan data mitra distributor PBF, pencatatan faktur tagihan supplier, PPN Masukan, dan jadwal pembayaran utang usaha klinik.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Ringkasan Utang Berjalan -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <h2>Total Saldo Utang Supplier</h2>
+          </div>
+          <span class="status warn">3 Tagihan Menjelang Tempo</span>
+        </div>
+        <div style="font-size:18px;font-weight:bold;margin:2px 0 10px">Rp 48.250.000</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Jatuh Tempo &lt; 7 Hari</div>
+            <div style="font-weight:bold;color:#c0392b;margin-top:2px">Rp 14.500.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Belum Jatuh Tempo</div>
+            <div style="font-weight:bold;color:#27ae60;margin-top:2px">Rp 33.750.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Faktur Pajak Masukan</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 4.781.081</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Pembayaran Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Pelunasan Faktur Terakhir</h2>
+          </div>
+          <span class="status">Kas Keluar</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>PAY-AP-2026-024 &bull; PT Enseval</span>
+            <span class="status ok">Lunas</span>
+          </div>
+          <div class="history-diag">Pelunasan INV-EN-2026-088 (Rp 8.400.000)</div>
+          <div class="history-notes">Transfer Mandiri 1020 &bull; No. Ref: MAND-881923 &bull; Tepat Waktu</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>PAY-AP-2026-023 &bull; PT Medika Alkesindo</span>
+            <span class="status ok">Lunas</span>
+          </div>
+          <div class="history-diag">Pelunasan INV-MA-0021 BMHP IGD (Rp 3.200.000)</div>
+          <div class="history-notes">Transfer Mandiri 1020 &bull; No. Ref: MAND-873911 &bull; Tepat Waktu</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>PAY-AP-2026-022 &bull; PT Kimia Farma PBF</span>
+            <span class="status ok">Lunas</span>
+          </div>
+          <div class="history-diag">Pelunasan Obat Injeksi Ranap (Rp 11.250.000)</div>
+          <div class="history-notes">Transfer Mandiri 1020 &bull; Sesuai Surat Pesanan</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-tagihan" onclick="switchTab('tab-tagihan')">
+        <svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        1. Tagihan Supplier (Faktur AP)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-bayar" onclick="switchTab('tab-bayar')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        2. Input Pembayaran Utang
+      </button>
+      <button class="exam-top-tab" data-tab="tab-master-supplier" onclick="switchTab('tab-master-supplier')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        3. Master Supplier &amp; Izin PBF
+      </button>
+      <button class="exam-top-tab" data-tab="tab-jurnal-ap" onclick="switchTab('tab-jurnal-ap')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        4. Pratinjau Jurnal Pelunasan
+      </button>
+    </nav>
+
+    <!-- TAB 1: TAGIHAN SUPPLIER -->
+    <div id="tab-tagihan" class="tab-pane active">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="Cari nomor faktur atau PBF..." style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;width:260px">
+            <select style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px">
+              <option>Semua Status</option>
+              <option selected>Belum Lunas (Open)</option>
+              <option>Jatuh Tempo Hari Ini</option>
+              <option>Lunas (Paid)</option>
+            </select>
+          </div>
+          <button class="btn primary small" onclick="switchTab('tab-bayar')">+ Bayar Tagihan Terpilih</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>No. Faktur PBF</th>
+              <th>Nama Penyalur (Supplier)</th>
+              <th>Ref. Penerimaan (GRN)</th>
+              <th>Tgl Faktur</th>
+              <th>Jatuh Tempo</th>
+              <th style="text-align:right">Total Tagihan (Rp)</th>
+              <th style="text-align:right">Sisa Utang (Rp)</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">INV-KF-2026-081</span></td>
+              <td><strong>PT Kimia Farma Trading &amp; Distribution</strong></td>
+              <td>GRN-2026-03-0036</td>
+              <td>20 Feb 2026</td>
+              <td><span style="color:#c0392b;font-weight:bold">22 Mar 2026 (5 hari)</span></td>
+              <td style="text-align:right">14.500.000</td>
+              <td style="text-align:right;font-weight:bold;color:#c0392b">14.500.000</td>
+              <td><span class="status warn">Belum Dibayar</span></td>
+              <td><button class="btn small primary" onclick="switchTab('tab-bayar')">Bayar</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">INV-EN-2026-114</span></td>
+              <td><strong>PT Enseval Putera Megatrading</strong></td>
+              <td>GRN-2026-03-0038</td>
+              <td>25 Feb 2026</td>
+              <td>27 Mar 2026 (10 hari)</td>
+              <td style="text-align:right">9.200.000</td>
+              <td style="text-align:right;font-weight:bold">9.200.000</td>
+              <td><span class="status warn">Belum Dibayar</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-bayar')">Bayar</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">INV-SL-2026-039</span></td>
+              <td><strong>PT Sinergi Labora Medika</strong></td>
+              <td>GRN-2026-03-0035</td>
+              <td>02 Mar 2026</td>
+              <td>01 Apr 2026 (15 hari)</td>
+              <td style="text-align:right">7.750.000</td>
+              <td style="text-align:right;font-weight:bold">7.750.000</td>
+              <td><span class="status warn">Belum Dibayar</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-bayar')">Bayar</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">INV-MA-2026-050</span></td>
+              <td><strong>PT Medika Alkesindo</strong></td>
+              <td>GRN-2026-03-0040</td>
+              <td>10 Mar 2026</td>
+              <td>09 Apr 2026 (23 hari)</td>
+              <td style="text-align:right">16.800.000</td>
+              <td style="text-align:right;font-weight:bold">16.800.000</td>
+              <td><span class="status warn">Belum Dibayar</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-bayar')">Bayar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: INPUT PEMBAYARAN -->
+    <div id="tab-bayar" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Pemberlakuan Akun Kas/Bank:</strong> Setiap pembayaran utang usaha mengurangi saldo akun liabilitas <em>2110 Utang Usaha</em> dan akun aset kas/bank (<em>1010 Kas / 1020 Bank Operasional</em>). Nomor referensi bank wajib diisi untuk rekonsiliasi bulanan.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Formulir Pengeluaran Kas/Bank untuk Pelunasan Utang</h2>
+          <span class="status dark">Pembayaran AP</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Pilih Faktur Tagihan</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>INV-KF-2026-081 &bull; PT Kimia Farma (Sisa: Rp 14.500.000)</option>
+              <option>INV-EN-2026-114 &bull; PT Enseval (Sisa: Rp 9.200.000)</option>
+              <option>INV-SL-2026-039 &bull; PT Sinergi Labora (Sisa: Rp 7.750.000)</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Sumber Rekening Pembayaran</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>1020 - Rekening Bank Mandiri Operasional (Saldo: Rp 84.150.000)</option>
+              <option>1010 - Kas Kasir Utama (Saldo: Rp 7.200.000)</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Tanggal Transaksi Bayar</label>
+            <input type="date" value="2026-03-17" class="input" style="width:100%;margin-top:4px">
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="gap:12px;margin-top:12px">
+          <div>
+            <label class="small" style="font-weight:600">Nominal Pembayaran (Rp)</label>
+            <input type="number" value="14500000" class="input" style="width:100%;margin-top:4px;font-weight:bold">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Nomor Referensi Transfer Bank</label>
+            <input type="text" value="TRF-MAND-20260317-901" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Potongan Diskon / Pajak</label>
+            <input type="text" placeholder="Tidak ada potongan" class="input" style="width:100%;margin-top:4px;background:#f9f9f9" readonly>
+          </div>
+        </div>
+
+        <div class="balance-box" style="margin-top:14px">
+          <div>
+            <span>Sisa Tagihan Setelah Bayar: <strong>Rp 0 (LUNAS)</strong></span>
+          </div>
+          <div>
+            <button class="btn secondary" style="margin-right:8px">Batal</button>
+            <button class="btn primary">Posting Pembayaran Utang &amp; Cetak Bukti Kas</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MASTER DATA SUPPLIER -->
+    <div id="tab-master-supplier" class="tab-pane">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Katalog PBF Sah &amp; Penyalur Alat Kesehatan</h3>
+            <span class="small" style="color:var(--muted)">Pengadaan farmasi hanya melalui badan hukum berizin distributor resmi</span>
+          </div>
+          <button class="btn small primary">+ Tambah Supplier Baru</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Nama Badan Usaha</th>
+              <th>Izin PBF / Penyalur</th>
+              <th>Masa Berlaku Izin</th>
+              <th>NPWP</th>
+              <th>Syarat Bayar</th>
+              <th>Status Mitra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">SUP-001</span></td>
+              <td><strong>PT Kimia Farma Trading &amp; Distribution</strong></td>
+              <td>FK.01.01/1/0291/2021</td>
+              <td>14 Des 2028</td>
+              <td>01.001.624.4-092.000</td>
+              <td>Net 30 Hari</td>
+              <td><span class="status ok">Aktif &bull; Terverifikasi</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">SUP-002</span></td>
+              <td><strong>PT Enseval Putera Megatrading</strong></td>
+              <td>FK.01.01/1/0118/2020</td>
+              <td>20 Okt 2027</td>
+              <td>01.325.890.3-018.000</td>
+              <td>Net 30 Hari</td>
+              <td><span class="status ok">Aktif &bull; Terverifikasi</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">SUP-003</span></td>
+              <td><strong>PT Medika Alkesindo</strong></td>
+              <td>IPAK/44/VII/2022</td>
+              <td>11 Jul 2027</td>
+              <td>02.441.782.1-031.000</td>
+              <td>Net 14 Hari</td>
+              <td><span class="status ok">Aktif &bull; Terverifikasi</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: PRATINJAU JURNAL AP -->
+    <div id="tab-jurnal-ap" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Pratinjau Jurnal Pelunasan Faktur Supplier (PAY-AP-2026-024)</h2>
+          <span class="status dark">Double-Entry</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode Akun</th>
+              <th>Nama Akun COA</th>
+              <th style="text-align:right">Debit (Rp)</th>
+              <th style="text-align:right">Kredit (Rp)</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">2110</span></td>
+              <td><strong>Utang Usaha (Accounts Payable)</strong></td>
+              <td style="text-align:right;font-weight:600">14.500.000</td>
+              <td style="text-align:right">-</td>
+              <td>Pelunasan tagihan PT Kimia Farma INV-KF-2026-081</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">1020</span></td>
+              <td><strong>Bank Mandiri Operasional</strong></td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:600">14.500.000</td>
+              <td>Pengeluaran kas melalui transfer bank operasional</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#fafbfc;font-weight:bold">
+              <td colspan="2" style="text-align:right">Total Seimbang:</td>
+              <td style="text-align:right;color:#27ae60">Rp 14.500.000</td>
+              <td style="text-align:right;color:#27ae60">Rp 14.500.000</td>
+              <td><span class="status ok">&check; Seimbang</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

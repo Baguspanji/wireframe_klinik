@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengadaan &amp; Purchase Order - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Manajemen Bisnis <span style="margin:0 8px">/</span> <b>Pengadaan (Purchasing &amp; PO)</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">A</span>
+      <span>Apoteker Penanggung Jawab</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#management">Manajemen Bisnis</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Pengadaan &amp; PO</div>
+        <h1>Pengadaan Obat &amp; Purchase Order</h1>
+        <p>Alur pengadaan farmasi, penerbitan Surat Pesanan resmi berkop APJ, Purchase Order, dan pencatatan nomor batch pada Goods Receipt Note (GRN).</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: IDENTITAS DOKUMEN & 3 RIWAYAT TERAKHIR -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Identitas Dokumen Aktif -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <h2>PO Aktif: PT Kimia Farma PBF</h2>
+          </div>
+          <span class="status ok">Disetujui APJ</span>
+        </div>
+        <div class="small" style="color:var(--muted);margin-bottom:10px">No. Dokumen: <span class="code-chip">PO-2026-03-0042</span> &bull; Izin PBF: FK.01.01/1/0291/2021</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Tanggal Pesanan</div>
+            <div style="font-weight:bold;margin-top:2px">15 Maret 2026</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Estimasi Kirim</div>
+            <div style="font-weight:bold;margin-top:2px">18 Maret 2026</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Total Nilai PO</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 14.500.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Penerimaan Barang (GRN) Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Penerimaan (GRN) Terakhir</h2>
+          </div>
+          <span class="status">FEFO Control</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>GRN-2026-03-0038 &bull; PBF Enseval</span>
+            <span class="status ok">Selesai</span>
+          </div>
+          <div class="history-diag">Amoxicillin 500mg (10 Box &bull; Bch: AMX2601 &bull; Exp: Des 2027)</div>
+          <div class="history-notes">Diterima: Staf Farmasi &bull; Sesuai PO-0039 &bull; Suhu 24&deg;C</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>GRN-2026-03-0037 &bull; PT Medika Alkesindo</span>
+            <span class="status ok">Selesai</span>
+          </div>
+          <div class="history-diag">Spuit 3cc &amp; Infus Set Makro (2 Karton &bull; Exp: Nov 2028)</div>
+          <div class="history-notes">Diterima: Perawat IGD &bull; Kondisi kemasan steril utuh</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>GRN-2026-03-0036 &bull; PBF Kimia Farma</span>
+            <span class="status ok">Selesai</span>
+          </div>
+          <div class="history-diag">Paracetamol Drop &amp; Ibuprofen Susp (15 Botol &bull; Exp: Agu 2027)</div>
+          <div class="history-notes">Diterima: apt. Ratna Dewi &bull; Sesuai SP Reguler No. 0035</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-daftar" onclick="switchTab('tab-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar PO &amp; Status
+      </button>
+      <button class="exam-top-tab" data-tab="tab-form-po" onclick="switchTab('tab-form-po')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        2. Buat Purchase Order (PO)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-grn" onclick="switchTab('tab-grn')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+        3. Penerimaan Barang (GRN)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-jurnal" onclick="switchTab('tab-jurnal')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        4. Pratinjau Jurnal Pengadaan
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR PO -->
+    <div id="tab-daftar" class="tab-pane active">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="Cari No. PO atau nama supplier..." style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;width:260px">
+            <select style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px">
+              <option>Semua Status</option>
+              <option>Draft</option>
+              <option selected>Approved (Menunggu Kirim)</option>
+              <option>Diterima Sebagian</option>
+              <option>Selesai (Received)</option>
+            </select>
+          </div>
+          <button class="btn primary small" onclick="switchTab('tab-form-po')">+ Buat PO Baru</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>No. Dokumen</th>
+              <th>Jenis Surat Pesanan</th>
+              <th>Supplier (PBF)</th>
+              <th>Tgl Buat</th>
+              <th>Total Item</th>
+              <th>Nilai Pesanan</th>
+              <th>Penanggung Jawab</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">PO-2026-03-0042</span></td>
+              <td><span class="status">SP Obat Reguler</span></td>
+              <td><strong>PT Kimia Farma T&amp;D</strong></td>
+              <td>15 Mar 2026</td>
+              <td>4 Item (Antibiotik, Analgesik)</td>
+              <td>Rp 14.500.000</td>
+              <td>apt. Ratna Dewi (SIPA)</td>
+              <td><span class="status ok">Approved</span></td>
+              <td><button class="btn small" onclick="switchTab('tab-grn')">Proses GRN</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">PO-2026-03-0043</span></td>
+              <td><span class="status warn">SP Prekursor Farmasi</span></td>
+              <td><strong>PT Enseval Putera Megatrading</strong></td>
+              <td>16 Mar 2026</td>
+              <td>1 Item (Tremenza Tab / Pseudoephedrine)</td>
+              <td>Rp 2.450.000</td>
+              <td>apt. Ratna Dewi (SIPA)</td>
+              <td><span class="status warn">Verifikasi APJ</span></td>
+              <td><button class="btn small">Tinjau SP</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">PO-2026-03-0040</span></td>
+              <td><span class="status">Alkes &amp; BMHP</span></td>
+              <td><strong>PT Medika Alkesindo</strong></td>
+              <td>10 Mar 2026</td>
+              <td>6 Item (Kassa, Infus, Handscoon)</td>
+              <td>Rp 5.850.000</td>
+              <td>dr. Adrian (Klinik)</td>
+              <td><span class="status ok">Selesai (GRN Closed)</span></td>
+              <td><button class="btn small">Lihat Faktur</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: FORM BUAT PO -->
+    <div id="tab-form-po" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Ketentuan Surat Pesanan Farmasi:</strong> Pemesanan obat prekursor/psikotropika/narkotika wajib memakai format Surat Pesanan resmi terpisah, ditandatangani oleh Apoteker Penanggung Jawab (APJ) dengan nomor SIPA aktif, dan hanya ditujukan ke PBF resmi.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Formulir Pembuatan Purchase Order &amp; Surat Pesanan (SP)</h2>
+          <span class="status dark">Draft PO</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Jenis Dokumen Pesanan</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option>Surat Pesanan Obat Reguler (Non-OOT)</option>
+              <option>Surat Pesanan Prekursor Farmasi</option>
+              <option>Surat Pesanan Psikotropika</option>
+              <option>Surat Pesanan Khusus Narkotika (Form Khusus)</option>
+              <option>Pesanan Alat Kesehatan &amp; Reagen Lab</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Penyalur Terpilih (PBF Sah)</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option>PT Kimia Farma Trading &amp; Distribution (PBF)</option>
+              <option>PT Enseval Putera Megatrading (PBF)</option>
+              <option>PT Medika Alkesindo (Penyalur Alkes)</option>
+              <option>PT Sinergi Labora Medika (Reagen Lab)</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Apoteker Penanggung Jawab (APJ)</label>
+            <input type="text" class="input" value="apt. Ratna Dewi, S.Farm (SIPA: 19880415/SIPA/2021)" readonly style="width:100%;margin-top:4px;background:#f9f9f9">
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <strong style="font-size:12px">Daftar Barang Pesanan</strong>
+          <table class="table" style="font-size:11px;margin-top:6px">
+            <thead>
+              <tr>
+                <th>Kode Barang</th>
+                <th>Nama Obat / BMHP</th>
+                <th>Satuan</th>
+                <th style="width:90px">Jumlah</th>
+                <th style="width:130px">Harga Satuan (Rp)</th>
+                <th style="width:80px">PPN (11%)</th>
+                <th>Subtotal (Rp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-chip">MED-AMX-500</span></td>
+                <td>Amoxicillin Trihydrate 500 mg Kaplet</td>
+                <td>Box @ 100</td>
+                <td><input type="number" value="20" class="input" style="width:70px;padding:3px 6px"></td>
+                <td><input type="number" value="65000" class="input" style="width:110px;padding:3px 6px"></td>
+                <td>Ya (11%)</td>
+                <td style="font-weight:bold">Rp 1.443.000</td>
+              </tr>
+              <tr>
+                <td><span class="code-chip">MED-PCT-500</span></td>
+                <td>Paracetamol 500 mg Tablet</td>
+                <td>Box @ 100</td>
+                <td><input type="number" value="30" class="input" style="width:70px;padding:3px 6px"></td>
+                <td><input type="number" value="35000" class="input" style="width:110px;padding:3px 6px"></td>
+                <td>Ya (11%)</td>
+                <td style="font-weight:bold">Rp 1.165.500</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="balance-box" style="margin-top:14px">
+          <div>
+            <span>Total Item: <strong>2 Item</strong> &bull; Subtotal DPP: <strong>Rp 2.350.000</strong> &bull; PPN Masukan: <strong>Rp 258.500</strong></span>
+          </div>
+          <div style="text-align:right">
+            <span>Grand Total PO: <strong style="font-size:14px;color:#111">Rp 2.608.500</strong></span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn secondary">Simpan Draft</button>
+          <button class="btn primary">Buat Dokumen &amp; Kirim Otorisasi APJ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PENERIMAAN BARANG (GRN) -->
+    <div id="tab-grn" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <div>
+            <h2 style="margin:0 0 4px">Penerimaan Fisik Barang (Goods Receipt Note) &bull; PO-2026-03-0042</h2>
+            <div class="small" style="color:var(--muted)">Wajib mencatat No. Batch dan Tanggal Kedaluwarsa (FEFO) sebelum barang masuk stok</div>
+          </div>
+          <span class="status dark">SJ: SJ-KF-99201</span>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Nama Barang</th>
+              <th>Jumlah Dipesan</th>
+              <th>Jumlah Diterima</th>
+              <th>Nomor Batch PBF</th>
+              <th>Tanggal Kedaluwarsa (Exp)</th>
+              <th>Kondisi Fisik / Suhu</th>
+              <th>Status QC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Amoxicillin 500mg Kaplet</strong><br><small class="code-chip">MED-AMX-500</small></td>
+              <td>20 Box</td>
+              <td><input type="number" value="20" class="input" style="width:70px;padding:3px 6px"></td>
+              <td><input type="text" value="KF-AMX-26B" class="input" style="width:110px;padding:3px 6px"></td>
+              <td><input type="date" value="2028-02-28" class="input" style="padding:3px 6px"></td>
+              <td>Segel Utuh &bull; 23&deg;C</td>
+              <td><span class="status ok">Lolos QC</span></td>
+            </tr>
+            <tr>
+              <td><strong>Cefixime 100mg Kapsul</strong><br><small class="code-chip">MED-CFX-100</small></td>
+              <td>10 Box</td>
+              <td><input type="number" value="10" class="input" style="width:70px;padding:3px 6px"></td>
+              <td><input type="text" value="KF-CFX-25A" class="input" style="width:110px;padding:3px 6px"></td>
+              <td><input type="date" value="2027-11-30" class="input" style="padding:3px 6px"></td>
+              <td>Segel Utuh &bull; 23&deg;C</td>
+              <td><span class="status ok">Lolos QC</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+          <div class="small" style="color:var(--muted)">Petugas Penerima: <strong>apt. Ratna Dewi (APJ)</strong> &bull; Waktu: 17 Nov 2026 14:00</div>
+          <button class="btn primary small">Simpan Penerimaan &amp; Perbarui Kartu Stok (FEFO)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PRATINJAU JURNAL -->
+    <div id="tab-jurnal" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Prinsip Akrual Penerimaan Barang (GR/IR):</strong> Saat fisik barang tiba (GRN), persediaan diakui di debit dan dicadangkan ke akun <em>2120 Utang Belum Ditagih (GR/IR)</em>. Akun ini akan ditutup ke <em>2110 Utang Usaha (AP)</em> saat faktur tagihan resmi supplier tiba.
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <h2>Pratinjau Jurnal Penerimaan Barang (GRN-2026-03-0038)</h2>
+          <span class="status dark">Double-Entry</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode Akun</th>
+              <th>Nama Akun COA</th>
+              <th style="text-align:right">Debit (Rp)</th>
+              <th style="text-align:right">Kredit (Rp)</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">1300</span></td>
+              <td><strong>Persediaan Obat &amp; BMHP</strong></td>
+              <td style="text-align:right;font-weight:600">13.063.063</td>
+              <td style="text-align:right">-</td>
+              <td>Penerimaan fisik barang masuk gudang farmasi</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">1400</span></td>
+              <td><strong>PPN Masukan (Pajak Dibayar di Muka)</strong></td>
+              <td style="text-align:right;font-weight:600">1.436.937</td>
+              <td style="text-align:right">-</td>
+              <td>PPN 11% Faktur Pajak BKP Masukan</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">2120</span></td>
+              <td><strong>Utang Belum Ditagih (Akrual GR/IR)</strong></td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:600">14.500.000</td>
+              <td>Liabilitas sementara sebelum faktur supplier tiba</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#fafbfc;font-weight:bold">
+              <td colspan="2" style="text-align:right">Total Seimbang:</td>
+              <td style="text-align:right;color:#27ae60">Rp 14.500.000</td>
+              <td style="text-align:right;color:#27ae60">Rp 14.500.000</td>
+              <td><span class="status ok">&check; Seimbang</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manajemen Bisnis - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.module-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: all .15s ease;
+}
+.module-card:hover { border-color: #666; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+.module-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: #eef1f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+.module-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.module-card h3 { margin: 0; font-size: 13px; }
+.module-card p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.5; }
+.module-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  font-size: 11px;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.kpi-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px;
+}
+.kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.kpi-value { font-size: 18px; font-weight: bold; color: #111; margin-top: 4px; }
+.kpi-sub { font-size: 11px; color: #555; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Manajemen Bisnis <span style="margin:0 8px">/</span> <b>Overview</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">M</span>
+      <span>Manajer Bisnis</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#management">Manajemen Bisnis</a> <span>/</span> Overview</div>
+        <h1>Manajemen Bisnis &amp; Operasional</h1>
+        <p>Pengelolaan pengadaan farmasi, utang usaha, beban operasional, aset tetap, payroll karyawan, dan remunerasi praktisi medis dalam satu sistem terpadu.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="../../index.html#management">Kembali ke Dashboard</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: IDENTITAS MODUL & RIWAYAT TERAKHIR -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Identitas Bisnis & Eksekutif -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <h2>Ringkasan Finansial Bisnis</h2>
+          </div>
+          <span class="status dark">Periode Berjalan</span>
+        </div>
+        <div class="small" style="color:var(--muted);margin-bottom:12px">NPWP: 01.234.567.8-012.000 &bull; Pengusaha Kena Pajak (PKP)</div>
+        <div class="kpi-row">
+          <div>
+            <div class="small" style="color:var(--muted)">Utang Usaha (AP)</div>
+            <div style="font-size:14px;font-weight:bold;margin-top:2px">Rp 48.250.000</div>
+            <div style="font-size:10px;color:#c0392b">3 faktur tempo &lt; 7 hari</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">PO Outstanding</div>
+            <div style="font-size:14px;font-weight:bold;margin-top:2px">Rp 22.800.000</div>
+            <div style="font-size:10px;color:#2980b9">2 PO menunggu kirim</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Beban Operasional</div>
+            <div style="font-size:14px;font-weight:bold;margin-top:2px">Rp 34.620.000</div>
+            <div style="font-size:10px;color:#27ae60">72% anggaran bulanan</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Akrual Jasa Medis</div>
+            <div style="font-size:14px;font-weight:bold;margin-top:2px">Rp 18.450.000</div>
+            <div style="font-size:10px;color:#555">8 praktisi aktif</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Transaksi & Approval Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Transaksi Terakhir</h2>
+          </div>
+          <span class="status">Audit Trail</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>PO-2026-03-0042 &bull; PT Kimia Farma PBF</span>
+            <span class="status ok">Disetujui</span>
+          </div>
+          <div class="history-diag">Pengadaan Obat Antibiotik &amp; Analgesik Bulanan (Rp 14.500.000)</div>
+          <div class="history-notes">Disetujui oleh apt. Ratna Dewi (APJ) &bull; SP Reguler &bull; 17 Nov 2026 10:20</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>EXP-2026-03-0018 &bull; PT PLN (Persero)</span>
+            <span class="status dark">Dibayar</span>
+          </div>
+          <div class="history-diag">Pembayaran Listrik Operasional Gedung Utama (Rp 4.250.000)</div>
+          <div class="history-notes">Kas Keluar Bank Mandiri 1020 &bull; Disetujui Manajer Ops &bull; 16 Nov 2026 14:15</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>REM-2026-03-0008 &bull; dr. Adrian Permana, Sp.A</span>
+            <span class="status ok">Terverifikasi</span>
+          </div>
+          <div class="history-diag">Remunerasi Jasa Medis Poli Anak Periode 1-15 (Rp 6.800.000)</div>
+          <div class="history-notes">Billing lunas &bull; Potongan PPh 21 bukan pegawai 2.5% &bull; 16 Nov 2026 11:00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-modul" onclick="switchTab('tab-modul')">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        1. Modul Bisnis
+      </button>
+      <button class="exam-top-tab" data-tab="tab-aging" onclick="switchTab('tab-aging')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        2. Aging Utang &amp; Jatuh Tempo
+      </button>
+      <button class="exam-top-tab" data-tab="tab-approval" onclick="switchTab('tab-approval')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        3. Antrean Persetujuan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-kepatuhan" onclick="switchTab('tab-kepatuhan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        4. Regulasi &amp; Legalitas
+      </button>
+    </nav>
+
+    <!-- TAB 1: MODUL BISNIS -->
+    <div id="tab-modul" class="tab-pane active">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Pengendalian Bisnis Terpadu:</strong> Mengelola pengadaan farmasi, utang usaha, beban operasional, aset tetap, payroll karyawan, dan remunerasi dokter mitra. Seluruh transaksi tervalidasi izin legalitas dan otomatis membentuk jurnal double-entry ke COA 1000–5900.
+      </div>
+      <div class="grid grid-3">
+        <!-- Purchasing -->
+        <a class="module-card" href="purchasing.html">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <h3>Pengadaan (Purchasing &amp; PO)</h3>
+          <p>Purchase Request, Surat Pesanan Narkotika/Psikotropika APJ, Purchase Order, dan Penerimaan Barang (GRN).</p>
+          <div class="module-foot">
+            <span class="code-chip">PO &bull; GRN</span>
+            <span style="font-weight:600">4 Aktif &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Supplier & AP -->
+        <a class="module-card" href="supplier-ap.html">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <h3>Supplier &amp; Utang Usaha (AP)</h3>
+          <p>Verifikasi PBF berizin, faktur pembelian supplier, pencatatan PPN Masukan, dan jadwal pelunasan utang.</p>
+          <div class="module-foot">
+            <span class="code-chip">PBF &bull; AP</span>
+            <span style="font-weight:600">12 Mitra &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Biaya Operasional -->
+        <a class="module-card" href="pengeluaran.html">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Biaya Operasional (Expenses)</h3>
+          <p>Pengajuan biaya utilitas, kas kecil klinik, pemeliharaan gedung, dan reimbursement operasional berjenjang.</p>
+          <div class="module-foot">
+            <span class="code-chip">COA 5100-5300</span>
+            <span style="font-weight:600">Buka Form &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Aset Tetap -->
+        <a class="module-card" href="aset-tetap.html">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3>Aset Tetap &amp; Depresiasi</h3>
+          <p>Register USG, dental unit, genset, jadwal penyusutan garis lurus bulanan, dan jurnal akumulasi depresiasi.</p>
+          <div class="module-foot">
+            <span class="code-chip">COA 1600 &amp; 5400</span>
+            <span style="font-weight:600">28 Unit &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Payroll Karyawan -->
+        <a class="module-card" href="payroll.html">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Payroll Staf &amp; BPJS</h3>
+          <p>Gaji pokok perawat/staf, iuran BPJS Ketenagakerjaan &amp; Kesehatan (beban klinik &amp; potongan staf), bukti potong PPh 21.</p>
+          <div class="module-foot">
+            <span class="code-chip">COA 5200 &bull; BPJS</span>
+            <span style="font-weight:600">24 Karyawan &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Remunerasi Medis -->
+        <a class="module-card" href="remunerasi.html">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+          <h3>Remunerasi &amp; Jasa Medis</h3>
+          <p>Bagi hasil tindakan dokter umum, spesialis, dokter gigi, penahanan s.d. billing lunas, dan PPh 21 tenaga ahli.</p>
+          <div class="module-foot">
+            <span class="code-chip">COA 5210 &amp; 2130</span>
+            <span style="font-weight:600">Hitung Jasa &rarr;</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- TAB 2: AGING UTANG -->
+    <div id="tab-aging" class="tab-pane">
+      <div class="grid grid-4" style="margin-bottom:14px">
+        <div class="kpi-box">
+          <div class="kpi-label">Lancar (&lt; 30 Hari)</div>
+          <div class="kpi-value" style="color:#27ae60">Rp 31.450.000</div>
+          <div class="kpi-sub">7 faktur PBF</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-label">31 - 60 Hari</div>
+          <div class="kpi-value" style="color:#f39c12">Rp 12.800.000</div>
+          <div class="kpi-sub">3 faktur alkes</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-label">61 - 90 Hari</div>
+          <div class="kpi-value" style="color:#e67e22">Rp 4.000.000</div>
+          <div class="kpi-sub">1 faktur reagen lab</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-label">&gt; 90 Hari (Macet)</div>
+          <div class="kpi-value" style="color:#c0392b">Rp 0</div>
+          <div class="kpi-sub">Toleransi 0%</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <h2>Daftar Tagihan Supplier Jatuh Tempo Terdekat</h2>
+          <span class="status warn">3 Menjelang Tempo</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>No. Faktur PBF</th>
+              <th>Nama Supplier</th>
+              <th>Tgl Faktur</th>
+              <th>Jatuh Tempo</th>
+              <th>Jumlah Tagihan</th>
+              <th>Sisa Bayar</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">INV-KF-2026-081</span></td>
+              <td><strong>PT Kimia Farma Trading &amp; Distribution</strong></td>
+              <td>20 Feb 2026</td>
+              <td><span style="color:#c0392b;font-weight:bold">22 Mar 2026 (5 hari)</span></td>
+              <td>Rp 14.500.000</td>
+              <td>Rp 14.500.000</td>
+              <td><span class="status warn">Belum Lunas</span></td>
+              <td><a href="supplier-ap.html" class="btn small">Bayar</a></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">INV-EN-2026-114</span></td>
+              <td><strong>PT Enseval Putera Megatrading</strong></td>
+              <td>25 Feb 2026</td>
+              <td>27 Mar 2026 (10 hari)</td>
+              <td>Rp 9.200.000</td>
+              <td>Rp 9.200.000</td>
+              <td><span class="status warn">Belum Lunas</span></td>
+              <td><a href="supplier-ap.html" class="btn small">Bayar</a></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">INV-SL-2026-039</span></td>
+              <td><strong>PT Sinergi Labora Medika</strong></td>
+              <td>02 Mar 2026</td>
+              <td>01 Apr 2026 (15 hari)</td>
+              <td>Rp 7.750.000</td>
+              <td>Rp 7.750.000</td>
+              <td><span class="status warn">Belum Lunas</span></td>
+              <td><a href="supplier-ap.html" class="btn small">Bayar</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: ANTREAN PERSETUJUAN -->
+    <div id="tab-approval" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <div>
+            <h2 style="margin:0 0 4px">Matriks Persetujuan Berjenjang</h2>
+            <div class="small" style="color:var(--muted)">Pengadaan obat keras wajib persetujuan APJ; pengeluaran &gt; Rp 5.000.000 butuh otorisasi Direktur</div>
+          </div>
+          <span class="status warn">3 Menunggu Otorisasi</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>ID Transaksi</th>
+              <th>Jenis Dokumen</th>
+              <th>Pengaju</th>
+              <th>Uraian / Vendor</th>
+              <th>Nominal</th>
+              <th>Tingkat Approval</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">PO-2026-03-0044</span></td>
+              <td>Surat Pesanan Prekursor</td>
+              <td>apt. Ratna Dewi, S.Farm</td>
+              <td>Pengadaan pseudoephedrine tab &bull; PT Kimia Farma</td>
+              <td>Rp 3.850.000</td>
+              <td><span class="status dark">Apoteker PJ (APJ)</span></td>
+              <td><button class="btn small primary">Setujui</button> <button class="btn small">Tolak</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">EXP-2026-03-0021</span></td>
+              <td>Biaya Kalibrasi USG &amp; Dental</td>
+              <td>drg. Maya Santoso</td>
+              <td>Vendor Kalibrasi BPFK &bull; Ruang Poli Gigi &amp; Obgyn</td>
+              <td>Rp 8.500.000</td>
+              <td><span class="status warn">Direktur Klinik</span></td>
+              <td><button class="btn small primary">Setujui</button> <button class="btn small">Tolak</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">PAY-2026-03-DRAFT</span></td>
+              <td>Draft Payroll Staf Maret 2026</td>
+              <td>Budi Hartono (HRD)</td>
+              <td>Gaji Pokok, Tunjangan Shift, BPJS TK/Kes (24 Staf)</td>
+              <td>Rp 76.400.000</td>
+              <td><span class="status warn">Direktur Klinik</span></td>
+              <td><button class="btn small primary">Setujui</button> <button class="btn small">Tinjau</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: KEPATUHAN & REGULASI -->
+    <div id="tab-kepatuhan" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Standar Kepatuhan Operasional Fasilitas Kesehatan</h2>
+          <span class="status ok">Terkontrol</span>
+        </div>
+        <div class="rule-row">
+          <div class="rule-mark rule-ok">&check;</div>
+          <div>
+            <strong>Izin Penyalur Farmasi (PBF Sah):</strong> Pembelian obat narkotika, psikotropika, dan prekursor farmasi hanya dilayani dari PBF resmi dengan nomor izin aktif dan Surat Pesanan standar BPOM.
+            <div class="small" style="color:var(--muted);margin-top:2px">Pengendalian: Pengecekan izin distributor resmi berkala sebelum PO diterbitkan.</div>
+          </div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-mark rule-ok">&check;</div>
+          <div>
+            <strong>Pemisahan Jasa Medis dan Payroll Karyawan:</strong> Dokter spesialis dan dokter umum mitra bukan merupakan subjek payroll karyawan tetap. Jasa medis dihitung dari billing tindakan lunas dan dipotong PPh 21 bukan pegawai.
+            <div class="small" style="color:var(--muted);margin-top:2px">Jurnal: Beban Jasa Medis (5210) &bull; Utang Jasa Medis (2130) &bull; Utang PPh 21 (2210).</div>
+          </div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-mark rule-ok">&check;</div>
+          <div>
+            <strong>Pencatatan Pajak Masukan (PPN Faktur BKP):</strong> Faktur pajak dari supplier obat &amp; alkes dicatat sebagai Pajak Masukan (1400) dan dikonfirmasi sebelum kredit pajak dilaporkan.
+            <div class="small" style="color:var(--muted);margin-top:2px">Akun: 1400 PPN Masukan (Aset Lancar Pajak Dibayar di Muka).</div>
+          </div>
+        </div>
+        <div class="rule-row">
+          <div class="rule-mark rule-ok">&check;</div>
+          <div>
+            <strong>Penyusutan Aset Medis (Metode Garis Lurus):</strong> Aset golongan 1 (komputer, alkes kecil 4 tahun) dan golongan 2 (USG, dental chair 8 tahun) disusutkan metode garis lurus setiap tutup buku bulanan.
+            <div class="small" style="color:var(--muted);margin-top:2px">Akun: Beban Penyusutan (5400) vs Akumulasi Penyusutan (1690).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>

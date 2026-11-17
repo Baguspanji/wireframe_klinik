@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aset Tetap &amp; Depresiasi - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.balance-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="appSidebar"></aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Manajemen Bisnis <span style="margin:0 8px">/</span> <b>Aset Tetap &amp; Depresiasi</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">F</span>
+      <span>Akuntan Aset Tetap</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#management">Manajemen Bisnis</a> <span>/</span> <a href="index.html">Overview</a> <span>/</span> Aset Tetap</div>
+        <h1>Aset Tetap &amp; Depresiasi Medis</h1>
+        <p>Inventarisasi peralatan medis, fasilitas gedung, perhitungan penyusutan metode garis lurus bulanan, dan jadwal sertifikasi kalibrasi BPFK.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="index.html">Kembali ke Overview</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- Card Kiri: Ringkasan Nilai Buku Aset -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <h2>Nilai Buku Bersih (Net Book Value)</h2>
+          </div>
+          <span class="status ok">28 Unit Aktif</span>
+        </div>
+        <div style="font-size:18px;font-weight:bold;margin:2px 0 10px">Rp 235.500.000</div>
+        <div class="grid grid-3" style="gap:8px;font-size:12px">
+          <div>
+            <div class="small" style="color:var(--muted)">Harga Perolehan Awal</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 320.000.000</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Akumulasi Penyusutan</div>
+            <div style="font-weight:bold;color:#c0392b;margin-top:2px">(Rp 84.500.000)</div>
+          </div>
+          <div>
+            <div class="small" style="color:var(--muted)">Depresiasi Bulanan</div>
+            <div style="font-weight:bold;margin-top:2px">Rp 3.850.000 / bln</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Kanan: 3 Riwayat Aset Terakhir -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+            <h2>3 Riwayat Aset Terakhir</h2>
+          </div>
+          <span class="status">Inventaris</span>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>AST-2026-0028 &bull; Ruang Sterilisasi</span>
+            <span class="status ok">Baru</span>
+          </div>
+          <div class="history-diag">Autoclave Medis B-Class 24 Liter (Rp 22.000.000)</div>
+          <div class="history-notes">Masa Manfaat: 4 Tahun &bull; Garansi 2 Tahun &bull; Vendor Medika Alkesindo</div>
+        </div>
+        <div class="history-item">
+          <div class="history-date">
+            <span>DEP-2026-02-001 &bull; Tutup Buku Februari</span>
+            <span class="status ok">Posted</span>
+          </div>
+          <div class="history-diag">Posting Beban Penyusutan Bulanan (Rp 3.850.000)</div>
+          <div class="history-notes">Jurnal Otomatis: 5400 Beban Penyusutan vs 1690 Akumulasi</div>
+        </div>
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>AST-2025-0014 &bull; Poli Gigi 1</span>
+            <span class="status ok">Lolos Uji</span>
+          </div>
+          <div class="history-diag">Kalibrasi Berkala Dental Chair Unit Gnatus</div>
+          <div class="history-notes">Sertifikat Kelayakan BPFK Berlaku s.d. Jan 2027</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-aset-daftar" onclick="switchTab('tab-aset-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Register Aset Tetap
+      </button>
+      <button class="exam-top-tab" data-tab="tab-aset-tambah" onclick="switchTab('tab-aset-tambah')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        2. Tambah Register Aset
+      </button>
+      <button class="exam-top-tab" data-tab="tab-aset-depresiasi" onclick="switchTab('tab-aset-depresiasi')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3. Jadwal &amp; Hitung Penyusutan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-aset-jurnal" onclick="switchTab('tab-aset-jurnal')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        4. Pratinjau Jurnal Penyusutan
+      </button>
+    </nav>
+
+    <!-- TAB 1: REGISTER ASET -->
+    <div id="tab-aset-daftar" class="tab-pane active">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="Cari nama atau nomor aset..." style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;width:260px">
+            <select style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px">
+              <option>Semua Kategori</option>
+              <option>Alat Medis &amp; Diagnostik</option>
+              <option>Peralatan Poli Gigi</option>
+              <option>Instalasi Listrik &amp; Genset</option>
+              <option>Kendaraan Operasional / Ambulans</option>
+            </select>
+          </div>
+          <button class="btn primary small" onclick="switchTab('tab-aset-tambah')">+ Tambah Aset Baru</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>No. Aset</th>
+              <th>Nama Peralatan / Aset</th>
+              <th>Unit Penempatan</th>
+              <th>Tgl Perolehan</th>
+              <th style="text-align:right">Harga Beli (Rp)</th>
+              <th style="text-align:right">Akum. Penyusutan (Rp)</th>
+              <th style="text-align:right">Nilai Buku (Rp)</th>
+              <th>Masa Manfaat</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">AST-MED-001</span></td>
+              <td><strong>USG 4D Mindray DC-30 (Color Doppler)</strong></td>
+              <td>Poli KIA / Kebidanan</td>
+              <td>15 Jan 2024</td>
+              <td style="text-align:right">120.000.000</td>
+              <td style="text-align:right;color:#c0392b">32.500.000</td>
+              <td style="text-align:right;font-weight:bold">87.500.000</td>
+              <td>8 Tahun (Gol. 2)</td>
+              <td><span class="status ok">Beroperasi Baik</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AST-DENT-004</span></td>
+              <td><strong>Dental Unit Chair Gnatus S400</strong></td>
+              <td>Poli Gigi &amp; Mulut</td>
+              <td>10 Jun 2024</td>
+              <td style="text-align:right">75.000.000</td>
+              <td style="text-align:right;color:#c0392b">15.625.000</td>
+              <td style="text-align:right;font-weight:bold">59.375.000</td>
+              <td>8 Tahun (Gol. 2)</td>
+              <td><span class="status ok">Beroperasi Baik</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AST-LAB-008</span></td>
+              <td><strong>Hematology Analyzer Sysmex XN-350</strong></td>
+              <td>Laboratorium Utama</td>
+              <td>05 Nov 2024</td>
+              <td style="text-align:right">68.000.000</td>
+              <td style="text-align:right;color:#c0392b">11.333.333</td>
+              <td style="text-align:right;font-weight:bold">56.666.667</td>
+              <td>8 Tahun (Gol. 2)</td>
+              <td><span class="status ok">Beroperasi Baik</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AST-MED-028</span></td>
+              <td><strong>Autoclave Medis B-Class 24L</strong></td>
+              <td>Ruang CSSD / Sterilisasi</td>
+              <td>10 Feb 2026</td>
+              <td style="text-align:right">22.000.000</td>
+              <td style="text-align:right;color:#c0392b">458.333</td>
+              <td style="text-align:right;font-weight:bold">21.541.667</td>
+              <td>4 Tahun (Gol. 1)</td>
+              <td><span class="status ok">Baru &bull; Garansi</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: TAMBAH ASET -->
+    <div id="tab-aset-tambah" class="tab-pane">
+      <div class="note-band" style="margin-bottom:14px">
+        <strong>Ketentuan Pengelompokan Aset:</strong> Golongan 1: masa manfaat 4 tahun (tarif garis lurus 25%/tahun). Golongan 2: masa manfaat 8 tahun (tarif garis lurus 12.5%/tahun). Perolehan baru langsung dicatat ke Akun Aset Tetap 1600.
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Formulir Pendaftaran Register Aset Tetap Baru</h2>
+          <span class="status dark">Aset Baru</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div>
+            <label class="small" style="font-weight:600">Nama Aset / Peralatan</label>
+            <input type="text" placeholder="Contoh: EKG 12 Lead Bionet CardioTouch" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Kategori Aset &amp; Golongan</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option selected>Golongan 1 (4 Tahun &bull; 25% / Thn) - Elektronik &amp; Alkes Kecil</option>
+              <option>Golongan 2 (8 Tahun &bull; 12.5% / Thn) - USG, Dental Chair, Radiologi</option>
+              <option>Golongan 3 (16 Tahun) - Genset Berat &amp; Lift</option>
+              <option>Bangunan Permanen (20 Tahun &bull; 5% / Thn)</option>
+            </select>
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Unit Penempatan (Penanggung Jawab)</label>
+            <select class="input" style="width:100%;margin-top:4px">
+              <option>Instalasi Gawat Darurat (IGD)</option>
+              <option>Poli Umum</option>
+              <option>Poli Kebidanan (KIA)</option>
+              <option>Laboratorium</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="gap:12px;margin-top:12px">
+          <div>
+            <label class="small" style="font-weight:600">Tanggal Perolehan (Beli)</label>
+            <input type="date" value="2026-03-17" class="input" style="width:100%;margin-top:4px">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Harga Perolehan (Rp)</label>
+            <input type="number" placeholder="25000000" class="input" style="width:100%;margin-top:4px;font-weight:bold">
+          </div>
+          <div>
+            <label class="small" style="font-weight:600">Vendor Penjual / No. Faktur</label>
+            <input type="text" placeholder="PT Medika Alkesindo &bull; INV-MA-091" class="input" style="width:100%;margin-top:4px">
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn secondary">Batal</button>
+          <button class="btn primary">Simpan Register Aset Tetap</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: JADWAL DEPRESIASI -->
+    <div id="tab-aset-depresiasi" class="tab-pane">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h3 style="font-size:13px;margin:0">Eksekusi Penyusutan Bulanan (Metode Garis Lurus)</h3>
+            <span class="small" style="color:var(--muted)">Periode Aktif: <strong>Maret 2026</strong> &bull; Total Beban Penyusutan: <strong>Rp 3.850.000</strong></span>
+          </div>
+          <button class="btn primary small">Jalankan Posting Penyusutan</button>
+        </div>
+
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>No. Aset</th>
+              <th>Nama Aset</th>
+              <th>Harga Perolehan</th>
+              <th>Tarif / Thn</th>
+              <th style="text-align:right">Beban Depresiasi Mar 2026 (Rp)</th>
+              <th>Status Bulan Ini</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">AST-MED-001</span></td>
+              <td>USG 4D Mindray DC-30</td>
+              <td>Rp 120.000.000</td>
+              <td>12.5% (8 Thn)</td>
+              <td style="text-align:right;font-weight:bold">1.250.000</td>
+              <td><span class="status warn">Siap Posting</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AST-DENT-004</span></td>
+              <td>Dental Unit Chair Gnatus S400</td>
+              <td>Rp 75.000.000</td>
+              <td>12.5% (8 Thn)</td>
+              <td style="text-align:right;font-weight:bold">781.250</td>
+              <td><span class="status warn">Siap Posting</span></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">AST-LAB-008</span></td>
+              <td>Hematology Analyzer Sysmex</td>
+              <td>Rp 68.000.000</td>
+              <td>12.5% (8 Thn)</td>
+              <td style="text-align:right;font-weight:bold">708.333</td>
+              <td><span class="status warn">Siap Posting</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: PRATINJAU JURNAL -->
+    <div id="tab-aset-jurnal" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <h2>Pratinjau Jurnal Penyusutan Bulanan Aset Tetap</h2>
+          <span class="status dark">Double-Entry</span>
+        </div>
+        <table class="table" style="font-size:11px">
+          <thead>
+            <tr>
+              <th>Kode Akun</th>
+              <th>Nama Akun COA</th>
+              <th style="text-align:right">Debit (Rp)</th>
+              <th style="text-align:right">Kredit (Rp)</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">5400</span></td>
+              <td><strong>Beban Penyusutan Aset Tetap</strong></td>
+              <td style="text-align:right;font-weight:bold">3.850.000</td>
+              <td style="text-align:right">-</td>
+              <td>Penyusutan garis lurus 28 unit peralatan medis &amp; fasilitas klinik</td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">1690</span></td>
+              <td><strong>Akumulasi Penyusutan Aset Tetap</strong> (Kontra Aset)</td>
+              <td style="text-align:right">-</td>
+              <td style="text-align:right;font-weight:bold">3.850.000</td>
+              <td>Pengurang nilai buku aset tetap klinik</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#fafbfc;font-weight:bold">
+              <td colspan="2" style="text-align:right">Total Seimbang:</td>
+              <td style="text-align:right;color:#27ae60">Rp 3.850.000</td>
+              <td style="text-align:right;color:#27ae60">Rp 3.850.000</td>
+              <td><span class="status ok">&check; Seimbang</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/main.js"></script>
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-pane").forEach(function (pane) {
+    pane.classList.remove("active");
+  });
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.remove("active");
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+  var activeBtn = document.querySelector('.exam-top-tab[data-tab="' + tabId + '"]');
+  if (activeBtn) activeBtn.classList.add("active");
+}
+</script>
+</body>
+</html>
