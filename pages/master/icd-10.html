@@ -209,73 +209,7 @@ tr.inactive-row td .code-name { text-decoration: line-through; }
 <div class="app">
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="brand">
-    <div class="brand-icon">C</div>
-    <div><strong>Clinic ERP</strong><small>Management System</small></div>
-  </div>
-
-  <div class="nav-label">GENERAL</div>
-  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
-
-  <div class="nav-label">OPERASIONAL</div>
-  <div class="nav-group" id="nav-operasional">
-    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
-      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
-      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
-    </button>
-    <div class="nav-subitems">
-      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
-      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
-      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
-      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
-      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
-      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
-      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
-      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
-      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
-      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
-      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
-    </div>
-  </div>
-
-  <div class="nav-label">KEUANGAN</div>
-  <div class="nav-group" id="nav-keuangan">
-    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
-      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
-      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
-    </button>
-    <div class="nav-subitems">
-      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
-      <a class="nav-item nav-sub" href="../keuangan/billing-kasir.html"><span>Billing &amp; Kasir</span></a>
-      <a class="nav-item nav-sub" href="../keuangan/jurnal-umum.html"><span>Form Jurnal Umum</span></a>
-      <a class="nav-item nav-sub" href="../keuangan/coa.html"><span>Chart of Accounts</span></a>
-      <a class="nav-item nav-sub" href="../keuangan/buku-besar.html"><span>Buku Besar</span></a>
-      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
-    </div>
-  </div>
-
-  <div class="nav-label">MASTER DATA</div>
-  <div class="nav-group open" id="nav-master">
-    <button class="nav-item nav-group-toggle" data-toggle="nav-master">
-      <span class="nav-left"><i class="nav-icon"></i><span>Master Data</span></span>
-      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
-    </button>
-    <div class="nav-subitems">
-      <a class="nav-item nav-sub" href="index.html"><span>Overview Master</span></a>
-      <a class="nav-item nav-sub" href="obat.html"><span>Data Obat</span></a>
-      <a class="nav-item nav-sub" href="satuan-jenis.html"><span>Satuan &amp; Jenis</span></a>
-      <a class="nav-item nav-sub" href="dokter.html"><span>Dokter &amp; Pengguna</span></a>
-      <a class="nav-item nav-sub" href="tarif.html"><span>Tarif Layanan</span></a>
-      <a class="nav-item nav-sub active" href="icd-10.html"><span>ICD-10 Diagnosis</span></a>
-      <a class="nav-item nav-sub" href="icd-9.html"><span>ICD-9 Tindakan</span></a>
-    </div>
-  </div>
-
-  <div class="nav-label">MANAJEMEN</div>
-  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
-  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
-</aside>
+<aside class="sidebar" id="appSidebar"></aside>
 
 <!-- MAIN -->
 <main class="main">
@@ -609,6 +543,7 @@ tr.inactive-row td .code-name { text-decoration: line-through; }
 </main>
 </div>
 
+<script src="../../js/sidebar.js"></script>
 <script src="../../js/main.js"></script>
 <script>
 var TODAY = "2026-11-17";
