@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Dispensing &amp; Telaah Farmasi - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* History Mini Timeline */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.checklist-box {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  background: #fafbfc;
+  border: 1px solid var(--line);
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 14px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.etiket-preview {
+  background: #fff;
+  border: 2px dashed #999;
+  border-radius: 6px;
+  padding: 14px;
+  max-width: 480px;
+  margin: 10px 0;
+  font-family: monospace;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub active" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="pemeriksaan-farmasi.html"><span>+ Form Dispensing</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> Farmasi <span style="margin:0 8px">/</span> <b>Form Dispensing Obat</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">F</span>
+      <span>Apoteker Penanggung Jawab</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="farmasi.html">Farmasi</a> <span>/</span> Form Dispensing</div>
+        <h1>Form Telaah &amp; Dispensing Obat (Farmasi)</h1>
+        <p>Verifikasi klinis resep dokter, penyiapan batch/stok, cetak etiket aturan minum, dan penyerahan obat (PIO).</p>
+      </div>
+      <div>
+        <a class="btn" href="farmasi.html">Kembali ke Antrean Resep</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: DATA DASAR PASIEN (KIRI) & 3 RIWAYAT TERAKHIR (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: DATA DASAR PASIEN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Data Dasar Pasien</h2>
+          </div>
+          <span class="status dark">No. Resep: RX-045</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:16px;font-weight:bold;">Andi Pratama</div>
+            <div class="small muted" style="margin-top:2px;">No. RM: <b>RM-000124</b> | NIK: 3201234567890001</div>
+          </div>
+          <span class="status" style="background:#e8f4fd;color:#0b69a3;font-weight:600;">Umum / Tunai</span>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;font-size:11px;gap:8px;">
+          <div><b>Tgl Lahir / Usia:</b> 12 Mei 1994 (32 Thn)</div>
+          <div><b>BB / TB:</b> 68 kg / 172 cm</div>
+          <div><b>Dokter Peresep:</b> dr. Budi Santoso (Poli Umum)</div>
+          <div><b>Waktu Resep:</b> 17 Nov 2026 08:35</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;">
+          <div style="color:#c0392b;display:flex;align-items:center;gap:6px;">
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#c0392b;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <b>Peringatan Alergi:</b> Amoxicillin (Alergi Penisilin), Seafood
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 RIWAYAT RESEP TERAKHIR -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+            <h2>3 Riwayat Resep Obat Terakhir</h2>
+          </div>
+          <span class="muted small">RM-000124</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>28 Okt 2026 - Poli Umum</span>
+            <span class="muted">dr. Budi Santoso</span>
+          </div>
+          <div class="history-diag">Resep: Omeprazole 20mg (14 tab), Antasida Doen Susp (1 btl)</div>
+          <div class="history-notes">Status: Diserahkan lengkap. Pasien teredukasi konsumsi 30 menit ac.</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>14 Agu 2026 - Poli Gigi</span>
+            <span class="muted">drg. Rina</span>
+          </div>
+          <div class="history-diag">Resep: Asam Mefenamat 500mg (10 kap)</div>
+          <div class="history-notes">Status: Diserahkan lengkap. Edukasi analgesik pasca tambal gigi.</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>02 Mar 2026 - IGD</span>
+            <span class="muted">dr. Dimas</span>
+          </div>
+          <div class="history-diag">Resep: Oralit sachet (10), Attapulgite tab (10), Zink 20mg (10)</div>
+          <div class="history-notes">Status: Diserahkan lengkap. Kasus GEA rawat jalan.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS FARMASI (FULL WIDTH) -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-telaah" onclick="switchFarmasiTab('tab-telaah')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+        1. Telaah Resep (Verifikasi Klinis)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-penyiapan" onclick="switchFarmasiTab('tab-penyiapan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+        2. Penyiapan &amp; Pengambilan Stok Obat
+      </button>
+      <button class="exam-top-tab" data-tab="tab-etiket" onclick="switchFarmasiTab('tab-etiket')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        3. Etiket &amp; Pengemasan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-penyerahan" onclick="switchFarmasiTab('tab-penyerahan')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+        4. Penyerahan Obat &amp; Konseling (PIO)
+      </button>
+    </nav>
+
+    <!-- TAB 1: TELAAH RESEP (VERIFIKASI KLINIS) -->
+    <div class="tab-pane active" id="tab-telaah">
+      <div class="card">
+        <div class="card-title">
+          <h2>Telaah Kelayakan Resep (Standar Permenkes Farmasi Klinis)</h2>
+          <span class="status dark">Resep Elektronik #RX-045</span>
+        </div>
+
+        <div class="card section" style="background:#fcfdfe;border:1px solid #dce2e6;margin-top:0;">
+          <h3 style="margin-bottom:8px;">Daftar Item Obat dari Dokter (Poli Umum)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>R/ Ke</th><th>Nama Obat</th><th>Bentuk Sediaan</th><th>Jumlah</th><th>Signa (Aturan Minum)</th><th>Instruksi Tambahan</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>R/ 1</td><td><b>Paracetamol 500mg</b></td><td>Tablet</td><td>10 Tablet</td><td>3 x 1 tablet sehari</td><td>Bila demam / nyeri</td></tr>
+                <tr><td>R/ 2</td><td><b>Cetirizine 10mg</b></td><td>Tablet</td><td>5 Tablet</td><td>1 x 1 tablet sehari</td><td>Malam hari sebelum tidur</td></tr>
+                <tr><td>R/ 3</td><td><b>Vitamin C 500mg</b></td><td>Tablet</td><td>10 Tablet</td><td>1 x 1 tablet sehari</td><td>Pagi hari sesudah makan</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h3 style="margin:14px 0 8px;">Checklist 7 Benar Telaah Resep</h3>
+        <div class="checklist-box">
+          <label class="check-item"><input type="checkbox" checked> 1. Benar Identitas Pasien (Nama, RM, Usia, BB)</label>
+          <label class="check-item"><input type="checkbox" checked> 2. Benar Nama Obat &amp; Kekuatan Sediaan</label>
+          <label class="check-item"><input type="checkbox" checked> 3. Benar Dosis, Frekuensi &amp; Durasi Pemakaian</label>
+          <label class="check-item"><input type="checkbox" checked> 4. Benar Rute Pemberian (Oral)</label>
+          <label class="check-item"><input type="checkbox" checked> 5. Benar Waktu Konsumsi (pagi/malam/ac/dc/pc)</label>
+          <label class="check-item"><input type="checkbox" checked> 6. Tidak Ada Duplikasi Terapi / Kontraindikasi</label>
+          <label class="check-item"><input type="checkbox" checked> 7. Bebas Alergi (Amoxicillin dihindari - Sesuai)</label>
+          <label class="check-item"><input type="checkbox" checked> 8. Tidak Ada Interaksi Obat Merugikan</label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catatan Telaah Klinis Apoteker</label>
+          <input type="text" class="field" value="Resep telah ditelaah secara administratif dan farmasetik. Aman untuk disiapkan.">
+        </div>
+
+        <div style="margin-top:14px;text-align:right;">
+          <button type="button" class="btn primary" onclick="switchFarmasiTab('tab-penyiapan')">Verifikasi Valid &amp; Lanjut Siapkan Stok Obat &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PENYIAPAN & ALOKASI STOK OBAT -->
+    <div class="tab-pane" id="tab-penyiapan">
+      <div class="card">
+        <div class="card-title">
+          <h2>Penyiapan Fisik &amp; Pemotongan Stok Depo Farmasi</h2>
+          <span class="status">Otomatis FEFO (First Expired First Out)</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Item Obat</th><th>Jml Resep</th><th>Nomor Batch</th><th>Tanggal Expiry</th><th>Sisa Stok Depo</th><th>Lokasi Rak</th><th>Status Fisik</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Paracetamol 500mg Tab (Kimia Farma)</b></td>
+                <td>10 Tab</td>
+                <td><input type="text" class="field" value="B-PCT2610" style="height:28px;"></td>
+                <td><span class="small">10/2028</span></td>
+                <td><span class="status dark">480 Tab</span></td>
+                <td>Rak A-02</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Tersedia &amp; Siap</span></td>
+              </tr>
+              <tr>
+                <td><b>Cetirizine 10mg Tab (Hexpharm)</b></td>
+                <td>5 Tab</td>
+                <td><input type="text" class="field" value="B-CTZ2608" style="height:28px;"></td>
+                <td><span class="small">08/2027</span></td>
+                <td><span class="status dark">210 Tab</span></td>
+                <td>Rak B-01</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Tersedia &amp; Siap</span></td>
+              </tr>
+              <tr>
+                <td><b>Vitamin C 500mg Tab (Kalbe)</b></td>
+                <td>10 Tab</td>
+                <td><input type="text" class="field" value="B-VTC2612" style="height:28px;"></td>
+                <td><span class="small">12/2027</span></td>
+                <td><span class="status dark">350 Tab</span></td>
+                <td>Rak C-05</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Tersedia &amp; Siap</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:14px;">
+          <div class="form-group">
+            <label class="form-label">Petugas Peracik / Asisten Apoteker (TTK)</label>
+            <select class="field">
+              <option selected>Siti Rahmawati, A.Md.Farm</option>
+              <option>Dedi Kurniawan, S.Farm</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apoteker Pemeriksa Akhir</label>
+            <select class="field">
+              <option selected>apt. Dewi Sartika, S.Farm</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchFarmasiTab('tab-telaah')">&larr; Kembali ke Telaah</button>
+          <button type="button" class="btn primary" onclick="switchFarmasiTab('tab-etiket')">Stok Siap, Cetak Etiket &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: ETIKET & PENGEMASAN -->
+    <div class="tab-pane" id="tab-etiket">
+      <div class="card">
+        <div class="card-title">
+          <h2>Preview &amp; Cetak Etiket Obat Pasien</h2>
+          <button type="button" class="btn primary" onclick="window.print()">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Cetak Semua Etiket Thermal
+          </button>
+        </div>
+
+        <div class="grid grid-3">
+          <!-- ETIKET 1 -->
+          <div class="etiket-preview">
+            <div style="text-align:center;font-weight:bold;border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:6px;">
+              INSTALASI FARMASI CLINIC ERP<br>
+              <span style="font-size:10px;font-weight:normal;">Jl. Kemang Raya No. 45 Jakarta</span>
+            </div>
+            <div>No: RX-045 &nbsp;&nbsp;&nbsp;&nbsp; Tgl: 17/11/2026</div>
+            <div>Pasien: <b>Andi Pratama</b> (32 Thn)</div>
+            <div>No. RM : RM-000124</div>
+            <hr style="margin:4px 0;">
+            <div style="text-align:center;font-size:13px;font-weight:bold;margin:6px 0;">
+              PARACETAMOL 500 MG<br>
+              3 x Sehari 1 Tablet<br>
+              (Sesudah Makan - Bila Demam)
+            </div>
+            <div style="font-size:10px;text-align:center;margin-top:6px;">OBAT DALAM (PUTIH)</div>
+          </div>
+
+          <!-- ETIKET 2 -->
+          <div class="etiket-preview">
+            <div style="text-align:center;font-weight:bold;border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:6px;">
+              INSTALASI FARMASI CLINIC ERP<br>
+              <span style="font-size:10px;font-weight:normal;">Jl. Kemang Raya No. 45 Jakarta</span>
+            </div>
+            <div>No: RX-045 &nbsp;&nbsp;&nbsp;&nbsp; Tgl: 17/11/2026</div>
+            <div>Pasien: <b>Andi Pratama</b> (32 Thn)</div>
+            <div>No. RM : RM-000124</div>
+            <hr style="margin:4px 0;">
+            <div style="text-align:center;font-size:13px;font-weight:bold;margin:6px 0;">
+              CETIRIZINE 10 MG<br>
+              1 x Sehari 1 Tablet<br>
+              (Malam Hari Sesudah Makan)
+            </div>
+            <div style="font-size:10px;text-align:center;margin-top:6px;">OBAT DALAM (PUTIH)</div>
+          </div>
+
+          <!-- ETIKET 3 -->
+          <div class="etiket-preview">
+            <div style="text-align:center;font-weight:bold;border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:6px;">
+              INSTALASI FARMASI CLINIC ERP<br>
+              <span style="font-size:10px;font-weight:normal;">Jl. Kemang Raya No. 45 Jakarta</span>
+            </div>
+            <div>No: RX-045 &nbsp;&nbsp;&nbsp;&nbsp; Tgl: 17/11/2026</div>
+            <div>Pasien: <b>Andi Pratama</b> (32 Thn)</div>
+            <div>No. RM : RM-000124</div>
+            <hr style="margin:4px 0;">
+            <div style="text-align:center;font-size:13px;font-weight:bold;margin:6px 0;">
+              VITAMIN C 500 MG<br>
+              1 x Sehari 1 Tablet<br>
+              (Pagi Hari Sesudah Makan)
+            </div>
+            <div style="font-size:10px;text-align:center;margin-top:6px;">OBAT DALAM (PUTIH)</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchFarmasiTab('tab-penyiapan')">&larr; Kembali ke Penyiapan</button>
+          <button type="button" class="btn primary" onclick="switchFarmasiTab('tab-penyerahan')">Etiket Selesai, Panggil Pasien &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PENYERAHAN & KONSELING (PIO) -->
+    <div class="tab-pane" id="tab-penyerahan">
+      <div class="card">
+        <div class="card-title">
+          <h2>Penyerahan Obat &amp; Pelayanan Informasi Obat (PIO)</h2>
+          <button type="button" class="btn secondary" onclick="alert('Memanggil nomor antrean obat Andi Pratama!')">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg> Panggil Loket Pengambilan
+          </button>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Penerima Obat <span class="req">*</span></label>
+              <select class="field">
+                <option selected>Pasien Sendiri (Andi Pratama)</option>
+                <option>Keluarga / Pendamping</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Metode Konseling Informasi Obat</label>
+              <div class="radio-group" style="flex-wrap:wrap;">
+                <label class="radio-label"><input type="checkbox" checked> Aturan minum &amp; dosis</label>
+                <label class="radio-label"><input type="checkbox" checked> Efek samping mengantuk (Cetirizine)</label>
+                <label class="radio-label"><input type="checkbox" checked> Cara penyimpanan di suhu ruang</label>
+                <label class="radio-label"><input type="checkbox" checked> Peringatan alergi</label>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-group">
+              <label class="form-label">Konfirmasi Tagihan Kasir</label>
+              <div class="card" style="padding:10px;background:#f8fafc;border:1px solid #d0d7de;">
+                <div style="display:flex;justify-content:space-between;">
+                  <span>Total Tagihan Obat:</span>
+                  <b>Rp 42.000</b>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                  <span>Status Pembayaran di Kasir:</span>
+                  <span class="status dark" style="background:#d4edda;color:#155724;font-weight:bold;">LUNAS (KASIR-01)</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan Tambahan Penyerahan</label>
+              <input type="text" class="field" value="Pasien memahami petunjuk minum obat cetirizine malam hari karena efek sedasi.">
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+          <button type="button" class="btn" onclick="switchFarmasiTab('tab-etiket')">&larr; Kembali ke Etiket</button>
+          <button type="button" class="btn primary" onclick="selesaiDispensing()" style="padding:10px 22px;font-weight:bold;">
+            Selesai Dispensing &amp; Tutup Resep #RX-045
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertFarmasiSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Dispensing Berhasil:</b> Resep <b>#RX-045</b> atas nama <b>Andi Pratama (RM-000124)</b> telah selesai diserahkan. Stok depo farmasi otomatis terpotong dan riwayat tersimpan di rekam medis.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function switchFarmasiTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function selesaiDispensing() {
+  document.getElementById("alertFarmasiSuccess").style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

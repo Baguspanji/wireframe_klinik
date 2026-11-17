@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Hasil Uji Laboratorium Klinis - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Mini Timeline Riwayat */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.flag-abnormal {
+  color: #c0392b;
+  font-weight: bold;
+}
+.flag-normal {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.report-paper {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 24px;
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub active" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="pemeriksaan-laboratorium.html"><span>+ Form Hasil Lab</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> Laboratorium <span style="margin:0 8px">/</span> <b>Form Hasil Pemeriksaan Lab</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">L</span>
+      <span>Analis Laboratorium Klinis</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="laboratorium.html">Laboratorium</a> <span>/</span> Form Hasil Uji</div>
+        <h1>Form Pemeriksaan &amp; Hasil Laboratorium Klinis</h1>
+        <p>Pencatatan sampling spesimen, input hasil parameter uji, validasi nilai kritis, dan cetak ekspertise.</p>
+      </div>
+      <div>
+        <a class="btn" href="laboratorium.html">Kembali ke Order Lab</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: DATA DASAR PASIEN (KIRI) & 3 RIWAYAT TERAKHIR LAB (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: DATA DASAR PASIEN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Data Dasar Pasien</h2>
+          </div>
+          <span class="status dark">No. Order: LAB-020</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:16px;font-weight:bold;">Andi Pratama</div>
+            <div class="small muted" style="margin-top:2px;">No. RM: <b>RM-000124</b> | NIK: 3201234567890001</div>
+          </div>
+          <span class="status" style="background:#e8f4fd;color:#0b69a3;font-weight:600;">Umum / Tunai</span>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;font-size:11px;gap:8px;">
+          <div><b>Tgl Lahir / Usia:</b> 12 Mei 1994 (32 Thn)</div>
+          <div><b>Jenis Kelamin:</b> Laki-laki</div>
+          <div><b>Dokter Pengirim:</b> dr. Budi Santoso (Poli Umum)</div>
+          <div><b>Waktu Order:</b> 17 Nov 2026 08:40 WIB</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;">
+          <div style="color:#555;display:flex;align-items:center;gap:6px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <b>Diagnosa Pengantar:</b> J06.9 - ISPA Akut dengan Febris hari ke-2 (Evaluasi Komplikasi)
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 RIWAYAT TERAKHIR LAB PASIEN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m21.5 2-1.4 1.4M15 8l-4 4"/><circle cx="10" cy="14" r="5"/><path d="M19 10l-4-4"/></svg>
+            <h2>3 Riwayat Hasil Lab Terakhir</h2>
+          </div>
+          <span class="muted small">RM-000124</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>28 Okt 2026 - Kimia Darah</span>
+            <span class="muted">dr. Budi Santoso</span>
+          </div>
+          <div class="history-diag">Gula Darah Sewaktu (GDS): 112 mg/dL (Normal)</div>
+          <div class="history-notes">Catatan: Skrining rutin metabolisme glukosa. Hasil terkendali.</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>02 Mar 2026 - Elektrolit &amp; Feses</span>
+            <span class="muted">dr. Dimas (IGD)</span>
+          </div>
+          <div class="history-diag">Feses Rutin: Bakteri (+), Amuba (-), Eritrosit 0-1</div>
+          <div class="history-notes">Elektrolit: Na 138, K 3.8, Cl 101. Evaluasi GEA akut.</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>10 Nov 2025 - Hematologi</span>
+            <span class="muted">Medical Check-Up</span>
+          </div>
+          <div class="history-diag">Darah Lengkap: Hb 14.8 g/dL, Leukosit 7.400 /uL, Trombosit 265.000</div>
+          <div class="history-notes">Hasil pemeriksaan penunjang normal tanpa nilai kritis.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS LABORATORIUM (FULL WIDTH) -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-sampling" onclick="switchLabTab('tab-sampling')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+        1. Penerimaan &amp; Pengambilan Sampel
+      </button>
+      <button class="exam-top-tab" data-tab="tab-input-hasil" onclick="switchLabTab('tab-input-hasil')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="m21.5 2-1.4 1.4M15 8l-4 4"/><circle cx="10" cy="14" r="5"/><path d="M19 10l-4-4"/></svg>
+        2. Input Hasil &amp; Parameter Uji
+      </button>
+      <button class="exam-top-tab" data-tab="tab-validasi" onclick="switchLabTab('tab-validasi')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        3. Validasi &amp; Nilai Kritis
+      </button>
+      <button class="exam-top-tab" data-tab="tab-cetak-ekspertise" onclick="switchLabTab('tab-cetak-ekspertise')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        4. Lembar Hasil Ekspertise
+      </button>
+    </nav>
+
+    <!-- CONTENT 1: PENERIMAAN & PENGAMBILAN SAMPEL -->
+    <div class="tab-pane active" id="tab-sampling">
+      <div class="card">
+        <div class="card-title">
+          <h2>Sampling &amp; Manajemen Spesimen Laboratorium</h2>
+          <span class="status dark">Spesimen Darah &amp; Urin</span>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">No. Barcode Tabung Spesimen</label>
+            <input type="text" class="field" value="SMP-20261117-020" readonly style="background:#f4f5f6;font-weight:bold;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Waktu Pengambilan Sampel</label>
+            <input type="datetime-local" class="field" value="2026-11-17T08:50">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Petugas Phlebotomist / Analis</label>
+            <select class="field">
+              <option selected>Rahmat Hidayat, A.Md.AK</option>
+              <option>Endah Pratiwi, S.Tr.Kes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:10px;">
+          <table>
+            <thead>
+              <tr><th>Jenis Spesimen</th><th>Wadah / Tabung</th><th>Volume</th><th>Kondisi Sampel</th><th>Lokasi Analisis</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Darah Vena (EDTA)</b></td>
+                <td>Tabung Tutup Ungu (K2-EDTA 3ml)</td>
+                <td>2.5 mL</td>
+                <td><span class="status dark">Baik (Non-Hemolisis)</span></td>
+                <td>Alat Hematology Analyzer</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diterima</span></td>
+              </tr>
+              <tr>
+                <td><b>Serum Darah (Clot Activator)</b></td>
+                <td>Tabung Tutup Kuning (SST Gel)</td>
+                <td>3.0 mL</td>
+                <td><span class="status dark">Baik (Non-Ikterik)</span></td>
+                <td>Alat Kimia Klinik</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diterima</span></td>
+              </tr>
+              <tr>
+                <td><b>Urin Pagi (Midstream)</b></td>
+                <td>Pot Urin Steril 60ml</td>
+                <td>25 mL</td>
+                <td><span class="status dark">Kuning Jernih</span></td>
+                <td>Urine Analyzer &amp; Mikroskopik</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diterima</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:16px;text-align:right;">
+          <button type="button" class="btn primary" onclick="switchLabTab('tab-input-hasil')">Spesimen Siap &amp; Lanjut Input Hasil Analisis &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 2: INPUT HASIL & PARAMETER UJI -->
+    <div class="tab-pane" id="tab-input-hasil">
+      <div class="card">
+        <div class="card-title">
+          <h2>Input Nilai Parameter Uji Laboratorium</h2>
+          <div>
+            <button type="button" class="btn secondary" onclick="alert('Sinkronisasi otomatis nilai dari alat Hematology Analyzer selesai.')">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg> Tarik Data Alat Analyzer
+            </button>
+          </div>
+        </div>
+
+        <!-- PAKET 1: HEMATOLOGI LENGKAP -->
+        <div class="card section" style="background:#fcfdfe;border:1px solid #dce2e6;margin-top:0;">
+          <h3 style="margin-bottom:10px;">Panel Hematologi Rutin (CBC)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Parameter</th><th>Hasil Pemeriksaan</th><th>Satuan</th><th>Nilai Rujukan</th><th>Keterangan / Flag</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Hemoglobin (Hb)</b></td>
+                  <td><input type="number" step="0.1" class="field" value="14.2" style="height:28px;width:100px;"></td>
+                  <td>g/dL</td>
+                  <td>13.2 - 17.3</td>
+                  <td><span class="flag-normal">Normal</span></td>
+                </tr>
+                <tr>
+                  <td><b>Leukosit (WBC)</b></td>
+                  <td><input type="number" class="field" value="12800" style="height:28px;width:100px;color:#c0392b;font-weight:bold;"></td>
+                  <td>/uL</td>
+                  <td>4.500 - 10.000</td>
+                  <td><span class="flag-abnormal">Tinggi (Leukositosis)</span></td>
+                </tr>
+                <tr>
+                  <td><b>Hematokrit (Ht)</b></td>
+                  <td><input type="number" step="0.1" class="field" value="42.5" style="height:28px;width:100px;"></td>
+                  <td>%</td>
+                  <td>40.0 - 52.0</td>
+                  <td><span class="flag-normal">Normal</span></td>
+                </tr>
+                <tr>
+                  <td><b>Trombosit (PLT)</b></td>
+                  <td><input type="number" class="field" value="240000" style="height:28px;width:100px;"></td>
+                  <td>/uL</td>
+                  <td>150.000 - 450.000</td>
+                  <td><span class="flag-normal">Normal</span></td>
+                </tr>
+                <tr>
+                  <td><b>Eritrosit (RBC)</b></td>
+                  <td><input type="number" step="0.1" class="field" value="4.8" style="height:28px;width:100px;"></td>
+                  <td>10^6/uL</td>
+                  <td>4.3 - 5.9</td>
+                  <td><span class="flag-normal">Normal</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PAKET 2: KIMIA KLINIK & SEROLOGI -->
+        <div class="card section" style="background:#fcfdfe;border:1px solid #dce2e6;">
+          <h3 style="margin-bottom:10px;">Panel Kimia Darah &amp; Serologi Widal</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Parameter</th><th>Hasil Pemeriksaan</th><th>Satuan</th><th>Nilai Rujukan</th><th>Keterangan / Flag</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Gula Darah Sewaktu (GDS)</b></td>
+                  <td><input type="number" class="field" value="105" style="height:28px;width:100px;"></td>
+                  <td>mg/dL</td>
+                  <td>&lt; 140</td>
+                  <td><span class="flag-normal">Normal</span></td>
+                </tr>
+                <tr>
+                  <td><b>Widal S. Typhi O</b></td>
+                  <td><input type="text" class="field" value="1/80" style="height:28px;width:100px;"></td>
+                  <td>Titer</td>
+                  <td>&lt; 1/160 (Negatif)</td>
+                  <td><span class="flag-normal">Batas Negatif</span></td>
+                </tr>
+                <tr>
+                  <td><b>Widal S. Typhi H</b></td>
+                  <td><input type="text" class="field" value="1/80" style="height:28px;width:100px;"></td>
+                  <td>Titer</td>
+                  <td>&lt; 1/160 (Negatif)</td>
+                  <td><span class="flag-normal">Batas Negatif</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchLabTab('tab-sampling')">&larr; Kembali ke Sampling</button>
+          <button type="button" class="btn primary" onclick="switchLabTab('tab-validasi')">Lanjut Validasi &amp; Nilai Kritis &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 3: VALIDASI & NILAI KRITIS -->
+    <div class="tab-pane" id="tab-validasi">
+      <div class="card">
+        <div class="card-title">
+          <h2>Validasi Hasil &amp; Pemeriksaan Nilai Kritis (Critical Values)</h2>
+          <span class="status dark">Supervisi Patologi Klinik</span>
+        </div>
+
+        <div class="alert info">
+          <b>Catatan Parameter:</b> Ditemukan peningkatan leukosit <b>12.800 /uL</b> selaras dengan infeksi saluran pernapasan akut febris hari ke-2. Tidak ada indikasi nilai kritis darurat (Critical Alert).
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Status Validasi Hasil Lab <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Tervalidasi &amp; Rilis (Valid &amp; Released)</option>
+              <option>Perlu Pengulangan Uji (Re-test Sample)</option>
+              <option>Nilai Kritis (Lapor Segera ke Dokter DPJP)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dokter Penanggung Jawab Lab / Analis Verifikator</label>
+            <input type="text" class="field" value="dr. Maya Anggraini, Sp.PK / Rahmat H., A.Md.AK" readonly style="background:#f4f5f6;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kesan &amp; Ekspertise Klinis Laboratorium</label>
+          <textarea class="field" rows="3">Leukositosis ringan menyokong kecurigaan proses infeksi akut. Uji Widal Salmonella typhi O/H belum menunjukkan titer diagnostik signifikan (1/80). Disarankan kontrol darah rutin ulang bila demam berlanjut &gt;3 hari.</textarea>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchLabTab('tab-input-hasil')">&larr; Kembali ke Input Hasil</button>
+          <button type="button" class="btn primary" onclick="switchLabTab('tab-cetak-ekspertise')">Validasi Selesai, Lihat Lembar Ekspertise &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 4: LEMBAR HASIL EKSPERTISE -->
+    <div class="tab-pane" id="tab-cetak-ekspertise">
+      <div class="card">
+        <div class="card-title">
+          <h2>Lembar Ekspertise Hasil Uji Laboratorium</h2>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="btn secondary" onclick="window.print()">
+              <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Cetak PDF Hasil Lab
+            </button>
+            <button type="button" class="btn primary" onclick="selesaiSimpanLab()">
+              Kirim Hasil ke RME Dokter &amp; Billing
+            </button>
+          </div>
+        </div>
+
+        <!-- PRATINJAU DOKUMEN CETAK LAB -->
+        <div class="report-paper">
+          <div style="text-align:center;border-bottom:2px solid #333;padding-bottom:10px;margin-bottom:14px;">
+            <div style="font-size:16px;font-weight:bold;">LABORATORIUM KLINIS - CLINIC ERP</div>
+            <div class="small muted">Izin Operasional No: 445/LAB-KLINIK/2026 | Jl. Kemang Raya No. 45 Jakarta Selatan</div>
+          </div>
+
+          <div class="grid grid-2" style="font-size:12px;margin-bottom:16px;">
+            <div>
+              <div>Nama Pasien : <b>Andi Pratama</b></div>
+              <div>No. RM / NIK : RM-000124 / 3201234567890001</div>
+              <div>Tgl Lahir/Usia: 12 Mei 1994 (32 Thn) / Laki-laki</div>
+            </div>
+            <div style="text-align:right;">
+              <div>No. Order Lab : <b>LAB-020</b></div>
+              <div>Dokter Perujuk: dr. Budi Santoso (Poli Umum)</div>
+              <div>Waktu Selesai : 17 Nov 2026 09:15 WIB</div>
+            </div>
+          </div>
+
+          <table style="width:100%;margin-bottom:16px;">
+            <thead>
+              <tr style="background:#eee;">
+                <th>Pemeriksaan</th><th>Hasil</th><th>Satuan</th><th>Nilai Rujukan</th><th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" style="background:#f9f9f9;font-weight:bold;">HEMATOLOGI LENGKAP</td></tr>
+              <tr><td>Hemoglobin</td><td>14.2</td><td>g/dL</td><td>13.2 - 17.3</td><td>Normal</td></tr>
+              <tr><td>Leukosit</td><td><b>12.800</b></td><td>/uL</td><td>4.500 - 10.000</td><td style="color:#c0392b;font-weight:bold;">Tinggi</td></tr>
+              <tr><td>Hematokrit</td><td>42.5</td><td>%</td><td>40.0 - 52.0</td><td>Normal</td></tr>
+              <tr><td>Trombosit</td><td>240.000</td><td>/uL</td><td>150.000 - 450.000</td><td>Normal</td></tr>
+              <tr><td colspan="5" style="background:#f9f9f9;font-weight:bold;">KIMIA DARAH &amp; SEROLOGI</td></tr>
+              <tr><td>Gula Darah Sewaktu (GDS)</td><td>105</td><td>mg/dL</td><td>&lt; 140</td><td>Normal</td></tr>
+              <tr><td>Widal S. Typhi O</td><td>1/80</td><td>Titer</td><td>&lt; 1/160</td><td>Negatif</td></tr>
+              <tr><td>Widal S. Typhi H</td><td>1/80</td><td>Titer</td><td>&lt; 1/160</td><td>Negatif</td></tr>
+            </tbody>
+          </table>
+
+          <div style="border:1px solid #ccc;padding:10px;border-radius:4px;font-size:11px;margin-bottom:20px;">
+            <b>Ekspertise:</b> Leukositosis menyokong infeksi akut. Widal belum bermakna secara serologis. Disarankan evaluasi klinis DPJP.
+          </div>
+
+          <div style="display:flex;justify-content:space-between;text-align:center;font-size:11px;margin-top:20px;">
+            <div>
+              Petugas Analis Laboratorium<br><br><br>
+              <b>( Rahmat Hidayat, A.Md.AK )</b>
+            </div>
+            <div>
+              Dokter Penanggung Jawab Laboratorium<br><br><br>
+              <b>( dr. Maya Anggraini, Sp.PK )</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertLabSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Hasil Lab Berhasil Dirilis:</b> Pemeriksaan order <b>#LAB-020</b> untuk pasien <b>Andi Pratama (RM-000124)</b> telah tervalidasi. Hasil otomatis dapat diakses oleh dokter di Poli Umum dan tagihan lab diteruskan ke Kasir.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function switchLabTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function selesaiSimpanLab() {
+  document.getElementById("alertLabSuccess").style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
