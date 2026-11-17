@@ -186,6 +186,29 @@ p { color: var(--muted); margin: 0; line-height: 1.5; }
 .metric-label { color: var(--muted); font-size: 12px; }
 .metric-value { font-size: 22px; font-weight: bold; margin: 9px 0 5px; }
 .metric-note { font-size: 11px; color: var(--muted); }
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+.kpi-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: bold;
+  font-size: 11px;
+}
+.kpi-trend.up { color: #27ae60; }
+.kpi-trend.down { color: #c0392b; }
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
 .placeholder {
   border: 1px dashed #c9cbd0;
   background: #fafafa;
@@ -335,63 +358,281 @@ tr:last-child td { border-bottom: 0; }
     <section class="page active" id="dashboard">
       <div class="page-heading">
         <div>
-          <div class="breadcrumb">General <span>/</span> Dashboard</div>
-          <h1>Dashboard</h1>
-          <p>Ringkasan aktivitas dan kondisi klinik hari ini.</p>
+          <div class="breadcrumb">Executive <span>/</span> Business Dashboard</div>
+          <h1>Dashboard Kinerja Bisnis &amp; Finansial</h1>
+          <p>Pemantauan pendapatan klinik, margin operasional, arus kas piutang/utang, produktivitas poli, dan utilisasi farmasi.</p>
         </div>
-        <button class="btn">17 November 2026 ▾</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="field" id="dashPeriodFilter" style="font-weight:600;padding:7px 10px;border:1px solid var(--line);border-radius:4px;background:#fff">
+            <option selected>Periode: November 2026</option>
+            <option>Kuartal IV (Okt-Des 2026)</option>
+            <option>Tahun Berjalan (YTD 2026)</option>
+          </select>
+          <a class="btn primary" href="pages/bisnis/index.html">Portal Manajemen Bisnis</a>
+        </div>
       </div>
 
+      <!-- 4 METRIC CARDS BISNIS -->
       <div class="grid grid-4">
         <div class="card">
-          <div class="metric-label">Total Kunjungan Hari Ini</div>
-          <div class="metric-value">128</div>
-          <div class="metric-note">Pasien terdaftar</div>
+          <div class="metric-label">Pendapatan Bruto (Revenue)</div>
+          <div class="metric-value" style="color:#111">Rp 185.420.000</div>
+          <div class="metric-note">
+            <span class="kpi-trend up">&uarr; +14.2%</span> vs bulan lalu &bull; Target: 88.3%
+          </div>
         </div>
         <div class="card">
-          <div class="metric-label">Antrean Aktif</div>
-          <div class="metric-value">24</div>
-          <div class="metric-note">Menunggu pelayanan</div>
+          <div class="metric-label">Laba Bersih Operasional</div>
+          <div class="metric-value" style="color:#27ae60">Rp 54.850.000</div>
+          <div class="metric-note">
+            Operating Margin: <strong>29.6%</strong> &bull; EBITDA Rp 58.7 Jt
+          </div>
         </div>
         <div class="card">
-          <div class="metric-label">Pendapatan Hari Ini</div>
-          <div class="metric-value">Rp 12,8 jt</div>
-          <div class="metric-note">Dari transaksi tercatat</div>
+          <div class="metric-label">Piutang Usaha Klaim (AR)</div>
+          <div class="metric-value" style="color:#d97706">Rp 34.600.000</div>
+          <div class="metric-note">
+            BPJS Rp 22.8 Jt &bull; Asuransi Rp 11.8 Jt (DSO 18 hr)
+          </div>
         </div>
         <div class="card">
-          <div class="metric-label">Piutang Berjalan</div>
-          <div class="metric-value">Rp 8,4 jt</div>
-          <div class="metric-note">Pasien dan penjamin</div>
+          <div class="metric-label">Utang Supplier PBF (AP)</div>
+          <div class="metric-value" style="color:#cf222e">Rp 28.450.000</div>
+          <div class="metric-note">
+            Tempo &lt; 7 hr: Rp 9.2 Jt &bull; Rasio Kas: <strong>1.48x</strong>
+          </div>
         </div>
       </div>
 
+      <!-- GRAFIK UTAMA: TREN FINANSIAL & KOMPOSISI OMZET -->
       <div class="grid grid-2 section">
+        <!-- Grafik Kiri: Revenue vs Opex vs Profit -->
         <div class="card">
-          <div class="card-title"><h2>Aktivitas Pelayanan</h2><span class="muted small">Hari ini</span></div>
-          <div class="bar-row"><span>Poli Umum</span><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><b>54</b></div>
-          <div class="bar-row"><span>Poli Gigi</span><div class="bar-track"><div class="bar-fill" style="width:42%"></div></div><b>27</b></div>
-          <div class="bar-row"><span>Laboratorium</span><div class="bar-track"><div class="bar-fill" style="width:35%"></div></div><b>21</b></div>
-          <div class="bar-row"><span>IGD</span><div class="bar-track"><div class="bar-fill" style="width:18%"></div></div><b>12</b></div>
-          <div class="bar-row"><span>Rawat Inap</span><div class="bar-track"><div class="bar-fill" style="width:23%"></div></div><b>14</b></div>
+          <div class="card-title">
+            <div>
+              <h2 style="margin:0 0 2px">Tren Pendapatan, Biaya &amp; Laba (Jan - Nov 2026)</h2>
+              <div class="small" style="color:var(--muted)">Performa bulanan kas &amp; akrual klinik (dalam Juta Rupiah)</div>
+            </div>
+            <span class="status ok">Laba Positif</span>
+          </div>
+          <div class="chart-container" style="height:250px;">
+            <canvas id="chartRevenueVsOpex"></canvas>
+          </div>
         </div>
+
+        <!-- Grafik Kanan: Komposisi Omzet per Lini Bisnis -->
         <div class="card">
-          <div class="card-title"><h2>Ringkasan Keuangan</h2><span class="muted small">Bulan ini</span></div>
-          <div class="bar-row"><span>Pendapatan</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><b>Rp 185 jt</b></div>
-          <div class="bar-row"><span>Pengeluaran</span><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><b>Rp 98 jt</b></div>
-          <div class="bar-row"><span>Piutang</span><div class="bar-track"><div class="bar-fill" style="width:25%"></div></div><b>Rp 42 jt</b></div>
-          <div class="placeholder" style="margin-top:16px">Grafik tren pendapatan dan pengeluaran</div>
+          <div class="card-title">
+            <div>
+              <h2 style="margin:0 0 2px">Komposisi Sumber Pendapatan (Revenue Stream Mix)</h2>
+              <div class="small" style="color:var(--muted)">Porsi kontribusi lini layanan &amp; penjualan produk</div>
+            </div>
+            <span class="status">Bulan Ini</span>
+          </div>
+          <div class="chart-container" style="height:250px;">
+            <canvas id="chartRevenueMix"></canvas>
+          </div>
         </div>
       </div>
 
+      <!-- GRAFIK SEKUNDER: PAYER MIX & AGING PIUTANG/UTANG -->
+      <div class="grid grid-2 section">
+        <!-- Grafik Kiri: Payer Mix & ARPU -->
+        <div class="card">
+          <div class="card-title">
+            <div>
+              <h2 style="margin:0 0 2px">Payer Mix &amp; Rata-rata Pendapatan per Pasien (ARPU)</h2>
+              <div class="small" style="color:var(--muted)">Segmentasi pasien Umum, BPJS FKTP, dan Asuransi Swasta</div>
+            </div>
+            <span class="status dark">Segmentasi Pasien</span>
+          </div>
+          <div class="chart-container" style="height:230px;">
+            <canvas id="chartPayerMix"></canvas>
+          </div>
+        </div>
+
+        <!-- Grafik Kanan: Aging Piutang Klaim vs Utang PBF -->
+        <div class="card">
+          <div class="card-title">
+            <div>
+              <h2 style="margin:0 0 2px">Manajemen Likuiditas: Aging Piutang (AR) vs Utang (AP)</h2>
+              <div class="small" style="color:var(--muted)">Kolektibilitas klaim penjamin dan jadwal tempo PBF (Juta Rp)</div>
+            </div>
+            <span class="status warn">3 Tagihan Menjelang Tempo</span>
+          </div>
+          <div class="chart-container" style="height:230px;">
+            <canvas id="chartAgingAR"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABEL SCORECARD KINERJA LINI BISNIS -->
       <div class="card section">
-        <div class="card-title"><h2>Transaksi Terbaru</h2><button class="btn" onclick="showPage('billing')">Lihat Semua</button></div>
+        <div class="card-title">
+          <div>
+            <h2 style="margin:0 0 2px">Scorecard Profitabilitas Lini Bisnis &amp; Unit Pelayanan</h2>
+            <div class="small" style="color:var(--muted)">Realisasi omzet, alokasi beban, dan margin kontribusi laba per unit</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <a class="btn small" href="pages/keuangan/coa.html">Chart of Accounts</a>
+            <a class="btn small primary" href="pages/keuangan/buku-besar.html">Lihat Buku Besar</a>
+          </div>
+        </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>No. Transaksi</th><th>Pasien</th><th>Unit</th><th>Tanggal</th><th class="right">Total</th><th>Status</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Lini Bisnis / Unit Pelayanan</th>
+                <th>Volume Kunjungan / Transaksi</th>
+                <th class="right">Pendapatan Bruto (Rp)</th>
+                <th class="right">Beban Operasional &amp; HPP (Rp)</th>
+                <th class="right">Laba Kontribusi (Rp)</th>
+                <th class="right">Margin (%)</th>
+                <th>Rata-rata / Visit</th>
+                <th>Status Kinerja</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>INV-2026-00124</td><td>Andi Pratama</td><td>Poli Umum</td><td>17 Nov 2026</td><td class="right">Rp 150.000</td><td><span class="status dark">Lunas</span></td></tr>
-              <tr><td>INV-2026-00123</td><td>Siti Aminah</td><td>Laboratorium</td><td>17 Nov 2026</td><td class="right">Rp 275.000</td><td><span class="status">Belum Lunas</span></td></tr>
-              <tr><td>INV-2026-00122</td><td>Budi Santoso</td><td>Farmasi</td><td>17 Nov 2026</td><td class="right">Rp 85.000</td><td><span class="status dark">Lunas</span></td></tr>
+              <tr>
+                <td><strong>Instalasi Farmasi &amp; Apotek</strong><br><small class="code-chip">PROFIT-FAR</small></td>
+                <td>860 Resep Obat</td>
+                <td class="right" style="font-weight:600">70.450.000</td>
+                <td class="right">40.508.750</td>
+                <td class="right" style="font-weight:bold;color:#27ae60">29.941.250</td>
+                <td class="right"><strong>42.5%</strong></td>
+                <td>Rp 81.900</td>
+                <td><span class="status ok">Driver Omzet Utama</span></td>
+              </tr>
+              <tr>
+                <td><strong>Poli Umum &amp; Tindakan Rawat Jalan</strong><br><small class="code-chip">PROFIT-UMUM</small></td>
+                <td>520 Kunjungan</td>
+                <td class="right" style="font-weight:600">38.600.000</td>
+                <td class="right">26.325.200</td>
+                <td class="right" style="font-weight:bold;color:#27ae60">12.274.800</td>
+                <td class="right"><strong>31.8%</strong></td>
+                <td>Rp 74.200</td>
+                <td><span class="status ok">Stabil</span></td>
+              </tr>
+              <tr>
+                <td><strong>Poli Gigi &amp; Tindakan Odontogram</strong><br><small class="code-chip">PROFIT-GIGI</small></td>
+                <td>185 Pasien</td>
+                <td class="right" style="font-weight:600">27.800.000</td>
+                <td class="right">11.564.800</td>
+                <td class="right" style="font-weight:bold;color:#27ae60">16.235.200</td>
+                <td class="right"><strong>58.4%</strong></td>
+                <td>Rp 150.200</td>
+                <td><span class="status ok">Margin Tertinggi</span></td>
+              </tr>
+              <tr>
+                <td><strong>Rawat Inap Bangsal Mawar (10 Bed)</strong><br><small class="code-chip">PROFIT-RNP</small></td>
+                <td>18 Pasien Inap (BOR 72%)</td>
+                <td class="right" style="font-weight:600">22.200.000</td>
+                <td class="right">14.163.600</td>
+                <td class="right" style="font-weight:bold;color:#27ae60">8.036.400</td>
+                <td class="right"><strong>36.2%</strong></td>
+                <td>Rp 1.233.000</td>
+                <td><span class="status ok">Target Tercapai</span></td>
+              </tr>
+              <tr>
+                <td><strong>Laboratorium Klinis &amp; Diagnostik</strong><br><small class="code-chip">PROFIT-LAB</small></td>
+                <td>240 Parameter Uji</td>
+                <td class="right" style="font-weight:600">14.900.000</td>
+                <td class="right">5.811.000</td>
+                <td class="right" style="font-weight:bold;color:#27ae60">9.089.000</td>
+                <td class="right"><strong>61.0%</strong></td>
+                <td>Rp 62.100</td>
+                <td><span class="status ok">Margin Tinggi</span></td>
+              </tr>
+              <tr>
+                <td><strong>IGD &amp; Triase Gawat Darurat (24 Jam)</strong><br><small class="code-chip">PROFIT-IGD</small></td>
+                <td>94 Tindakan Darurat</td>
+                <td class="right" style="font-weight:600">11.470.000</td>
+                <td class="right">8.201.050</td>
+                <td class="right" style="font-weight:bold;color:#27ae60">3.268.950</td>
+                <td class="right"><strong>28.5%</strong></td>
+                <td>Rp 122.000</td>
+                <td><span class="status">Siaga 24 Jam</span></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background:#f7f7f8;font-weight:bold">
+                <td colspan="2">Total Konsolidasi Finansial:</td>
+                <td class="right" style="color:#111">Rp 185.420.000</td>
+                <td class="right" style="color:#cf222e">Rp 106.574.400</td>
+                <td class="right" style="color:#27ae60">Rp 78.845.600</td>
+                <td class="right" style="color:#27ae60">42.5% Gross</td>
+                <td>-</td>
+                <td><span class="status ok">EBITDA Sehat</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- TRANSAKSI REVENUE & CASHFLOW TERBARU -->
+      <div class="card section">
+        <div class="card-title">
+          <div>
+            <h2 style="margin:0 0 2px">Arus Kas &amp; Transaksi Kasir Terbaru</h2>
+            <div class="small" style="color:var(--muted)">Penerimaan kas loket kasir &amp; pembayaran invoice pasien</div>
+          </div>
+          <button class="btn" onclick="showPage('billing')">Buka Billing &amp; Kasir</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No. Invoice</th>
+                <th>Nama Pasien</th>
+                <th>Unit Layanan</th>
+                <th>Metode Bayar</th>
+                <th>Waktu Transaksi</th>
+                <th class="right">Nilai Tagihan</th>
+                <th>Status Pembayaran</th>
+                <th>Jurnal Akuntansi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-chip">INV-202611-0195</span></td>
+                <td><strong>Ny. Dewi Sartika</strong></td>
+                <td>Poli Umum &amp; Farmasi</td>
+                <td>QRIS Mandiri</td>
+                <td>17 Nov 2026 10:42 WIB</td>
+                <td class="right" style="font-weight:600">Rp 175.000</td>
+                <td><span class="status ok">Lunas</span></td>
+                <td><span class="code-chip">JV-202611-0083</span> (Kas vs Pendapatan)</td>
+              </tr>
+              <tr>
+                <td><span class="code-chip">INV-202611-0194</span></td>
+                <td><strong>Tn. Hendra Setiawan</strong></td>
+                <td>Rawat Inap Mawar</td>
+                <td>Asuransi Prudential</td>
+                <td>17 Nov 2026 10:15 WIB</td>
+                <td class="right" style="font-weight:600">Rp 3.450.000</td>
+                <td><span class="status warn">Klaim Terbit</span></td>
+                <td><span class="code-chip">JV-202611-0082</span> (Piutang vs Pendapatan)</td>
+              </tr>
+              <tr>
+                <td><span class="code-chip">INV-202611-0193</span></td>
+                <td><strong>An. Kenzo Alfarizi</strong></td>
+                <td>Poli Anak</td>
+                <td>Tunai Kasir</td>
+                <td>17 Nov 2026 09:50 WIB</td>
+                <td class="right" style="font-weight:600">Rp 210.000</td>
+                <td><span class="status ok">Lunas</span></td>
+                <td><span class="code-chip">JV-202611-0081</span> (Kas vs Pendapatan)</td>
+              </tr>
+              <tr>
+                <td><span class="code-chip">INV-202611-0192</span></td>
+                <td><strong>Ny. Ratih Kusuma</strong></td>
+                <td>Poli Gigi (Scalling)</td>
+                <td>Debit BCA</td>
+                <td>17 Nov 2026 09:18 WIB</td>
+                <td class="right" style="font-weight:600">Rp 350.000</td>
+                <td><span class="status ok">Lunas</span></td>
+                <td><span class="code-chip">JV-202611-0080</span> (Kas vs Pendapatan)</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1171,6 +1412,7 @@ tr:last-child td { border-bottom: 0; }
 </div>
 
 <script src="js/sidebar.js"></script>
+<script src="js/chart.umd.min.js"></script>
 <script>
 const pageNames = {
   dashboard: "Dashboard",
@@ -1237,6 +1479,177 @@ document.querySelectorAll(".report-menu button[data-report]").forEach(btn => {
     document.getElementById("report-" + btn.dataset.report).classList.add("active");
   });
 });
+
+// Inisialisasi Chart.js untuk Business Dashboard
+function initBusinessCharts() {
+  if (typeof Chart === "undefined") return;
+  // ponytail: Headless browser guard; Chart.js requires Canvas 2D context
+  if (typeof window.CanvasRenderingContext2D === "undefined") return;
+
+  const fontConfig = { family: "system-ui, -apple-system, sans-serif", size: 11 };
+
+  // 1. Tren Pendapatan vs Beban vs Laba
+  const ctxRev = document.getElementById("chartRevenueVsOpex");
+  if (ctxRev && ctxRev.getContext) {
+    new Chart(ctxRev, {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov"],
+        datasets: [
+          {
+            label: "Pendapatan Bruto (Jt Rp)",
+            data: [138, 142, 149, 155, 160, 168, 172, 175, 180, 182, 185.4],
+            borderColor: "#2563eb",
+            backgroundColor: "rgba(37, 99, 235, 0.08)",
+            tension: 0.25,
+            fill: true
+          },
+          {
+            label: "Beban Ops & HPP (Jt Rp)",
+            data: [96, 98, 102, 104, 106, 110, 112, 115, 116, 118, 126.7],
+            borderColor: "#cf222e",
+            backgroundColor: "transparent",
+            borderDash: [4, 4],
+            tension: 0.25
+          },
+          {
+            label: "Laba Bersih (Jt Rp)",
+            data: [42, 44, 47, 51, 54, 58, 60, 60, 64, 64, 58.7],
+            borderColor: "#27ae60",
+            backgroundColor: "transparent",
+            tension: 0.25,
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "top", labels: { boxWidth: 12, font: fontConfig } }
+        },
+        scales: {
+          y: {
+            ticks: { callback: v => "Rp " + v + "M", font: fontConfig }
+          },
+          x: { ticks: { font: fontConfig } }
+        }
+      }
+    });
+  }
+
+  // 2. Komposisi Pendapatan (Revenue Stream Mix)
+  const ctxMix = document.getElementById("chartRevenueMix");
+  if (ctxMix && ctxMix.getContext) {
+    new Chart(ctxMix, {
+      type: "doughnut",
+      data: {
+        labels: ["Farmasi & Apotek", "Poli Umum", "Poli Gigi", "Rawat Inap", "Laboratorium", "IGD"],
+        datasets: [{
+          data: [70.45, 38.60, 27.80, 22.20, 14.90, 11.47],
+          backgroundColor: ["#2563eb", "#27ae60", "#f59e0b", "#8b5cf6", "#06b6d4", "#ef4444"],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "right", labels: { boxWidth: 10, font: fontConfig } }
+        }
+      }
+    });
+  }
+
+  // 3. Payer Mix & ARPU
+  const ctxPayer = document.getElementById("chartPayerMix");
+  if (ctxPayer && ctxPayer.getContext) {
+    new Chart(ctxPayer, {
+      type: "bar",
+      data: {
+        labels: ["Umum (OOP)", "BPJS FKTP", "Asuransi Swasta", "Korporasi"],
+        datasets: [
+          {
+            label: "Total Omzet (Jt Rp)",
+            data: [82.5, 54.2, 36.8, 11.9],
+            backgroundColor: "#2563eb",
+            yAxisID: "y"
+          },
+          {
+            label: "ARPU / Pasien (Ribu Rp)",
+            data: [142, 68, 385, 290],
+            backgroundColor: "#f59e0b",
+            yAxisID: "y1"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "top", labels: { boxWidth: 12, font: fontConfig } }
+        },
+        scales: {
+          y: {
+            type: "linear",
+            position: "left",
+            ticks: { font: fontConfig }
+          },
+          y1: {
+            type: "linear",
+            position: "right",
+            grid: { drawOnChartArea: false },
+            ticks: { font: fontConfig }
+          },
+          x: { ticks: { font: fontConfig } }
+        }
+      }
+    });
+  }
+
+  // 4. Aging Piutang Klaim (AR) vs Utang PBF (AP)
+  const ctxAging = document.getElementById("chartAgingAR");
+  if (ctxAging && ctxAging.getContext) {
+    new Chart(ctxAging, {
+      type: "bar",
+      data: {
+        labels: ["0-15 Hari", "16-30 Hari", "31-60 Hari", "> 60 Hari"],
+        datasets: [
+          {
+            label: "Piutang Klaim (AR - Jt Rp)",
+            data: [18.4, 11.2, 4.2, 0.8],
+            backgroundColor: "#27ae60"
+          },
+          {
+            label: "Utang PBF (AP - Jt Rp)",
+            data: [9.2, 14.5, 4.1, 0.65],
+            backgroundColor: "#cf222e"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "top", labels: { boxWidth: 12, font: fontConfig } }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { font: fontConfig }
+          },
+          x: { ticks: { font: fontConfig } }
+        }
+      }
+    });
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initBusinessCharts);
+} else {
+  initBusinessCharts();
+}
 </script>
 </body>
 </html>
