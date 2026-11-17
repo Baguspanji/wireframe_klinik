@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Jurnal Umum - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Mini Timeline Riwayat Jurnal */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.balance-warn {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.t-account {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  padding: 10px;
+}
+.t-header {
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.t-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 11px;
+}
+.t-col-left {
+  border-right: 1px solid #ddd;
+  padding-right: 6px;
+}
+.t-col-right {
+  padding-left: 6px;
+  text-align: right;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group open" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Accounting</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub active" href="jurnal-umum.html"><span>+ Input Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Keuangan <span style="margin:0 8px">/</span> Accounting <span style="margin:0 8px">/</span> <b>Form Jurnal Umum</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Staf Keuangan &amp; Akuntansi</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html">Keuangan</a> <span>/</span> <a href="../../index.html#accounting">Accounting</a> <span>/</span> Input Jurnal</div>
+        <h1>Formulir Jurnal Umum (General Journal)</h1>
+        <p>Pencatatan mutasi debit-kredit manual, jurnal penyesuaian, pengakuan beban, dan posting buku besar.</p>
+      </div>
+      <div>
+        <a class="btn" href="../../index.html#accounting">Kembali ke Accounting</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: INFO PERIODE & BUKTI TRANSAKSI (KIRI) & 3 JURNAL TERAKHIR (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: IDENTITAS JURNAL & PERIODE -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <h2>Identitas Entri Jurnal</h2>
+          </div>
+          <span class="status dark">No. Bukti: JV-2026-0349</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Periode Akuntansi:</b> November 2026 (<span style="color:#27ae60;font-weight:bold;">OPEN</span>)</div>
+          <div><b>Status Jurnal:</b> <span class="status" style="background:#fff3cd;color:#856404;font-weight:bold;">Draft</span></div>
+          <div><b>Tgl Transaksi:</b> 17 November 2026</div>
+          <div><b>Mata Uang:</b> IDR (Rupiah Indonesia)</div>
+          <div><b>Cost Center:</b> Klinik Utama (Umum)</div>
+          <div><b>Dibuat Oleh:</b> Hendra (Accounting Staff)</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;">
+          <div style="color:#555;display:flex;align-items:center;gap:6px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <b>Aturan Validasi:</b> Total Debit harus tepat sama dengan Total Kredit (Balance Rp 0) sebelum dapat diposting ke General Ledger.
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 RIWAYAT JURNAL TERAKHIR -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Jurnal Terakhir Periode Berjalan</h2>
+          </div>
+          <span class="muted small">Buku Besar</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>JV-2026-0348 (17 Nov 2026)</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Posted</span>
+          </div>
+          <div class="history-diag">Pendapatan Pelayanan Rawat Jalan Poli Umum</div>
+          <div class="history-notes">Debit: Kas Kasir Rp 150.000 | Kredit: Pendapatan Poli Rp 150.000</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>JV-2026-0347 (17 Nov 2026)</span>
+            <span class="status" style="background:#fff3cd;color:#856404;">Draft</span>
+          </div>
+          <div class="history-diag">Pembelian Persediaan Obat Farmasi (PO-2601)</div>
+          <div class="history-notes">Debit: Persediaan Obat Rp 2.500.000 | Kredit: Utang Supplier Rp 2.500.000</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>JV-2026-0346 (16 Nov 2026)</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Posted</span>
+          </div>
+          <div class="history-diag">Pembayaran Rekening Listrik &amp; Air Klinik</div>
+          <div class="history-notes">Debit: Beban Utilitas Rp 850.000 | Kredit: Bank BCA Rp 850.000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS FORM JURNAL (FULL WIDTH) -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-entry" onclick="switchJurnalTab('tab-entry')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+        1. Input Baris Debit &amp; Kredit
+      </button>
+      <button class="exam-top-tab" data-tab="tab-lampiran" onclick="switchJurnalTab('tab-lampiran')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        2. Dokumen Referensi &amp; Lampiran
+      </button>
+      <button class="exam-top-tab" data-tab="tab-preview" onclick="switchJurnalTab('tab-preview')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        3. Pratinjau Dampak Buku Besar (T-Account)
+      </button>
+    </nav>
+
+    <!-- CONTENT 1: INPUT BARIS DEBIT & KREDIT -->
+    <div class="tab-pane active" id="tab-entry">
+      <div class="card">
+        <div class="card-title">
+          <h2>Header &amp; Parameter Transaksi</h2>
+          <div style="display:flex;gap:8px;">
+            <select class="field" id="templateJurnal" onchange="applyTemplate()" style="font-size:12px;">
+              <option value="">-- Pilih Template Cepat --</option>
+              <option value="kas-operasional">Pengisian Kas Kecil Operasional</option>
+              <option value="listrik-air">Beban Listrik, Air &amp; Internet</option>
+              <option value="beli-alkes">Pembelian Alat Medis Non-Aset</option>
+              <option value="piutang-bpjs">Pencairan Klaim Piutang BPJS</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="form-group">
+            <label class="form-label">Nomor Jurnal <span class="req">*</span></label>
+            <input type="text" class="field" value="JV-2026-0349" readonly style="background:#f4f5f6;font-weight:bold;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Transaksi <span class="req">*</span></label>
+            <input type="date" class="field" id="tglJurnal" value="2026-11-17" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipe Jurnal <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Jurnal Umum Manual (General)</option>
+              <option>Jurnal Penyesuaian (Adjustment)</option>
+              <option>Jurnal Koreksi (Correction)</option>
+              <option>Jurnal Pembalik (Reversal)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit / Cost Center <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Klinik Utama (General)</option>
+              <option>Poli Umum</option>
+              <option>Poli Gigi</option>
+              <option>Laboratorium</option>
+              <option>Farmasi</option>
+              <option>Rawat Inap</option>
+              <option>IGD</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div class="form-group">
+            <label class="form-label">Keterangan / Narasi Transaksi <span class="req">*</span></label>
+            <input type="text" class="field" id="narasiJurnal" value="Pembayaran biaya perawatan alat sterilisasi autoclave & perbaikan minor" placeholder="Contoh: Pengadaan bahan habis pakai...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Dokumen Referensi</label>
+            <input type="text" class="field" id="noRef" value="INV-SRV-2026/89" placeholder="Kwitansi / Invoice Vendor / No PO">
+          </div>
+        </div>
+
+        <!-- TABEL BARIS AKUN -->
+        <div style="margin-top:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <h3 style="margin:0;">Rincian Akun (Debit &amp; Kredit)</h3>
+            <button type="button" class="btn secondary" onclick="tambahBaris()" style="font-size:11px;">+ Tambah Baris Akun</button>
+          </div>
+
+          <div class="table-wrap">
+            <table id="tabelJurnal">
+              <thead>
+                <tr>
+                  <th style="width:40px;">No</th>
+                  <th style="width:280px;">Kode &amp; Nama Rekening (COA)</th>
+                  <th>Keterangan Baris (Memo)</th>
+                  <th style="width:140px;">Cost Center</th>
+                  <th style="width:160px;text-align:right;">Debit (Rp)</th>
+                  <th style="width:160px;text-align:right;">Kredit (Rp)</th>
+                  <th style="width:50px;text-align:center;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="barisBody">
+                <tr>
+                  <td>1</td>
+                  <td>
+                    <select class="field coa-select" style="width:100%;height:30px;" onchange="updateRowMemo(this, 1)">
+                      <option value="6-200">6-200 - Beban Operasional &amp; Pemeliharaan</option>
+                      <option value="1-101">1-101 - Kas Klinik</option>
+                      <option value="1-102">1-102 - Bank BCA Operasional</option>
+                      <option value="1-201">1-201 - Piutang Pasien</option>
+                      <option value="1-301">1-301 - Persediaan Obat</option>
+                      <option value="2-101">2-101 - Utang Supplier</option>
+                      <option value="4-101">4-101 - Pendapatan Pelayanan</option>
+                    </select>
+                  </td>
+                  <td><input type="text" class="field memo-input" value="Jasa servis autoclave lab dan poli" style="width:100%;height:30px;"></td>
+                  <td>
+                    <select class="field" style="width:100%;height:30px;">
+                      <option>Umum</option>
+                      <option selected>Laboratorium</option>
+                      <option>Poli Umum</option>
+                    </select>
+                  </td>
+                  <td><input type="number" class="field debit-input" value="1250000" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;font-weight:600;"></td>
+                  <td><input type="number" class="field credit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+                  <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>
+                    <select class="field coa-select" style="width:100%;height:30px;" onchange="updateRowMemo(this, 2)">
+                      <option value="1-102" selected>1-102 - Bank BCA Operasional</option>
+                      <option value="1-101">1-101 - Kas Klinik</option>
+                      <option value="2-101">2-101 - Utang Supplier</option>
+                      <option value="6-200">6-200 - Beban Operasional</option>
+                    </select>
+                  </td>
+                  <td><input type="text" class="field memo-input" value="Transfer pembayaran vendor servis" style="width:100%;height:30px;"></td>
+                  <td>
+                    <select class="field" style="width:100%;height:30px;">
+                      <option selected>Umum</option>
+                      <option>Laboratorium</option>
+                    </select>
+                  </td>
+                  <td><input type="number" class="field debit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+                  <td><input type="number" class="field credit-input" value="1250000" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;font-weight:600;"></td>
+                  <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="background:#f7f7f8;font-weight:bold;">
+                  <td colspan="4" style="text-align:right;">TOTAL:</td>
+                  <td style="text-align:right;" id="labelTotalDebit">Rp 1.250.000</td>
+                  <td style="text-align:right;" id="labelTotalKredit">Rp 1.250.000</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- KOTAK INDIKATOR BALANCE -->
+          <div style="margin-top:12px;">
+            <div id="boxBalance" class="balance-box balance-ok">
+              <span>Status Keseimbangan (Double Entry Balance):</span>
+              <span id="labelStatusBalance">BALANCE (Selisih: Rp 0)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <button type="button" class="btn" onclick="simpanDraftJurnal()">Simpan Draft Jurnal</button>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="btn secondary" onclick="switchJurnalTab('tab-preview')">Lihat Dampak Buku Besar &rarr;</button>
+            <button type="button" class="btn primary" id="btnPosting" onclick="postingJurnal()">Posting ke General Ledger (GL)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 2: DOKUMEN REFERENSI & LAMPIRAN -->
+    <div class="tab-pane" id="tab-lampiran">
+      <div class="card">
+        <div class="card-title">
+          <h2>Lampiran Bukti Transaksi Fisik / Digital</h2>
+          <span class="status dark">Kelengkapan Audit</span>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Jenis Dokumen Pendukung</label>
+              <select class="field">
+                <option selected>Invoice / Faktur Tagihan Vendor</option>
+                <option>Kwitansi Bukti Kas Keluar (BKK)</option>
+                <option>Bukti Transfer Bank / Rekening Koran</option>
+                <option>Surat Jalan / Berita Acara Penerimaan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan Tambahan Verifikator</label>
+              <textarea class="field" rows="3">Faktur asli telah diverifikasi oleh bagian umum & perlengkapan. Nomor SPK: SPK/MED/2026/11-04.</textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label">Unggah Berkas Pendukung (PDF / JPG)</label>
+            <div style="border:2px dashed #ccc;padding:24px;text-align:center;border-radius:6px;background:#fafbfc;">
+              <svg class="icon" viewBox="0 0 24 24" style="width:32px;height:32px;color:#888;margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              <div style="font-weight:bold;margin-bottom:4px;">Klik untuk telusuri berkas atau seret berkas ke sini</div>
+              <div class="small muted">Maksimal ukuran file 5 MB (PDF, PNG, JPG)</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;text-align:right;">
+          <button type="button" class="btn primary" onclick="switchJurnalTab('tab-entry')">&larr; Kembali ke Baris Jurnal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 3: PRATINJAU DAMPAK BUKU BESAR (T-ACCOUNT) -->
+    <div class="tab-pane" id="tab-preview">
+      <div class="card">
+        <div class="card-title">
+          <h2>Pratinjau Dampak Buku Besar (General Ledger Impact)</h2>
+          <span class="status dark">Simulasi Sebelum Posting</span>
+        </div>
+
+        <p class="small muted" style="margin-bottom:14px;">Berikut proyeksi mutasi saldo akun di General Ledger bila entri jurnal ini diposting:</p>
+
+        <div class="grid grid-2">
+          <!-- AKUN 1 -->
+          <div class="t-account">
+            <div class="t-header">6-200 Beban Pemeliharaan &amp; Operasional</div>
+            <div class="t-body">
+              <div class="t-col-left">
+                <b>DEBIT (+)</b><br>
+                <span>Mutasi Jurnal: +Rp 1.250.000</span><br>
+                <span class="muted">Saldo Awal: Rp 18.000.000</span><br>
+                <b>Saldo Baru: Rp 19.250.000</b>
+              </div>
+              <div class="t-col-right">
+                <b>KREDIT (-)</b><br>
+                <span class="muted">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AKUN 2 -->
+          <div class="t-account">
+            <div class="t-header">1-102 Bank BCA Operasional</div>
+            <div class="t-body">
+              <div class="t-col-left">
+                <b>DEBIT (+)</b><br>
+                <span class="muted">-</span>
+              </div>
+              <div class="t-col-right">
+                <b>KREDIT (-)</b><br>
+                <span>Mutasi Jurnal: -Rp 1.250.000</span><br>
+                <span class="muted">Saldo Awal: Rp 95.000.000</span><br>
+                <b>Saldo Baru: Rp 93.750.000</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchJurnalTab('tab-entry')">&larr; Edit Baris Jurnal</button>
+          <button type="button" class="btn primary" onclick="postingJurnal()">Konfirmasi &amp; Posting Sekarang</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFIKASI SUKSES -->
+    <div id="alertJurnalSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Jurnal Berhasil Diposting:</b> Entri bukti <b>JV-2026-0349</b> telah dicatat ke Buku Besar (General Ledger) periode November 2026. Saldo akun kas dan beban telah diperbarui otomatis.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+// Tab switcher
+function switchJurnalTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+// Calculate debit, kredit, balance
+function hitungTotal() {
+  let totalDebit = 0;
+  let totalKredit = 0;
+
+  document.querySelectorAll(".debit-input").forEach(inp => {
+    totalDebit += Number(inp.value) || 0;
+  });
+  document.querySelectorAll(".credit-input").forEach(inp => {
+    totalKredit += Number(inp.value) || 0;
+  });
+
+  document.getElementById("labelTotalDebit").textContent = formatRupiah(totalDebit);
+  document.getElementById("labelTotalKredit").textContent = formatRupiah(totalKredit);
+
+  const diff = Math.abs(totalDebit - totalKredit);
+  const box = document.getElementById("boxBalance");
+  const label = document.getElementById("labelStatusBalance");
+  const btnPost = document.getElementById("btnPosting");
+
+  if (diff === 0 && totalDebit > 0) {
+    box.className = "balance-box balance-ok";
+    label.textContent = "BALANCE (Selisih: Rp 0)";
+    if (btnPost) btnPost.disabled = false;
+  } else {
+    box.className = "balance-box balance-warn";
+    label.textContent = "TIDAK BALANCE! Selisih: " + formatRupiah(diff);
+    if (btnPost) btnPost.disabled = true;
+  }
+}
+
+function formatRupiah(angka) {
+  return "Rp " + angka.toLocaleString("id-ID");
+}
+
+function tambahBaris() {
+  const tbody = document.getElementById("barisBody");
+  const rowCount = tbody.rows.length + 1;
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${rowCount}</td>
+    <td>
+      <select class="field coa-select" style="width:100%;height:30px;">
+        <option value="1-101">1-101 - Kas Klinik</option>
+        <option value="1-102">1-102 - Bank BCA Operasional</option>
+        <option value="1-201">1-201 - Piutang Pasien</option>
+        <option value="1-301">1-301 - Persediaan Obat</option>
+        <option value="2-101">2-101 - Utang Supplier</option>
+        <option value="4-101">4-101 - Pendapatan Pelayanan</option>
+        <option value="6-200">6-200 - Beban Operasional</option>
+      </select>
+    </td>
+    <td><input type="text" class="field memo-input" placeholder="Memo rincian transaksi" style="width:100%;height:30px;"></td>
+    <td>
+      <select class="field" style="width:100%;height:30px;">
+        <option>Umum</option>
+        <option>Poli Umum</option>
+        <option>Laboratorium</option>
+        <option>Farmasi</option>
+      </select>
+    </td>
+    <td><input type="number" class="field debit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+    <td><input type="number" class="field credit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+    <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+  `;
+  tbody.appendChild(tr);
+  hitungTotal();
+}
+
+function hapusBaris(btn) {
+  const tbody = document.getElementById("barisBody");
+  if (tbody.rows.length <= 2) {
+    alert("Minimal entri jurnal membutuhkan 2 baris (Debit & Kredit)!");
+    return;
+  }
+  btn.closest("tr").remove();
+  // Renumber
+  Array.from(tbody.rows).forEach((row, idx) => {
+    row.cells[0].textContent = idx + 1;
+  });
+  hitungTotal();
+}
+
+function applyTemplate() {
+  const tpl = document.getElementById("templateJurnal").value;
+  const tbody = document.getElementById("barisBody");
+  if (!tpl) return;
+
+  if (tpl === "listrik-air") {
+    document.getElementById("narasiJurnal").value = "Pembayaran tagihan listrik PLN dan air PDAM bulan November";
+    tbody.innerHTML = `
+      <tr>
+        <td>1</td>
+        <td>
+          <select class="field coa-select" style="width:100%;height:30px;">
+            <option value="6-300" selected>6-300 - Beban Utilitas Listrik &amp; Air</option>
+          </select>
+        </td>
+        <td><input type="text" class="field memo-input" value="Tagihan listrik PLN gedung klinik" style="width:100%;height:30px;"></td>
+        <td><select class="field" style="width:100%;height:30px;"><option>Umum</option></select></td>
+        <td><input type="number" class="field debit-input" value="850000" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;font-weight:600;"></td>
+        <td><input type="number" class="field credit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+        <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>
+          <select class="field coa-select" style="width:100%;height:30px;">
+            <option value="1-102" selected>1-102 - Bank BCA Operasional</option>
+          </select>
+        </td>
+        <td><input type="text" class="field memo-input" value="Autodebit rekening bank operasional" style="width:100%;height:30px;"></td>
+        <td><select class="field" style="width:100%;height:30px;"><option>Umum</option></select></td>
+        <td><input type="number" class="field debit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+        <td><input type="number" class="field credit-input" value="850000" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;font-weight:600;"></td>
+        <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+      </tr>
+    `;
+  } else if (tpl === "kas-operasional") {
+    document.getElementById("narasiJurnal").value = "Pengisian kas kecil (Petty Cash) klinik";
+    tbody.innerHTML = `
+      <tr>
+        <td>1</td>
+        <td><select class="field coa-select" style="width:100%;height:30px;"><option value="1-101" selected>1-101 - Kas Kecil Klinik</option></select></td>
+        <td><input type="text" class="field memo-input" value="Tarik tunai isi kas kecil" style="width:100%;height:30px;"></td>
+        <td><select class="field" style="width:100%;height:30px;"><option>Umum</option></select></td>
+        <td><input type="number" class="field debit-input" value="2000000" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;font-weight:600;"></td>
+        <td><input type="number" class="field credit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+        <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><select class="field coa-select" style="width:100%;height:30px;"><option value="1-102" selected>1-102 - Bank BCA Operasional</option></select></td>
+        <td><input type="text" class="field memo-input" value="Penarikan tunai ATM operasional" style="width:100%;height:30px;"></td>
+        <td><select class="field" style="width:100%;height:30px;"><option>Umum</option></select></td>
+        <td><input type="number" class="field debit-input" value="0" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;"></td>
+        <td><input type="number" class="field credit-input" value="2000000" oninput="hitungTotal()" style="width:100%;height:30px;text-align:right;font-weight:600;"></td>
+        <td style="text-align:center;"><button type="button" class="btn" onclick="hapusBaris(this)" style="padding:2px 8px;color:#c0392b;">&times;</button></td>
+      </tr>
+    `;
+  }
+  hitungTotal();
+}
+
+function simpanDraftJurnal() {
+  alert("Jurnal tersimpan sebagai DRAFT (Belum mempengaruhi saldo Buku Besar).");
+}
+
+function postingJurnal() {
+  document.getElementById("alertJurnalSuccess").style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+// Initial calc
+hitungTotal();
+</script>
+</body>
+</html>

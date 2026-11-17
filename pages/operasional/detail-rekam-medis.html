@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Berkas Rekam Medis Elektronik (RME) - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Mini Timeline Riwayat Medis */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.rme-card {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px;
+  background: #fff;
+  margin-bottom: 12px;
+}
+.rme-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub active" href="rekam-medis.html"><span>Rekam Medis</span></a>
+      <a class="nav-item nav-sub" href="detail-rekam-medis.html"><span>+ Berkas RME Pasien</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> Rekam Medis <span style="margin:0 8px">/</span> <b>Berkas RME Pasien</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">M</span>
+      <span>Perekam Medis (A.Md.RMIK)</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="rekam-medis.html">Rekam Medis</a> <span>/</span> Berkas RME</div>
+        <h1>Berkas Rekam Medis Elektronik (RME Pasien)</h1>
+        <p>Integrasi rekam medis kumulatif lintas episode, koding ICD-10 &amp; ICD-9-CM, pelepasan informasi, dan retensi berkas.</p>
+      </div>
+      <div>
+        <a class="btn" href="rekam-medis.html">Kembali ke Unit Rekam Medis</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: DATA DASAR PASIEN (KIRI) & 3 EPISODE TERAKHIR (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: DATA DASAR PASIEN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Data Indeks Pasien (Master Patient Index)</h2>
+          </div>
+          <span class="status dark">RME Aktif</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:16px;font-weight:bold;">Andi Pratama</div>
+            <div class="small muted" style="margin-top:2px;">No. RM: <b>RM-000124</b> | NIK: 3201234567890001</div>
+          </div>
+          <span class="status" style="background:#e8f4fd;color:#0b69a3;font-weight:600;">Umum / Mandiri</span>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;font-size:11px;gap:8px;">
+          <div><b>TTL / Usia:</b> Jakarta, 12 Mei 1994 (32 Thn)</div>
+          <div><b>Jenis Kelamin:</b> Laki-laki</div>
+          <div><b>Golongan Darah:</b> O Rhesus (+)</div>
+          <div><b>Alamat Domisili:</b> Jl. Bangka Raya No. 12, Mampang, Jaksel</div>
+          <div><b>No. HP / Kontak:</b> 0812-3456-7890</div>
+          <div><b>Tgl Registrasi Pertama:</b> 10 Januari 2024</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;">
+          <div style="color:#27ae60;display:flex;align-items:center;gap:6px;">
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#27ae60;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <b>Status Kepatuhan RME:</b> Terkoneksi SatuSehat ID Pasien: <code>P-01928374615</code> (Permenkes 24/2022)
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 EPISODE RAWAT TERAKHIR -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <h2>3 Episode Kunjungan Terakhir</h2>
+          </div>
+          <span class="muted small">RM-000124</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 08:30 - Poli Umum &amp; Lab</span>
+            <span class="muted">dr. Budi Santoso</span>
+          </div>
+          <div class="history-diag">ISPA Akut Febris (J06.9) + Uji Lab Darah Lengkap (LAB-020)</div>
+          <div class="history-notes">Status: Berkas lengkap tervalidasi. Terapi Amoxicillin & Paracetamol.</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>28 Okt 2026 09:15 - Penunjang Laboratorium</span>
+            <span class="muted">Medical Check Up</span>
+          </div>
+          <div class="history-diag">Pemeriksaan Kimia Darah GDS (Z01.7)</div>
+          <div class="history-notes">Status: Berkas tersimpan di arsip digital RME.</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>02 Mar 2026 14:00 - IGD</span>
+            <span class="muted">dr. Dimas</span>
+          </div>
+          <div class="history-diag">Gastroenteritis Akut Dehidrasi Ringan (A09.9)</div>
+          <div class="history-notes">Status: Resume medis lengkap ditandatangani DPJP.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS REKAM MEDIS (FULL WIDTH) -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-timeline" onclick="switchRmeTab('tab-timeline')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        1. Linimasa Episode RME Kumulatif
+      </button>
+      <button class="exam-top-tab" data-tab="tab-coding" onclick="switchRmeTab('tab-coding')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+        2. Koding Klinis (ICD-10 &amp; ICD-9-CM)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-pelepasan" onclick="switchRmeTab('tab-pelepasan')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        3. Pelepasan Informasi &amp; Resume Medis
+      </button>
+      <button class="exam-top-tab" data-tab="tab-retensi" onclick="switchRmeTab('tab-retensi')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        4. Retensi &amp; Audit Log RME
+      </button>
+    </nav>
+
+    <!-- CONTENT 1: LINIMASA EPISODE RME KUMULATIF -->
+    <div class="tab-pane active" id="tab-timeline">
+      <div class="card">
+        <div class="card-title">
+          <h2>Linimasa Rekam Medis Terpadu (Single Patient Health Record)</h2>
+          <span class="status dark">3 Episode Perawatan Tercatat</span>
+        </div>
+
+        <!-- EPISODE 1 -->
+        <div class="rme-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ebecee;padding-bottom:8px;margin-bottom:8px;">
+            <div>
+              <b style="font-size:13px;">Kunjungan Rawat Jalan - Poli Umum &amp; Laboratorium</b>
+              <span class="rme-badge" style="background:#e8f4fd;color:#0b69a3;margin-left:8px;">17 Nov 2026, 08:30 WIB</span>
+            </div>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Lengkap (Closed)</span>
+          </div>
+          <div class="grid grid-3" style="font-size:12px;margin-bottom:8px;">
+            <div><b>Dokter DPJP:</b> dr. Budi Santoso</div>
+            <div><b>Diagnosa Utama:</b> J06.9 - Acute upper respiratory infection</div>
+            <div><b>Tindakan / Lab:</b> Hematologi Lengkap + Widal Test</div>
+          </div>
+          <div style="font-size:12px;color:#555;background:#fafbfc;padding:8px;border-radius:4px;">
+            <b>Ringkasan SOAP:</b> S: Demam 2 hari, batuk pilek, tenggorokan sakit. O: T 38.2C, Faring hiperemis, Leukosit 12.800. A: ISPA akut febris hari ke-2. P: Amoxicillin 500mg 3x1, Paracetamol 500mg 3x1, edukasi istirahat cukup.
+          </div>
+        </div>
+
+        <!-- EPISODE 2 -->
+        <div class="rme-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ebecee;padding-bottom:8px;margin-bottom:8px;">
+            <div>
+              <b style="font-size:13px;">Pemeriksaan Penunjang - Laboratorium Klinis</b>
+              <span class="rme-badge" style="background:#e8f4fd;color:#0b69a3;margin-left:8px;">28 Okt 2026, 09:15 WIB</span>
+            </div>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Lengkap (Closed)</span>
+          </div>
+          <div class="grid grid-3" style="font-size:12px;margin-bottom:8px;">
+            <div><b>Dokter Perujuk:</b> dr. Budi Santoso</div>
+            <div><b>Diagnosa:</b> Z01.7 - Examination for laboratory examination</div>
+            <div><b>Hasil:</b> GDS 105 mg/dL (Normal)</div>
+          </div>
+        </div>
+
+        <!-- EPISODE 3 -->
+        <div class="rme-card" style="margin-bottom:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ebecee;padding-bottom:8px;margin-bottom:8px;">
+            <div>
+              <b style="font-size:13px;">Pelayanan Kegawatdaruratan - IGD</b>
+              <span class="rme-badge" style="background:#e8f4fd;color:#0b69a3;margin-left:8px;">02 Mar 2026, 14:00 WIB</span>
+            </div>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Lengkap (Closed)</span>
+          </div>
+          <div class="grid grid-3" style="font-size:12px;margin-bottom:8px;">
+            <div><b>Dokter Jaga:</b> dr. Dimas</div>
+            <div><b>Diagnosa:</b> A09.9 - Infectious gastroenteritis and colitis, unspecified</div>
+            <div><b>Tindakan:</b> Rehidrasi oralit + infus RL 500ml observasi 4 jam</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 2: KODING KLINIS (ICD-10 & ICD-9-CM) -->
+    <div class="tab-pane" id="tab-coding">
+      <div class="card">
+        <div class="card-title">
+          <h2>Koding Morbiditas &amp; Prosedur Medis (ICD-10 &amp; ICD-9-CM)</h2>
+          <span class="status dark">Perekam Medis Koder</span>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Episode Kunjungan yang Dikoding</label>
+            <select class="field">
+              <option selected>17 Nov 2026 - Poli Umum &amp; Lab (dr. Budi Santoso)</option>
+              <option>02 Mar 2026 - IGD (dr. Dimas)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Perekam Medis Verifikator</label>
+            <input type="text" class="field" value="Rina Anggraini, A.Md.RMIK" readonly style="background:#f4f5f6;">
+          </div>
+        </div>
+
+        <h3 style="margin:14px 0 8px;">Koding Diagnosis (ICD-10)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Tipe Diagnosis</th><th>Deskripsi Klinis Dokter</th><th>Kode ICD-10</th><th>Deskripsi Resmi WHO</th><th>Validitas</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Diagnosis Utama (Primer)</b></td>
+                <td>ISPA Akut Febris</td>
+                <td><input type="text" class="field" value="J06.9" style="width:90px;font-weight:bold;"></td>
+                <td>Acute upper respiratory infection, unspecified</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Valid</span></td>
+              </tr>
+              <tr>
+                <td><b>Diagnosis Sekunder</b></td>
+                <td>Faringitis Akut</td>
+                <td><input type="text" class="field" value="J02.9" style="width:90px;font-weight:bold;"></td>
+                <td>Acute pharyngitis, unspecified</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Valid</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="margin:16px 0 8px;">Koding Tindakan / Prosedur (ICD-9-CM)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Nama Tindakan / Prosedur</th><th>Kode ICD-9-CM</th><th>Keterangan Prosedur</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Pemeriksaan Darah Lengkap Otomatis</b></td>
+                <td><input type="text" class="field" value="90.59" style="width:90px;font-weight:bold;"></td>
+                <td>Microscopic examination of blood, other microscopic examination</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Terkode</span></td>
+              </tr>
+              <tr>
+                <td><b>Uji Serologi Aglutinasi Widal</b></td>
+                <td><input type="text" class="field" value="90.52" style="width:90px;font-weight:bold;"></td>
+                <td>Microscopic examination of blood, culture and sensitivity</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Terkode</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:16px;text-align:right;">
+          <button type="button" class="btn primary" onclick="simpanRmeAction('Koding ICD-10 & ICD-9-CM')">Simpan Validasi Koding Klinis &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 3: PELEPASAN INFORMASI & RESUME MEDIS -->
+    <div class="tab-pane" id="tab-pelepasan">
+      <div class="card">
+        <div class="card-title">
+          <h2>Pelepasan Informasi Medis &amp; Surat Keterangan Dokter</h2>
+          <span class="status dark">Rahasia Kedokteran</span>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Tipe Dokumen Pelepasan <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Surat Keterangan Sakit (SKS Istirahat Kerja)</option>
+              <option>Resume Medis Pasien Pulang (Ringkasan Riwayat)</option>
+              <option>Formulir Klaim Asuransi Swasta / Reimbursement</option>
+              <option>Surat Keterangan Sehat Jasmani</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tujuan Penggunaan Dokumen</label>
+            <input type="text" class="field" value="Keperluan Izin Istirahat Tempat Kerja (PT Maju Jaya)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lama Istirahat Diberikan</label>
+            <input type="text" class="field" value="2 (Dua) Hari: 17 - 18 November 2026">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Persetujuan Pasien (Informed Consent Pelepasan Rahasia Medis)</label>
+          <div style="padding:10px;background:#fafbfc;border:1px solid #ebecee;border-radius:4px;font-size:12px;">
+            Pasien telah menandatangani persetujuan pelepasan data medis pada saat registrasi awal untuk kepentingan izin sakit kerja / klaim jaminan kesehatan.
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+          <button type="button" class="btn secondary" onclick="window.print()">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Cetak Surat Keterangan Sakit
+          </button>
+          <button type="button" class="btn primary" onclick="simpanRmeAction('Pelepasan Informasi Medis')">
+            Terbitkan Surat &amp; Catat Log Pelepasan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 4: RETENSI & AUDIT LOG RME -->
+    <div class="tab-pane" id="tab-retensi">
+      <div class="card">
+        <div class="card-title">
+          <h2>Masa Retensi &amp; Audit Trail Akses Berkas RME</h2>
+          <span class="status dark">Permenkes 24/2022</span>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Status Arsip</label>
+            <input type="text" class="field" value="Aktif (Masa simpan wajib min. 5 tahun)" readonly style="background:#f4f5f6;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jadwal Retensi / Penyusutan</label>
+            <input type="text" class="field" value="17 November 2031" readonly style="background:#f4f5f6;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Integritas Berkas Digital</label>
+            <input type="text" class="field" value="SHA-256 Valid / Enkripsi AES-256" readonly style="background:#f4f5f6;color:#27ae60;font-weight:bold;">
+          </div>
+        </div>
+
+        <h3 style="margin:14px 0 8px;">Log Riwayat Akses Berkas Pasien (Audit Trail)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Waktu Akses</th><th>Pengguna (User)</th><th>Peran (Role)</th><th>Unit / Modul</th><th>Aktivitas</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>17 Nov 2026 09:40</td><td>rina.rmik</td><td>Perekam Medis</td><td>Rekam Medis</td><td>Melakukan Koding Morbiditas ICD-10</td></tr>
+              <tr><td>17 Nov 2026 09:10</td><td>farmasi.apt</td><td>Apoteker</td><td>Farmasi</td><td>Membaca Resep Elektronik &amp; Telaah Obat</td></tr>
+              <tr><td>17 Nov 2026 08:50</td><td>analis.lab</td><td>Analis Lab</td><td>Laboratorium</td><td>Mengunggah Hasil Parameter Darah Lengkap</td></tr>
+              <tr><td>17 Nov 2026 08:32</td><td>dr.budi</td><td>Dokter DPJP</td><td>Poli Umum</td><td>Membuat Resume Medis &amp; Input SOAP</td></tr>
+              <tr><td>17 Nov 2026 08:10</td><td>loket.staff</td><td>Petugas Loket</td><td>Pendaftaran</td><td>Membuka Berkas &amp; Cetak Label Tracer</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertRmeSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Data Berkas RME Berhasil Disimpan:</b> Pembaruan status koding &amp; log pelepasan berkas untuk pasien <b>Andi Pratama (RM-000124)</b> berhasil disimpan di audit log rekam medis.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function switchRmeTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function simpanRmeAction(tipe) {
+  const alertBox = document.getElementById("alertRmeSuccess");
+  alertBox.style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

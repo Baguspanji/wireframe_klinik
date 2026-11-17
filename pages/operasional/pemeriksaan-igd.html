@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Penanganan Medis IGD - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Mini Timeline Riwayat Medis */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.triage-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+}
+.triage-red { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.triage-yellow { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+.triage-green { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.triage-black { background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+
+.obs-row {
+  display: grid;
+  grid-template-columns: 80px repeat(6, 1fr);
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  align-items: center;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub active" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="pemeriksaan-igd.html"><span>+ Form Tindakan IGD</span></a>
+      <a class="nav-item nav-sub" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> IGD <span style="margin:0 8px">/</span> <b>Form Penanganan Gawat Darurat</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">E</span>
+      <span>dr. Dimas (Dokter Jaga IGD)</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="igd.html">IGD</a> <span>/</span> Form Penanganan</div>
+        <h1>Form Penanganan Medis Gawat Darurat (IGD)</h1>
+        <p>Triase primer (ABCDE), asesmen klinis cepat emergensi, lembar observasi ketat, dan disposisi transfer/rujukan.</p>
+      </div>
+      <div>
+        <a class="btn" href="igd.html">Kembali ke Bed IGD</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: DATA DASAR PASIEN (KIRI) & 3 RIWAYAT TERAKHIR MEDIS (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: DATA DASAR PASIEN & TRIASE -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Data Pasien Emergensi</h2>
+          </div>
+          <span class="triage-badge triage-yellow">TRIASE KUNING (URGENT)</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:16px;font-weight:bold;">Fajar Nugroho</div>
+            <div class="small muted" style="margin-top:2px;">No. RM: <b>RM-000150</b> | NIK: 3273111402800004</div>
+          </div>
+          <span class="status" style="background:#e8f4fd;color:#0b69a3;font-weight:600;">BPJS Kesehatan</span>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;font-size:11px;gap:8px;">
+          <div><b>Usia / JK:</b> 46 Tahun / Laki-laki</div>
+          <div><b>Bed / Ruang:</b> Bed 1 - Observasi Akut</div>
+          <div><b>Waktu Masuk IGD:</b> 17 Nov 2026 08:40 WIB</div>
+          <div><b>Alat Transportasi:</b> Ambulans Klinik (Rujukan Puskesmas)</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;display:flex;justify-content:space-between;">
+          <div><b>Alergi Obat:</b> <span style="color:#c0392b;font-weight:bold;">Penisilin (Syok Anafilaktik Ringan)</span></div>
+          <div><b>Dokter DPJP:</b> dr. Dimas, Sp.B / dr. Umum</div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 RIWAYAT TERAKHIR REKAM MEDIS -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <h2>3 Riwayat Medis Terakhir</h2>
+          </div>
+          <span class="muted small">RM-000150</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>12 Sep 2026 - Poli Umum</span>
+            <span class="muted">dr. Budi Santoso</span>
+          </div>
+          <div class="history-diag">Hipertensi Grade II (I10) &amp; Dislipidemia (E78.5)</div>
+          <div class="history-notes">Terapi: Amlodipine 10mg 1x1 malam, Atorvastatin 20mg 1x1 malam. TD saat itu 155/95 mmHg.</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>04 Jun 2026 - Laboratorium</span>
+            <span class="muted">Skrining Profil Lipid</span>
+          </div>
+          <div class="history-diag">Kolesterol Total: 245 mg/dL, Trigliserida: 210 mg/dL, Asam Urat: 7.2 mg/dL</div>
+          <div class="history-notes">Evaluasi metabolik risiko kardiovaskular.</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>15 Jan 2025 - Rawat Inap Bedah</span>
+            <span class="muted">dr. Dimas, Sp.B</span>
+          </div>
+          <div class="history-diag">Post Appendektomi Laparoskopi (K35.8)</div>
+          <div class="history-notes">Perawatan 3 hari pasca bedah aman tanpa komplikasi luka operasi.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS PELAYANAN IGD (FULL WIDTH) -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-triage" onclick="switchIgdTab('tab-triage')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        1. Triase &amp; Survei Primer (ABCDE)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-anamnesis" onclick="switchIgdTab('tab-anamnesis')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="m21.5 2-1.4 1.4M15 8l-4 4"/><circle cx="10" cy="14" r="5"/><path d="M19 10l-4-4"/></svg>
+        2. Asesmen Medis &amp; Terapi Resusitasi
+      </button>
+      <button class="exam-top-tab" data-tab="tab-observasi" onclick="switchIgdTab('tab-observasi')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3. Lembar Observasi Berkala IGD
+      </button>
+      <button class="exam-top-tab" data-tab="tab-disposisi" onclick="switchIgdTab('tab-disposisi')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        4. Disposisi &amp; Resume Medis IGD
+      </button>
+    </nav>
+
+    <!-- TAB 1: TRIASE PRIMER (ABCDE) -->
+    <div class="tab-pane active" id="tab-triage">
+      <div class="card">
+        <div class="card-title">
+          <h2>Survei Primer Kegawatdaruratan (ABCDE)</h2>
+          <span class="status dark">Algoritma ATS / ESI</span>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label"><b>Airway (Jalan Napas)</b> <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Paten / Bebas (Tidak ada sumbatan)</option>
+              <option>Ancaman Obstruksi (Snoring / Gargling / Stridor)</option>
+              <option>Obstruksi Total (Perlu intubasi / cricothyroidotomy)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><b>Breathing (Pernapasan)</b> <span class="req">*</span></label>
+            <select class="field">
+              <option>Spontan, Adekuat, RR 16-20x/mnt</option>
+              <option selected>Takipnea (RR 26x/mnt), Napas dangkal, Retraksi ringan</option>
+              <option>Bradipnea / Apnea (Perlu Ventilasi Tekanan Positif / BVM)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label"><b>Circulation (Sirkulasi &amp; Hemodinamik)</b> <span class="req">*</span></label>
+            <select class="field">
+              <option>Nadi kuat teratur, Akral hangat, CRT &lt; 2 detik</option>
+              <option selected>Takikardia (HR 108x/mnt), TD 160/100, Akral hangat basah</option>
+              <option>Syok / Hipovolemik (Nadi cepat halus, TD &lt;90, CRT &gt;2 dtk)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><b>Disability (Neurologis &amp; GCS)</b> <span class="req">*</span></label>
+            <div style="display:flex;gap:8px;">
+              <input type="text" class="field" value="E4 M6 V5 (GCS 15)" style="width:140px;font-weight:bold;">
+              <select class="field">
+                <option selected>Pupil Isokor 3mm/3mm, Refleks Cahaya (+/+)</option>
+                <option>Pupil Anisokor</option>
+                <option>Pinpoint</option>
+                <option>Midriasis Total</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-4" style="margin-top:10px;">
+          <div class="form-group">
+            <label class="form-label">Tekanan Darah (mmHg)</label>
+            <input type="text" class="field" value="160/100">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Frekuensi Nadi (x/mnt)</label>
+            <input type="number" class="field" value="108">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Saturasi O2 Room Air (%)</label>
+            <input type="number" class="field" value="95" style="color:#c0392b;font-weight:bold;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Suhu (°C)</label>
+            <input type="number" step="0.1" class="field" value="36.8">
+          </div>
+        </div>
+
+        <div style="margin-top:16px;text-align:right;">
+          <button type="button" class="btn primary" onclick="switchIgdTab('tab-anamnesis')">Survei Primer Selesai, Lanjut Asesmen Medis &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ASESMEN MEDIS & TERAPI RESUSITASI -->
+    <div class="tab-pane" id="tab-anamnesis">
+      <div class="card">
+        <div class="card-title">
+          <h2>Asesmen Medis &amp; Tata Laksana Resusitasi IGD</h2>
+          <span class="status dark">Anamnesis SAMPLE</span>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Keluhan Utama &amp; Onset Kegawatan</label>
+            <textarea class="field" rows="2">Nyeri dada retrosternal seperti tertindih beban berat sejak 2 jam SMRS, menjalar ke bahu kiri dan rahang. Disertai keringat dingin dan sesak napas saat istirahat.</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Riwayat Penyakit &amp; Obat Terakhir (SAMPLE)</label>
+            <textarea class="field" rows="2">Riwayat hipertensi tidak terkontrol rutin. Terakhir minum amlodipine 2 hari lalu. Alergi: Penisilin. Makan terakhir: 4 jam lalu.</textarea>
+          </div>
+        </div>
+
+        <!-- TINDAKAN RESUSITASI / FARMAKOLOGI SEGERA -->
+        <h3 style="margin:12px 0 8px;">Order Terapi Gawat Darurat &amp; Pemeriksaan Penunjang Cito</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Intervensi / Terapi Emergensi</th><th>Dosis / Cara Pemberian</th><th>Waktu Diberikan</th><th>Pelaksana</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Oksigenasi Nasal Kanul</b></td>
+                <td>3 - 4 Liter per Menit</td>
+                <td>08:42 WIB</td>
+                <td>Ns. Ratna, S.Kep</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diberikan</span></td>
+              </tr>
+              <tr>
+                <td><b>Pemasangan IV Line NaCl 0.9%</b></td>
+                <td>Abocath 20G / 20 tpm (KVO)</td>
+                <td>08:45 WIB</td>
+                <td>Ns. Ratna, S.Kep</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Terpasang</span></td>
+              </tr>
+              <tr>
+                <td><b>EKG 12 Lead Cito</b></td>
+                <td>Evaluasi ST Deviasi / Infark Akut</td>
+                <td>08:48 WIB</td>
+                <td>dr. Dimas</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">ST Depresi V4-V6</span></td>
+              </tr>
+              <tr>
+                <td><b>ISDN Tablet Sublingual</b></td>
+                <td>5 mg Sublingual (Bawah lidah)</td>
+                <td>08:50 WIB</td>
+                <td>Ns. Ratna, S.Kep</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diberikan</span></td>
+              </tr>
+              <tr>
+                <td><b>Asam Asetilsalisilat (Aspilets)</b></td>
+                <td>160 mg Kunyah (Chewable)</td>
+                <td>08:52 WIB</td>
+                <td>Ns. Ratna, S.Kep</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diberikan</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:12px;">
+          <div class="form-group">
+            <label class="form-label">Diagnosa Kerja Emergensi (ICD-10)</label>
+            <input type="text" class="field" value="I20.0 - Unstable Angina Pectoris (UAP) dd/ Non-STEMI + Hipertensi Urgensi">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kondisi Pasca Tindakan Awal</label>
+            <input type="text" class="field" value="Nyeri dada berkurang dari NRS 8 menjadi NRS 4. Sesak napas mereda.">
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchIgdTab('tab-triage')">&larr; Kembali ke Triase</button>
+          <button type="button" class="btn primary" onclick="switchIgdTab('tab-observasi')">Lanjut Observasi TTV Berkala &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: LEMBAR OBSERVASI BERKALA IGD -->
+    <div class="tab-pane" id="tab-observasi">
+      <div class="card">
+        <div class="card-title">
+          <h2>Lembar Pemantauan &amp; Observasi Berkala IGD (Hourly Chart)</h2>
+          <button type="button" class="btn secondary" onclick="alert('Pencatatan observasi jam baru ditambahkan.')">+ Catat Observasi Baru</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Waktu</th><th>Tekanan Darah</th><th>Nadi (x/m)</th><th>RR (x/m)</th><th>SpO2</th><th>GCS</th><th>Nyeri (NRS)</th><th>Catatan Perkembangan &amp; TTD</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>08:45 WIB</b></td>
+                <td>160/100 mmHg</td>
+                <td>108</td>
+                <td>26</td>
+                <td>95%</td>
+                <td>15</td>
+                <td>8 / 10</td>
+                <td>O2 3 L/m masuk, IVFD terpasang, EKG direkam (dr. Dimas)</td>
+              </tr>
+              <tr>
+                <td><b>09:00 WIB</b></td>
+                <td>145/90 mmHg</td>
+                <td>94</td>
+                <td>22</td>
+                <td>98%</td>
+                <td>15</td>
+                <td>5 / 10</td>
+                <td>Pasca ISDN 5mg SL &amp; Aspilets. Pasien lebih tenang (Ns. Ratna)</td>
+              </tr>
+              <tr>
+                <td><b>09:30 WIB</b></td>
+                <td>135/85 mmHg</td>
+                <td>86</td>
+                <td>20</td>
+                <td>99%</td>
+                <td>15</td>
+                <td>3 / 10</td>
+                <td>Hemodinamik stabil. Siapkan koordinasi rujukan RS (dr. Dimas)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchIgdTab('tab-anamnesis')">&larr; Kembali ke Asesmen</button>
+          <button type="button" class="btn primary" onclick="switchIgdTab('tab-disposisi')">Lanjut Lembar Disposisi &amp; Rujukan &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: DISPOSISI & RESUME MEDIS IGD -->
+    <div class="tab-pane" id="tab-disposisi">
+      <div class="card">
+        <div class="card-title">
+          <h2>Disposisi Akhir Pasien IGD &amp; Surat Rujukan / Transfer</h2>
+          <span class="status dark">Rencana Tindak Lanjut</span>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Keputusan Disposisi Akhir <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Rujuk ke RS Tipe B/A (Fasilitas ICCU / Cathlab)</option>
+              <option>Pindah Rawat Inap Klinik (Ranap)</option>
+              <option>Boleh Pulang / Rawat Jalan (Kondisi Stabil)</option>
+              <option>Pulang Atas Permintaan Sendiri (PAPS)</option>
+              <option>Meninggal Dunia (Death On Arrival / In Situ)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rumah Sakit Tujuan Rujukan</label>
+            <input type="text" class="field" value="RSUD Pasar Minggu (ICCU / Sp.JP)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Transportasi Rujukan &amp; Pendamping</label>
+            <input type="text" class="field" value="Ambulans Emergency + Perawat Pendamping">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Alasan &amp; Indikasi Rujukan SPRI / SISRUTE</label>
+          <textarea class="field" rows="3">Pasien membutuhkan penanganan kardiologi intervensi lanjutan (evaluasi enzim Troponin I/T serial, angiografi / cathlab, dan pemantauan ruang intensif ICCU) yang melebihi kapasitas sarana Klinik Pratama.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Instruksi Medis Selama Transportasi Rujukan</label>
+          <input type="text" class="field" value="Lanjutkan O2 nasal kanul 3 Lpm, infus NaCl 0.9% 12 tpm, monitor EKG dan saturasi berkala dalam ambulans.">
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+          <button type="button" class="btn secondary" onclick="window.print()">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Cetak Surat Rujukan Medis
+          </button>
+          <button type="button" class="btn primary" onclick="selesaiSimpanIgd()" style="padding:10px 22px;font-weight:bold;">
+            Finalisasi Penanganan &amp; Teruskan ke Billing/Kasir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertIgdSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Penanganan IGD Berhasil Difinalisasi:</b> Pasien <b>Fajar Nugroho (RM-000150)</b> telah selesai ditangani dan distabilkan. Dokumen rujukan darurat, billing alkes/obat IGD, dan resume medis telah tercatat otomatis di sistem RME.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function switchIgdTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function selesaiSimpanIgd() {
+  document.getElementById("alertIgdSuccess").style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

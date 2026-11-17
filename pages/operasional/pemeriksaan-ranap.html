@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPPT &amp; Asuhan Rawat Inap - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Mini Timeline Riwayat Medis */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.cppt-entry {
+  background: #fafbfc;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.cppt-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ebecee;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group open" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub active" href="rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="pemeriksaan-ranap.html"><span>+ Form CPPT Ranap</span></a>
+      <a class="nav-item nav-sub" href="laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+  <a class="nav-item" href="../../index.html#billing"><i class="nav-icon"></i><span>Billing & Kasir</span></a>
+
+  <div class="nav-label">KEUANGAN</div>
+  <a class="nav-item" href="../../index.html#accounting"><i class="nav-icon"></i><span>Accounting</span></a>
+  <a class="nav-item" href="../../index.html#reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></a>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Operasional <span style="margin:0 8px">/</span> Rawat Inap <span style="margin:0 8px">/</span> <b>CPPT &amp; Asuhan Pasien</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">R</span>
+      <span>dr. Budi Santoso (DPJP Ranap)</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Operasional</a> <span>/</span> <a href="rawat-inap.html">Rawat Inap</a> <span>/</span> CPPT &amp; Asuhan</div>
+        <h1>Catatan Perkembangan Pasien Terintegrasi (CPPT)</h1>
+        <p>Dokumentasi asuhan medis DPJP, perawat, rekam tanda vital harian, jadwal obat MAR, dan resume pulang.</p>
+      </div>
+      <div>
+        <a class="btn" href="rawat-inap.html">Kembali ke Daftar Pasien</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS: DATA DASAR PASIEN (KIRI) & 3 CPPT TERAKHIR (KANAN) -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: DATA DASAR PASIEN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h2>Data Pasien Rawat Inap</h2>
+          </div>
+          <span class="status dark">Hari Rawat Ke-3</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:16px;font-weight:bold;">Hasan Basri</div>
+            <div class="small muted" style="margin-top:2px;">No. RM: <b>RM-000110</b> | NIK: 3271021405900001</div>
+          </div>
+          <span class="status" style="background:#e8f4fd;color:#0b69a3;font-weight:600;">BPJS Kesehatan</span>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;font-size:11px;gap:8px;">
+          <div><b>Ruang / Bed:</b> Ruang Mawar / Bed 01 (Kelas 1)</div>
+          <div><b>Tgl &amp; Jam Masuk:</b> 15 Nov 2026, 10:15 WIB</div>
+          <div><b>Dokter DPJP:</b> dr. Budi Santoso, Sp.PD / Umum</div>
+          <div><b>Diagnosa Masuk:</b> A01.0 - Demam Tifoid Akut</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;">
+          <div style="color:#555;display:flex;align-items:center;gap:6px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <b>Diet Pasien:</b> Makanan Lunak Tinggi Kalori Tinggi Protein (TKTP), Rendah Serat.
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 CATATAN CPPT SEBELUMNYA -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <h2>3 Catatan CPPT Terakhir</h2>
+          </div>
+          <span class="muted small">RM-000110</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>16 Nov 2026 21:00 - Shift Malam</span>
+            <span class="muted">Ns. Maya, S.Kep</span>
+          </div>
+          <div class="history-diag">S: Pasien tidak demam lagi malam ini. Perut kembung berkurang. O: T: 36.8C, TD: 118/75.</div>
+          <div class="history-notes">A: Demam tifoid perbaikan. P: Lanjut Ceftriaxone 1g IV drip, infus RL 20 tpm.</div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>16 Nov 2026 08:30 - Visite Pagi</span>
+            <span class="muted">dr. Budi Santoso (DPJP)</span>
+          </div>
+          <div class="history-diag">S: Mual berkurang, nafsu makan mulai membaik. O: Lidah tifoid berkurang, nyeri tekan (-).</div>
+          <div class="history-notes">A: Typhoid fever hari rawat ke-2. P: Rencana lab evaluasi besok pagi. Bila stabil rencanakan pulang tgl 18.</div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>15 Nov 2026 11:00 - Asesmen Awal</span>
+            <span class="muted">dr. Dimas (Admisi Ranap)</span>
+          </div>
+          <div class="history-diag">S: Demam 5 hari naik turun, sakit kepala, konstipasi. O: T: 38.6C, Widal O 1/320.</div>
+          <div class="history-notes">A: Demam tifoid akut. Terpasang IV line RL 20 tpm. Diet bubur saring.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS CPPT RAWAT INAP (FULL WIDTH) -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-cppt" onclick="switchRanapTab('tab-cppt')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+        1. Input CPPT &amp; Visite Dokter
+      </button>
+      <button class="exam-top-tab" data-tab="tab-ttv" onclick="switchRanapTab('tab-ttv')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        2. TTV &amp; Monitoring Cairan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-mar" onclick="switchRanapTab('tab-mar')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg>
+        3. Jadwal Obat Pasien (MAR)
+      </button>
+      <button class="exam-top-tab" data-tab="tab-discharge" onclick="switchRanapTab('tab-discharge')">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        4. Rencana Pulang (Discharge)
+      </button>
+    </nav>
+
+    <!-- CONTENT 1: INPUT CPPT HARIAN -->
+    <div class="tab-pane active" id="tab-cppt">
+      <div class="card">
+        <div class="card-title">
+          <h2>Formulir Catatan Perkembangan Pasien Terintegrasi (CPPT)</h2>
+          <span class="status dark">Visite Hari Ini - 17 Nov 2026</span>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Tanggal &amp; Waktu Visite <span class="req">*</span></label>
+            <input type="datetime-local" class="field" value="2026-11-17T09:15">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Profesi / PPA (Pemberi Pelayanan) <span class="req">*</span></label>
+            <select class="field">
+              <option selected>Dokter DPJP (dr. Budi Santoso)</option>
+              <option>Perawat (Nurse Shift)</option>
+              <option>Apoteker Farmasi Klinis</option>
+              <option>Nutrisionis / Ahli Gizi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipe Catatan</label>
+            <select class="field">
+              <option selected>Visite Rutin Pagi</option>
+              <option>Konsultasi Antar Spesialis</option>
+              <option>Catatan Kondisi Kritis / Emergensi</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div class="form-group">
+            <label class="form-label"><b>Subjective (S)</b> - Keluhan Pasien Hari Ini</label>
+            <textarea class="field" rows="3">Keluhan demam sudah tidak ada sejak 24 jam terakhir. Badan terasa lebih segar, tidak mual, sudah bisa makan nasi tim 1 porsi habis. Nyeri perut nihil.</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><b>Objective (O)</b> - Temuan Pemeriksaan Fisik</label>
+            <textarea class="field" rows="3">KU: Cukup, Compos Mentis (GCS 15). TD: 120/80 mmHg, N: 78x/m, RR: 18x/m, Suhu: 36.6 C. Lidah tifoid minimal. Abdomen: Supel, bising usus normal, nyeri tekan epigastrium (-).</textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label"><b>Assessment (A)</b> - Diagnosis Perkembangan</label>
+            <input type="text" class="field" value="Demam Tifoid Akut (A01.0) - Kondisi Membaik / Fase Pemulihan">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><b>Plan (P)</b> - Instruksi Medis &amp; Terapi Terintegrasi</label>
+            <textarea class="field" rows="3">- Ceftriaxone 1g IV dosis terakhir hari ini.
+- Ganti antibiotik oral Cefixime 200mg 2x1 tablet (selama 5 hari).
+- Infus RL aff (dilepas) sore ini pukul 16:00 bila asupan minum oral >2000 ml.
+- Pasien diperbolehkan rencana KRS besok pagi (18 Nov 2026).</textarea>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;text-align:right;">
+          <button type="button" class="btn primary" onclick="simpanRanapAction('CPPT Visite')">Simpan Catatan CPPT &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 2: TTV & MONITORING CAIRAN -->
+    <div class="tab-pane" id="tab-ttv">
+      <div class="card">
+        <div class="card-title">
+          <h2>Grafik Pemantauan TTV &amp; Keseimbangan Cairan Harian (Fluid Balance)</h2>
+          <button type="button" class="btn secondary" onclick="alert('Form input TTV perawat dibuka.')">+ Input TTV Shift Baru</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Shift / Jam</th><th>Suhu (°C)</th><th>TD (mmHg)</th><th>Nadi</th><th>RR</th><th>Intake (Infus+Minum)</th><th>Output (Urin+IWL)</th><th>Balance Cairan</th><th>Perawat</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Pagi (07:00)</b></td>
+                <td>36.6 °C</td>
+                <td>120/80</td>
+                <td>78 x/m</td>
+                <td>18 x/m</td>
+                <td>500 mL (RL) + 300 mL</td>
+                <td>600 mL Urin</td>
+                <td><span style="color:#27ae60;font-weight:bold;">+200 mL</span></td>
+                <td>Ns. Ratna</td>
+              </tr>
+              <tr>
+                <td><b>Siang (14:00)</b></td>
+                <td>36.7 °C</td>
+                <td>118/78</td>
+                <td>80 x/m</td>
+                <td>18 x/m</td>
+                <td>500 mL (RL) + 400 mL</td>
+                <td>700 mL Urin</td>
+                <td><span style="color:#27ae60;font-weight:bold;">+200 mL</span></td>
+                <td>Ns. Ratna</td>
+              </tr>
+              <tr>
+                <td><b>Malam (21:00)</b></td>
+                <td>36.8 °C</td>
+                <td>122/82</td>
+                <td>76 x/m</td>
+                <td>16 x/m</td>
+                <td>300 mL (Oral)</td>
+                <td>500 mL Urin</td>
+                <td><span style="color:#27ae60;font-weight:bold;">-200 mL</span></td>
+                <td>Ns. Maya</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchRanapTab('tab-cppt')">&larr; Kembali ke CPPT</button>
+          <button type="button" class="btn primary" onclick="switchRanapTab('tab-mar')">Lanjut Jadwal Obat Pasien (MAR) &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 3: JADWAL PEMBERIAN OBAT (MAR) -->
+    <div class="tab-pane" id="tab-mar">
+      <div class="card">
+        <div class="card-title">
+          <h2>Medication Administration Record (MAR) - Pemberian Obat Bangsal</h2>
+          <span class="status dark">Verifikasi Double Check Perawat</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Nama Obat &amp; Dosis</th><th>Rute</th><th>Frekuensi</th><th>Jadwal 06:00</th><th>Jadwal 12:00</th><th>Jadwal 18:00</th><th>Jadwal 24:00</th><th>Status Hari Ini</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Ceftriaxone Inj 1 gram</b></td>
+                <td>IV Bolus</td>
+                <td>1 x 24 jam</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Diberikan (Ns. Ratna)</span></td>
+                <td>-</td>
+                <td><span class="status">Selesai Siklus</span></td>
+              </tr>
+              <tr>
+                <td><b>Paracetamol Infus 1000 mg</b></td>
+                <td>IV Drip</td>
+                <td>K/P (Bila T &gt;38C)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="status">Tidak Diberikan (Afebris)</span></td>
+              </tr>
+              <tr>
+                <td><b>Curcuma Tablet 200 mg</b></td>
+                <td>Oral</td>
+                <td>3 x 1 tablet</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">07:00</span></td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">13:00</span></td>
+                <td><span class="status">Menunggu 19:00</span></td>
+                <td>-</td>
+                <td><span class="status dark">Aktif</span></td>
+              </tr>
+              <tr>
+                <td><b>Infus Ringer Laktat (RL) 500ml</b></td>
+                <td>IV Line</td>
+                <td>20 tetes/menit</td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Kolf Ke-4</span></td>
+                <td><span class="status dark" style="background:#d4edda;color:#155724;">Kolf Ke-5</span></td>
+                <td><span class="status">Aff Sesuai Instruksi</span></td>
+                <td>-</td>
+                <td><span class="status">Direncanakan Aff</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;">
+          <button type="button" class="btn" onclick="switchRanapTab('tab-ttv')">&larr; Kembali ke TTV</button>
+          <button type="button" class="btn primary" onclick="switchRanapTab('tab-discharge')">Lanjut Rencana Pemulangan (Discharge) &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT 4: RENCANA PULANG (DISCHARGE PLANNING) -->
+    <div class="tab-pane" id="tab-discharge">
+      <div class="card">
+        <div class="card-title">
+          <h2>Discharge Planning &amp; Ringkasan Pasien Keluar (Resume Medis Ranap)</h2>
+          <span class="status dark">Kriteria KRS Pasien</span>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Rencana Tanggal Keluar (KRS)</label>
+            <input type="date" class="field" value="2026-11-18">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Keadaan Saat Pulang</label>
+            <select class="field">
+              <option selected>Sembuh / Membaik Signifikan</option>
+              <option>Perbaikan Belum Tuntas (Lanjut Rawat Jalan)</option>
+              <option>Rujuk Rumah Sakit Lanjutan</option>
+              <option>Pulang Atas Permintaan Sendiri (PAPS)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jadwal Kontrol Poliklinik</label>
+            <input type="text" class="field" value="24 Nov 2026 di Poli Umum / Penyakit Dalam">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Obat Pulang yang Diresepkan (Take-Home Medications)</label>
+          <textarea class="field" rows="2">1. Cefixime 200 mg tablet No. X, 2x1 tablet per hari sesudah makan (habiskan).
+2. Curcuma 200 mg tablet No. X, 3x1 tablet per hari.
+3. Paracetamol 500 mg No. X, 3x1 tablet bila demam muncul kembali.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Edukasi &amp; Anjuran Pemulihan Pasien di Rumah</label>
+          <textarea class="field" rows="2">Hindari konsumsi makanan pedas, asam, atau bertekstur keras selama 1 minggu pasca rawat. Jaga kebersihan cuci tangan pakai sabun sebelum makan. Istirahat tirah baring cukup.</textarea>
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+          <button type="button" class="btn secondary" onclick="window.print()">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg> Cetak Resume Medis Ranap
+          </button>
+          <button type="button" class="btn primary" onclick="simpanRanapAction('Finalisasi Resume Pulang')" style="padding:10px 22px;font-weight:bold;">
+            Finalisasi Resume &amp; Kirim Berkas ke Billing Kasir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertRanapSuccess" style="display:none;margin-top:16px;" class="alert success">
+      <b>Data CPPT &amp; Asuhan Rawat Inap Berhasil Disimpan:</b> Perkembangan pasien <b>Hasan Basri (RM-000110)</b> di <b>Ruang Mawar Bed 01</b> telah diperbarui secara terintegrasi.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+function switchRanapTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function simpanRanapAction(tipe) {
+  const alertBox = document.getElementById("alertRanapSuccess");
+  alertBox.style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
