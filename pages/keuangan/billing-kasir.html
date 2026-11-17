@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Billing &amp; Kasir - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+/* Mini Timeline Riwayat */
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Top Tab Navigation Full Width */
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.invoice-doc {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  padding: 18px;
+}
+.invoice-doc h3 { margin: 0 0 2px; }
+.invoice-doc table { font-size: 11px; }
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+.sum-line b { font-size: 13px; }
+
+.metric-mini { font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group open" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub active" href="billing-kasir.html"><span>Form Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="jurnal-umum.html"><span>+ Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Keuangan <span style="margin:0 8px">/</span> Billing &amp; Kasir <span style="margin:0 8px">/</span> <b>Form Tagihan &amp; Pembayaran</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Kasir Loket 1</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#billing">Keuangan</a> <span>/</span> <a href="../../index.html#billing">Billing &amp; Kasir</a> <span>/</span> Tagihan &amp; Pembayaran</div>
+        <h1>Form Tagihan &amp; Pembayaran Kasir</h1>
+        <p>Billing menghitung kewajiban pembayaran; Kasir mencatat penerimaan uang. Keduanya menghasilkan event bagi Accounting Engine dan tidak menulis jurnal secara langsung.</p>
+      </div>
+      <div>
+        <a class="btn" href="../../index.html#billing">Kembali ke Billing</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <!-- CARD KIRI: IDENTITAS TAGIHAN -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <h2>Identitas &amp; Konteks Tagihan</h2>
+          </div>
+          <span class="status dark">INV-2026-00124</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Pasien:</b> Ny. Rina Kartika (MR-004521)</div>
+          <div><b>Billing Account:</b> BA-2026-11-0457</div>
+          <div><b>Kunjungan:</b> VST-2026-11-0891</div>
+          <div><b>Encounter:</b> ENC-2026-11-0733</div>
+          <div><b>Unit Pelayanan:</b> Poli Umum</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Badan Usaha:</b> PT Sehat Nusantara (PKP)</div>
+          <div><b>Periode:</b> Nov 2026 <span class="status" style="background:#d4edda;color:#155724;font-weight:bold;">OPEN</span></div>
+          <div><b>Tanggal Invoice:</b> 17 November 2026</div>
+          <div><b>Pembayar Utama:</b> Mandiri (self)</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;line-height:1.6;">
+          <div style="color:#555;">
+            <b>Jejak Sumber:</b> <span class="code-chip">source_type = billing</span>
+            <span class="code-chip">source_id = ENC-2026-11-0733</span>
+            <span class="code-chip">idempotency_key = INV-2026-00124</span>
+          </div>
+          <div style="margin-top:6px;color:#555;">
+            Satu sumber layanan hanya boleh ditagihkan satu kali. Item invoice wajib tertelusur ke
+            <span class="code-chip">service_transaction_item_id</span> asalnya.
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD KANAN: 3 TAGIHAN TERAKHIR -->
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Tagihan Terakhir</h2>
+          </div>
+          <span class="muted small">Kasir Loket 1</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>INV-2026-00123 &middot; 17 Nov 2026</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Lunas</span>
+          </div>
+          <div class="history-diag">Tn. Bagas Pratama &middot; Poli Gigi</div>
+          <div class="history-notes">
+            Total Rp 350.000 &middot; Tunai &middot; Alokasi penuh &middot; Status dihitung dari saldo dan alokasi, bukan diubah manual
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>INV-2026-00122 &middot; 17 Nov 2026</span>
+            <span class="status" style="background:#fff3cd;color:#856404;">Dibayar Sebagian</span>
+          </div>
+          <div class="history-diag">Ny. Sari Wulandari &middot; Rawat Inap</div>
+          <div class="history-notes">
+            Total Rp 3.500.000 &middot; Penjamin asuransi Rp 2.800.000 (LOG-2026/117) &middot; Dibayar pasien Rp 200.000
+          </div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>INV-2026-00121 &middot; 16 Nov 2026</span>
+            <span class="status">Draft</span>
+          </div>
+          <div class="history-diag">An. Dwi Lestari &middot; Poli Umum + Farmasi</div>
+          <div class="history-notes">
+            Total Rp 188.250 &middot; Menunggu verifikasi resep dan konfirmasi penjamin
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-rincian" onclick="switchTab('tab-rincian')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Rincian Tagihan
+      </button>
+      <button class="exam-top-tab" data-tab="tab-penjamin" onclick="switchTab('tab-penjamin')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        2. Penjamin &amp; Alokasi
+      </button>
+      <button class="exam-top-tab" data-tab="tab-kasir" onclick="switchTab('tab-kasir')">
+        <svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        3. Pembayaran &amp; Kasir
+      </button>
+      <button class="exam-top-tab" data-tab="tab-kontrol" onclick="switchTab('tab-kontrol')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        4. Kontrol &amp; Cetak
+      </button>
+    </nav>
+
+    <!-- TAB 1: RINCIAN TAGIHAN -->
+    <div class="tab-pane active" id="tab-rincian">
+      <div class="card">
+        <div class="card-title">
+          <h2>Item Tagihan (Invoice Items)</h2>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="btn secondary" onclick="tambahItem()" style="font-size:11px;">+ Tambah Item</button>
+            <button type="button" class="btn secondary" onclick="recalc()" style="font-size:11px;">Hitung Ulang</button>
+          </div>
+        </div>
+
+        <p class="small muted" style="margin-bottom:10px;">
+          Semua unit yang menghasilkan biaya mengirim transaksi ke Billing Engine. Item di bawah merupakan agregasi
+          <span class="code-chip">service_transactions</span> pada encounter ini.
+        </p>
+
+        <div class="table-wrap">
+          <table id="tabelItem">
+            <thead>
+              <tr>
+                <th style="width:36px;">No</th>
+                <th style="width:120px;">Sumber</th>
+                <th>Item &amp; Katalog</th>
+                <th style="width:60px;">Qty</th>
+                <th style="width:120px;text-align:right;">Harga</th>
+                <th style="width:110px;text-align:right;">Diskon</th>
+                <th style="width:130px;">Kode Pajak</th>
+                <th style="width:115px;text-align:right;">PPN</th>
+                <th style="width:120px;">Penjamin</th>
+                <th style="width:125px;text-align:right;">Total</th>
+                <th style="width:44px;text-align:center;">Hapus</th>
+              </tr>
+            </thead>
+            <tbody id="itemBody">
+              <tr>
+                <td>1</td>
+                <td><span class="small muted">Konsultasi</span></td>
+                <td><input type="text" class="field" value="Konsultasi dokter umum (KAT-KONS-01)" style="width:100%;height:30px;"></td>
+                <td><input type="number" class="field item-qty" value="1" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-price" value="150000" step="100" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td>
+                  <select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="PPN_DIBEBASKAN" selected>PPN_DIBEBASKAN</option>
+                    <option value="PPN_BKP">PPN_BKP</option>
+                    <option value="NON_BKP">NON_BKP</option>
+                  </select>
+                </td>
+                <td class="right item-taxval">Rp 0</td>
+                <td>
+                  <select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="self" selected>Mandiri</option>
+                    <option value="bpjs">BPJS</option>
+                    <option value="insurer">Asuransi</option>
+                    <option value="corporate">Perusahaan</option>
+                  </select>
+                </td>
+                <td class="right item-total" style="font-weight:600;">Rp 150.000</td>
+                <td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><span class="small muted">Tindakan</span></td>
+                <td><input type="text" class="field" value="Nebulisasi (KAT-TIND-14)" style="width:100%;height:30px;"></td>
+                <td><input type="number" class="field item-qty" value="1" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-price" value="85000" step="500" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td>
+                  <select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="PPN_DIBEBASKAN" selected>PPN_DIBEBASKAN</option>
+                    <option value="PPN_BKP">PPN_BKP</option>
+                    <option value="NON_BKP">NON_BKP</option>
+                  </select>
+                </td>
+                <td class="right item-taxval">Rp 0</td>
+                <td>
+                  <select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="self" selected>Mandiri</option>
+                    <option value="bpjs">BPJS</option>
+                    <option value="insurer">Asuransi</option>
+                    <option value="corporate">Perusahaan</option>
+                  </select>
+                </td>
+                <td class="right item-total" style="font-weight:600;">Rp 85.000</td>
+                <td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><span class="small muted">Farmasi</span></td>
+                <td><input type="text" class="field" value="Amoxicillin 500 mg (10 tablet)" style="width:100%;height:30px;"></td>
+                <td><input type="number" class="field item-qty" value="10" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-price" value="3500" step="100" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td>
+                  <select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="PPN_DIBEBASKAN">PPN_DIBEBASKAN</option>
+                    <option value="PPN_BKP" selected>PPN_BKP</option>
+                    <option value="NON_BKP">NON_BKP</option>
+                  </select>
+                </td>
+                <td class="right item-taxval">Rp 3.850</td>
+                <td>
+                  <select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="self" selected>Mandiri</option>
+                    <option value="bpjs">BPJS</option>
+                    <option value="insurer">Asuransi</option>
+                    <option value="corporate">Perusahaan</option>
+                  </select>
+                </td>
+                <td class="right item-total" style="font-weight:600;">Rp 38.850</td>
+                <td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><span class="small muted">Farmasi</span></td>
+                <td><input type="text" class="field" value="Vitamin C 500 mg (10 tablet)" style="width:100%;height:30px;"></td>
+                <td><input type="number" class="field item-qty" value="10" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-price" value="1500" step="100" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td>
+                  <select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="PPN_DIBEBASKAN">PPN_DIBEBASKAN</option>
+                    <option value="PPN_BKP" selected>PPN_BKP</option>
+                    <option value="NON_BKP">NON_BKP</option>
+                  </select>
+                </td>
+                <td class="right item-taxval">Rp 1.650</td>
+                <td>
+                  <select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="self" selected>Mandiri</option>
+                    <option value="bpjs">BPJS</option>
+                    <option value="insurer">Asuransi</option>
+                    <option value="corporate">Perusahaan</option>
+                  </select>
+                </td>
+                <td class="right item-total" style="font-weight:600;">Rp 16.650</td>
+                <td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><span class="small muted">Laboratorium</span></td>
+                <td><input type="text" class="field" value="Darah lengkap (KAT-LAB-03)" style="width:100%;height:30px;"></td>
+                <td><input type="number" class="field item-qty" value="1" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-price" value="120000" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td>
+                  <select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="PPN_DIBEBASKAN" selected>PPN_DIBEBASKAN</option>
+                    <option value="PPN_BKP">PPN_BKP</option>
+                    <option value="NON_BKP">NON_BKP</option>
+                  </select>
+                </td>
+                <td class="right item-taxval">Rp 0</td>
+                <td>
+                  <select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="self" selected>Mandiri</option>
+                    <option value="bpjs">BPJS</option>
+                    <option value="insurer">Asuransi</option>
+                    <option value="corporate">Perusahaan</option>
+                  </select>
+                </td>
+                <td class="right item-total" style="font-weight:600;">Rp 120.000</td>
+                <td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><span class="small muted">BHP</span></td>
+                <td><input type="text" class="field" value="Masker dan spuit (BHP-022)" style="width:100%;height:30px;"></td>
+                <td><input type="number" class="field item-qty" value="1" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-price" value="25000" step="500" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>
+                <td>
+                  <select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="PPN_DIBEBASKAN">PPN_DIBEBASKAN</option>
+                    <option value="PPN_BKP" selected>PPN_BKP</option>
+                    <option value="NON_BKP">NON_BKP</option>
+                  </select>
+                </td>
+                <td class="right item-taxval">Rp 2.750</td>
+                <td>
+                  <select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">
+                    <option value="self" selected>Mandiri</option>
+                    <option value="bpjs">BPJS</option>
+                    <option value="insurer">Asuransi</option>
+                    <option value="corporate">Perusahaan</option>
+                  </select>
+                </td>
+                <td class="right item-total" style="font-weight:600;">Rp 27.750</td>
+                <td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:14px;">
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">Subtotal Layanan</div>
+            <div class="metric-value" id="labelSubtotal" style="font-size:18px;">Rp 430.000</div>
+            <p class="metric-mini">Sebelum diskon dan pajak</p>
+          </div>
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">Diskon &amp; Penyesuaian</div>
+            <div class="metric-value" id="labelDiskon" style="font-size:18px;">Rp 0</div>
+            <p class="metric-mini">Wajib otorisasi bila &gt; 0</p>
+          </div>
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">PPN Keluaran (11%, ilustrasi)</div>
+            <div class="metric-value" id="labelPpn" style="font-size:18px;">Rp 8.250</div>
+            <p class="metric-mini">Hanya atas barang BKP; jasa medis dibebaskan</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px;padding:14px;background:#fafbfc;">
+          <div class="sum-line"><span>DPP Barang Kena Pajak</span><span id="labelDpp">Rp 75.000</span></div>
+          <div class="sum-line"><span>PPN Keluaran (tarif ilustrasi 11%)</span><span id="labelPpn2">Rp 8.250</span></div>
+          <div class="sum-line"><span>Pembulatan</span><span>Rp 0</span></div>
+          <div class="sum-line"><span><b>Grand Total Invoice</b></span><span><b id="labelGrand">Rp 438.250</b></span></div>
+          <div class="sum-line"><span>Sudah Dibayar / Deposit Terpakai</span><span id="labelPaid">Rp 0</span></div>
+          <div class="sum-line"><span><b>Outstanding</b></span><span><b id="labelOutstanding">Rp 438.250</b></span></div>
+          <div class="sum-line"><span>Status Invoice (dihitung dari alokasi)</span><span id="statusInvoice" class="status" style="background:#fff3cd;color:#856404;">Belum Dibayar</span></div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          <b>Batas peran modul:</b> Billing hanya menghitung kewajiban. Penerimaan uang dicatat pada tab Pembayaran &amp; Kasir,
+          dan jurnal akuntansi tetap dibuat oleh Accounting Engine melalui <span class="code-chip">account_mapping_rules</span>.
+          Diskon dan penyesuaian wajib memiliki otorisasi.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PENJAMIN & ALOKASI -->
+    <div class="tab-pane" id="tab-penjamin">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Pembayar &amp; Coverages</h2><span class="status dark">Pembayar Jamak</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Jenis Penjamin Utama</label>
+              <select class="field">
+                <option selected>Mandiri (self)</option>
+                <option>JKN / BPJS Kesehatan</option>
+                <option>Asuransi swasta / TPA</option>
+                <option>Perusahaan / kontrak</option>
+                <option>Program lain</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Penjamin</label>
+              <input type="text" class="field" value="Pasien sendiri">
+            </div>
+            <div class="form-group">
+              <label class="form-label">No. Kontrak / Polis</label>
+              <input type="text" class="field" placeholder="Diisi bila penjamin bukan mandiri">
+            </div>
+            <div class="form-group">
+              <label class="form-label">No. Peserta / Member</label>
+              <input type="text" class="field" placeholder="Nomor kartu peserta">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Dari</label>
+              <input type="date" class="field" value="2026-01-01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Sampai</label>
+              <input type="date" class="field" value="2026-12-31">
+            </div>
+          </div>
+
+          <div class="note-band" style="margin-top:10px;">
+            <b>Kapitasi JKN:</b> layanan dalam kapitasi tidak menghasilkan pendapatan per layanan. Klaim non-kapitasi
+            hanya dibuat dari layanan valid yang belum pernah diklaim, dan diverifikasi status kepesertaannya pada kunjungan.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Surat Jaminan &amp; Plafon</h2><span class="status">LOG-2026/118</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Nomor Surat Jaminan</label>
+              <input type="text" class="field" value="LOG-2026/118">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status Verifikasi</label>
+              <select class="field">
+                <option selected>Terverifikasi</option>
+                <option>Menunggu verifikasi</option>
+                <option>Ditolak</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Plafon Jaminan (Rp)</label>
+              <input type="number" class="field" value="2000000" step="10000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Co-pay / Excess (%)</label>
+              <input type="number" class="field" value="20" min="0" max="100">
+            </div>
+          </div>
+
+          <div class="note-band" style="margin-top:10px;">
+            Item yang ditolak penjamin dialihkan ke tanggungan pasien dengan otorisasi dan tercatat sebagai
+            <span class="code-chip">billing_adjustment</span>, bukan dengan mengubah invoice lama secara diam-diam.
+          </div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title">
+          <h2>Alokasi Tanggungan per Pembayar</h2>
+          <button type="button" class="btn secondary" onclick="recalc()" style="font-size:11px;">Hitung Ulang Alokasi</button>
+        </div>
+
+        <div class="table-wrap"><table>
+          <thead>
+            <tr><th>Pembayar</th><th>Jenis</th><th>Dasar Penjaminan</th><th class="right">Tanggungan (Rp)</th><th>Catatan</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Mandiri (self)</b></td>
+              <td>self</td>
+              <td>Sisa setelah penjamin lain</td>
+              <td class="right"><input type="number" id="allocSelf" class="field" value="438250" readonly style="width:130px;height:30px;text-align:right;background:#f4f5f6;font-weight:600;"></td>
+              <td class="small muted">Termasuk co-pay dan item non-covered</td>
+            </tr>
+            <tr>
+              <td>Asuransi swasta</td>
+              <td>insurer</td>
+              <td>LOG-2026/118, plafon Rp 2.000.000</td>
+              <td class="right"><input type="number" id="allocInsurer" class="field" value="0" step="1000" style="width:130px;height:30px;text-align:right;" oninput="recalc()"></td>
+              <td class="small muted">Co-pay 20% menjadi tanggungan pasien</td>
+            </tr>
+            <tr>
+              <td>BPJS Kesehatan</td>
+              <td>bpjs</td>
+              <td>Kapitasi / klaim non-kapitasi</td>
+              <td class="right"><input type="number" id="allocBpjs" class="field" value="0" step="1000" style="width:130px;height:30px;text-align:right;" oninput="recalc()"></td>
+              <td class="small muted">Layanan kapitasi tidak menagih pasien</td>
+            </tr>
+            <tr>
+              <td>Perusahaan</td>
+              <td>corporate</td>
+              <td>Kontrak MCU / klinik perusahaan</td>
+              <td class="right"><input type="number" id="allocCorporate" class="field" value="0" step="1000" style="width:130px;height:30px;text-align:right;" oninput="recalc()"></td>
+              <td class="small muted">Invoice berkala dengan umur piutang</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#f7f7f8;font-weight:bold;">
+              <td colspan="3" style="text-align:right;">TOTAL ALOKASI:</td>
+              <td class="right" id="labelAllocTotal">Rp 438.250</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table></div>
+
+        <div id="boxAlloc" class="balance-box balance-ok" style="margin-top:12px;">
+          <span>Kontrol Alokasi:</span>
+          <span id="labelAllocStatus">ALOKASI = GRAND TOTAL (selisih Rp 0)</span>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Satu episode memiliki satu <span class="code-chip">billing_account</span>. Invoice dibentuk per pembayar, sehingga
+          pasien dan penjamin dapat menerima dokumen terpisah. Status lunas dihitung dari saldo dan alokasi pembayaran.
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title"><h2>Deposit Pasien</h2><span class="status dark">Liabilitas</span></div>
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Saldo Deposit Tersedia</label>
+            <input type="text" class="field" value="Rp 500.000" readonly style="background:#f4f5f6;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Deposit Digunakan (Rp)</label>
+            <input type="number" id="depositUsed" class="field" value="0" step="1000" max="500000" oninput="recalc()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sisa Dibayar Pasien</label>
+            <input type="text" id="sisaBayarPasien" class="field" value="Rp 438.250" readonly style="background:#f4f5f6;font-weight:600;">
+          </div>
+        </div>
+        <div class="note-band" style="margin-top:6px;">
+          Deposit pasien adalah liabilitas (akun 2300), bukan pendapatan. Pemakaian deposit mengurangi liabilitas dan piutang,
+          bukan menambah pendapatan baru.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PEMBAYARAN & KASIR -->
+    <div class="tab-pane" id="tab-kasir">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Pembayaran Diterima</h2><span class="status dark">PAY-2026-00451</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Metode Pembayaran</label>
+              <select class="field" id="metodeBayar" onchange="recalc()">
+                <option value="cash" selected>Tunai (cash)</option>
+                <option value="transfer">Transfer bank</option>
+                <option value="va">Virtual Account</option>
+                <option value="qris">QRIS</option>
+                <option value="edc">Kartu / EDC</option>
+                <option value="ewallet">E-wallet</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nominal Diterima (Rp)</label>
+              <input type="number" id="nominalBayar" class="field" value="438250" step="1000" oninput="paymentTouched=true;recalc()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Biaya Transaksi (fee)</label>
+              <input type="text" id="labelFee" class="field" value="Rp 0" readonly style="background:#f4f5f6;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">No. Referensi / Approval</label>
+              <input type="text" class="field" placeholder="Nomor trace bank, VA, atau approval EDC">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu Pembayaran</label>
+              <input type="text" class="field" value="17 Nov 2026, 12:04 WIB" readonly style="background:#f4f5f6;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dialokasikan ke Invoice</label>
+              <input type="text" id="labelApplied" class="field" value="Rp 438.250" readonly style="background:#f4f5f6;font-weight:600;">
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:10px;padding:12px;background:#fafbfc;">
+            <div class="sum-line"><span>Kewajiban setelah deposit</span><span id="labelDue">Rp 438.250</span></div>
+            <div class="sum-line"><span>Kembalian tunai</span><span id="labelChange">Rp 0</span></div>
+            <div class="sum-line"><span><b>Outstanding setelah pembayaran</b></span><span><b id="labelSisa">Rp 0</b></span></div>
+          </div>
+
+          <div id="boxPay" class="balance-box balance-ok" style="margin-top:12px;">
+            <span>Kontrol Pembayaran:</span>
+            <span id="labelPayStatus">PEMBAYARAN TIDAK MELEBIHI SALDO</span>
+          </div>
+
+          <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end;">
+            <button type="button" class="btn secondary" onclick="alert('Kuitansi dicetak setelah pembayaran tersimpan.')">Cetak Kuitansi</button>
+            <button type="button" class="btn primary" onclick="simpanPembayaran()">Simpan &amp; Alokasikan Pembayaran</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Sesi Kasir &amp; Tutup Shift</h2><span class="status" style="background:#d4edda;color:#155724;">OPEN</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Sesi Kasir</label>
+              <input type="text" class="field" value="CS-2026-11-17/01" readonly style="background:#f4f5f6;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kasir</label>
+              <input type="text" class="field" value="Dewi - Loket 1" readonly style="background:#f4f5f6;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kas Awal (opening cash)</label>
+              <input type="number" id="kasAwal" class="field" value="500000" step="10000" oninput="recalc()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kas Seharusnya (expected)</label>
+              <input type="text" id="labelExpected" class="field" value="Rp 938.250" readonly style="background:#f4f5f6;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kas Fisik Dihitung (counted)</label>
+              <input type="number" id="kasFisik" class="field" value="938250" step="1000" oninput="recalc()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Selisih Kas (variance)</label>
+              <input type="text" id="labelVariance" class="field" value="Rp 0" readonly style="background:#f4f5f6;font-weight:600;">
+            </div>
+          </div>
+
+          <div class="note-band">
+            Selisih kas tutup shift diposting ke akun <span class="code-chip">5900 Selisih Kas dan Pembulatan</span>.
+            Pembulatan tunai diperlakukan sebagai selisih pembulatan, bukan pendapatan.
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="card-title" style="margin-bottom:6px;"><h3 style="font-size:12px;margin:0;">Jurnal Otomatis yang Akan Dibentuk</h3></div>
+            <div class="table-wrap">
+              <table style="font-size:11px;">
+                <thead><tr><th>Akun</th><th style="text-align:right;">Debit</th><th style="text-align:right;">Kredit</th></tr></thead>
+                <tbody id="jurnalPreview"></tbody>
+              </table>
+            </div>
+            <p class="small muted" style="margin-top:8px;">
+              Dihasilkan Accounting Engine dari event <span class="code-chip">cashier.payment.received</span> dengan
+              <span class="code-chip">source_id = PAY-2026-00451</span> dan idempotency key yang unik.
+            </p>
+          </div>
+
+          <div style="margin-top:12px;text-align:right;">
+            <button type="button" class="btn secondary" onclick="alert('Shift ditutup. Selisih kas diposting ke akun 5900 setelah otorisasi.')">Tutup Shift &amp; Setor Kas</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: KONTROL & CETAK -->
+    <div class="tab-pane" id="tab-kontrol">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Kontrol Billing &amp; Kasir</h2><span class="status dark">Sebelum Finalisasi</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Setiap item tertelusur ke sumber layanan.</b><div class="small muted">Item invoice menyimpan <span class="code-chip">service_transaction_item_id</span>; satu sumber tidak boleh ditagih dua kali.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok" id="markAlokasi">OK</span>
+            <div><b>Total alokasi sama dengan grand total.</b><div class="small muted">Tanggungan pasien dan penjamin dipisahkan; invoice dibentuk per pembayar.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok" id="markBayar">OK</span>
+            <div><b>Pembayaran tidak melebihi saldo yang dapat dialokasikan.</b><div class="small muted">Kelebihan tunai diperlakukan sebagai kembalian; kelebihan non-tunai masuk deposit/kredit pasien.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Status lunas dihitung dari saldo dan alokasi.</b><div class="small muted">Status tidak diubah manual tanpa dasar transaksi.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode pajak wajib ada pada setiap item.</b><div class="small muted">Item tanpa kode pajak tidak dapat ditagihkan; perubahan kode pajak tidak mengubah invoice lama.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Diskon dan penyesuaian memiliki otorisasi.</b><div class="small muted">Koreksi invoice yang memuat pajak dilakukan lewat credit note dengan reversal pajak.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Refund terhubung ke pembayaran asal.</b><div class="small muted">Refund tidak boleh berdiri sendiri tanpa referensi pembayaran yang dikembalikan.</div></div>
+          </div>
+
+          <div class="form-group" style="margin-top:14px;">
+            <label class="form-label">Catatan Otorisasi</label>
+            <textarea class="field" rows="3">Diskon Rp 0. Co-pay 20% atas item non-covered telah diinformasikan ke pasien. Penjamin diverifikasi pada kunjungan.</textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Dokumen Tagihan</h2><div style="display:flex;gap:8px;"><button class="btn secondary" onclick="window.print()">Cetak Invoice</button><button class="btn secondary" onclick="window.print()">Cetak Kuitansi</button></div></div>
+
+          <div class="invoice-doc">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <h3>Klinik Utama Kemang</h3>
+                <div class="small muted">PT Sehat Nusantara &middot; NPWP 01.234.567.8-901.000</div>
+                <div class="small muted">Jl. Kemang Raya No. 21, Jakarta Selatan</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:bold;">INVOICE</div>
+                <div class="small muted">INV-2026-00124</div>
+                <div class="small muted">17 Nov 2026</div>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin:14px 0;font-size:11px;">
+              <div>
+                <div class="muted">Ditagihkan kepada</div>
+                <div><b>Ny. Rina Kartika</b> (MR-004521)</div>
+                <div>Poli Umum &middot; VST-2026-11-0891</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="muted">Status</div>
+                <div id="statusDoc" style="font-weight:bold;">Belum Dibayar</div>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Deskripsi</th><th class="right">Qty</th><th class="right">Total</th></tr></thead>
+                <tbody id="docItems"></tbody>
+                <tfoot>
+                  <tr><td colspan="2" class="right">Subtotal</td><td class="right" id="docSubtotal">Rp 430.000</td></tr>
+                  <tr><td colspan="2" class="right">PPN</td><td class="right" id="docPpn">Rp 8.250</td></tr>
+                  <tr><td colspan="2" class="right"><b>Grand Total</b></td><td class="right"><b id="docGrand">Rp 438.250</b></td></tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <p class="small muted" style="margin-top:12px;">
+              Jasa pelayanan kesehatan medis PPN dibebaskan (PP 49/2022). PPN pada dokumen ini hanya atas barang BKP
+              dan memakai tarif ilustrasi yang wajib dikonfirmasi konsultan pajak.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertBilling" style="display:none;margin-top:16px;" class="alert success">
+      <b>Pembayaran tersimpan:</b> <b id="alertPayNo">PAY-2026-00451</b> dialokasikan ke INV-2026-00124.
+      Event diteruskan ke Accounting Engine; jurnal dibuat otomatis dan tidak diedit dari modul kasir.
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var PPN_RATE = 0.11; // tarif ilustrasi, wajib dikonfigurasi ber-tanggal-berlaku
+var paymentTouched = false;
+var savedApplied = 0;
+var grandTotal = 0;
+var allocSelf = 0;
+var depositUsed = 0;
+var due = 0;
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function formatRupiah(angka) {
+  return "Rp " + Number(angka || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+}
+
+function numberOrZero(el) {
+  return Number(el && el.value ? el.value : 0) || 0;
+}
+
+function recalc() {
+  var rows = document.querySelectorAll("#itemBody tr");
+  var subtotal = 0, diskon = 0, dpp = 0, ppn = 0, lineGrand = 0;
+  var docRows = [];
+
+  rows.forEach(function (tr) {
+    var qty = numberOrZero(tr.querySelector(".item-qty"));
+    var price = numberOrZero(tr.querySelector(".item-price"));
+    var disc = numberOrZero(tr.querySelector(".item-disc"));
+    var tax = tr.querySelector(".item-tax") ? tr.querySelector(".item-tax").value : "NON_BKP";
+    var desc = tr.querySelector("td:nth-child(3) input") ? tr.querySelector("td:nth-child(3) input").value : "Item";
+    var gross = qty * price;
+    var net = Math.max(gross - disc, 0);
+    var taxAmt = tax === "PPN_BKP" ? Math.round(net * PPN_RATE) : 0;
+
+    tr.querySelector(".item-taxval").textContent = formatRupiah(taxAmt);
+    tr.querySelector(".item-total").textContent = formatRupiah(net + taxAmt);
+
+    subtotal += gross;
+    diskon += disc;
+    if (tax === "PPN_BKP") dpp += net;
+    ppn += taxAmt;
+    lineGrand += net + taxAmt;
+    docRows.push({ desc: desc, qty: qty, total: net + taxAmt });
+  });
+
+  grandTotal = lineGrand;
+
+  document.getElementById("labelSubtotal").textContent = formatRupiah(subtotal);
+  document.getElementById("labelDiskon").textContent = formatRupiah(diskon);
+  document.getElementById("labelPpn").textContent = formatRupiah(ppn);
+  document.getElementById("labelDpp").textContent = formatRupiah(dpp);
+  document.getElementById("labelPpn2").textContent = formatRupiah(ppn);
+  document.getElementById("labelGrand").textContent = formatRupiah(grandTotal);
+
+  renderDoc(docRows, subtotal, ppn);
+
+  recalcAllocation();
+}
+
+function recalcAllocation() {
+  var insurer = numberOrZero(document.getElementById("allocInsurer"));
+  var bpjs = numberOrZero(document.getElementById("allocBpjs"));
+  var corporate = numberOrZero(document.getElementById("allocCorporate"));
+
+  var other = insurer + bpjs + corporate;
+  var self = Math.max(grandTotal - other, 0);
+
+  document.getElementById("allocSelf").value = self;
+  document.getElementById("labelAllocTotal").textContent = formatRupiah(self + other);
+
+  var diff = Math.abs((self + other) - grandTotal);
+  var box = document.getElementById("boxAlloc");
+  var label = document.getElementById("labelAllocStatus");
+  var mark = document.getElementById("markAlokasi");
+
+  if (diff < 0.5) {
+    box.className = "balance-box balance-ok";
+    label.textContent = "ALOKASI = GRAND TOTAL (selisih Rp 0)";
+    if (mark) { mark.textContent = "OK"; mark.className = "rule-mark rule-ok"; }
+  } else {
+    box.className = "balance-box balance-warn";
+    label.textContent = "ALOKASI MELEBIHI GRAND TOTAL - selisih " + formatRupiah(diff);
+    if (mark) { mark.textContent = "X"; mark.className = "rule-mark rule-warn"; }
+  }
+
+  allocSelf = self;
+
+  var depositEl = document.getElementById("depositUsed");
+  var maxDeposit = Math.min(500000, self);
+  depositUsed = Math.min(numberOrZero(depositEl), maxDeposit);
+  depositEl.value = depositUsed;
+
+  var sisa = Math.max(self - depositUsed, 0);
+  document.getElementById("sisaBayarPasien").value = formatRupiah(sisa);
+  due = sisa;
+
+  if (!paymentTouched) {
+    document.getElementById("nominalBayar").value = due;
+  }
+
+  recalcPayment();
+}
+
+function recalcPayment() {
+  var method = document.getElementById("metodeBayar").value;
+  var amount = numberOrZero(document.getElementById("nominalBayar"));
+  var feeRate = method === "qris" ? 0.007 : (method === "edc" ? 0.015 : (method === "ewallet" ? 0.01 : 0));
+  var applied = Math.min(amount, due);
+  var fee = Math.round(applied * feeRate);
+  var change = method === "cash" ? Math.max(amount - due, 0) : 0;
+  var outstanding = Math.max(grandTotal - depositUsed - applied, 0);
+
+  document.getElementById("labelFee").value = formatRupiah(fee);
+  document.getElementById("labelApplied").value = formatRupiah(applied);
+  document.getElementById("labelDue").textContent = formatRupiah(due);
+  document.getElementById("labelChange").textContent = formatRupiah(change);
+  document.getElementById("labelSisa").textContent = formatRupiah(outstanding);
+
+  var box = document.getElementById("boxPay");
+  var label = document.getElementById("labelPayStatus");
+  var mark = document.getElementById("markBayar");
+  var overpayNonCash = (method !== "cash" && amount > due);
+
+  if (overpayNonCash) {
+    box.className = "balance-box balance-warn";
+    label.textContent = "NOMINAL MELEBIHI SALDO - kelebihan masuk deposit/kredit pasien";
+    if (mark) { mark.textContent = "X"; mark.className = "rule-mark rule-warn"; }
+  } else {
+    box.className = "balance-box balance-ok";
+    label.textContent = "PEMBAYARAN TIDAK MELEBIHI SALDO";
+    if (mark) { mark.textContent = "OK"; mark.className = "rule-mark rule-ok"; }
+  }
+
+  var status = "Belum Dibayar";
+  var statusStyle = "background:#fff3cd;color:#856404;";
+  var paidTotal = depositUsed + savedApplied;
+  if (paidTotal >= grandTotal && grandTotal > 0) {
+    status = "Lunas";
+    statusStyle = "background:#d4edda;color:#155724;";
+  } else if (paidTotal > 0) {
+    status = "Dibayar Sebagian";
+    statusStyle = "background:#ffe8cc;color:#8a4b00;";
+  }
+
+  var statusEl = document.getElementById("statusInvoice");
+  statusEl.textContent = status;
+  statusEl.setAttribute("style", statusStyle);
+
+  var docStatus = document.getElementById("statusDoc");
+  if (docStatus) docStatus.textContent = status;
+
+  var outstandingRecorded = Math.max(grandTotal - paidTotal, 0);
+  document.getElementById("labelPaid").textContent = formatRupiah(paidTotal);
+  document.getElementById("labelOutstanding").textContent = formatRupiah(outstandingRecorded);
+
+  renderJurnalPreview(method, applied, fee);
+
+  var opening = numberOrZero(document.getElementById("kasAwal"));
+  var cashIn = method === "cash" ? applied : 0;
+  var expected = opening + cashIn;
+  var counted = numberOrZero(document.getElementById("kasFisik"));
+  var variance = counted - expected;
+
+  document.getElementById("labelExpected").value = formatRupiah(expected);
+  document.getElementById("labelVariance").value = formatRupiah(variance);
+}
+
+function renderJurnalPreview(method, applied, fee) {
+  var lines = [];
+
+  if (depositUsed > 0) {
+    lines.push(["2300 Uang Muka Pasien (Deposit)", depositUsed, 0]);
+    lines.push(["1100 Piutang Pasien", 0, depositUsed]);
+  }
+
+  if (applied > 0) {
+    if (method === "cash") {
+      lines.push(["1000 Kas dan Bank", applied, 0]);
+    } else {
+      lines.push(["1050 Dana Transit Pembayaran Digital", Math.max(applied - fee, 0), 0]);
+      if (fee > 0) lines.push(["5500 Beban Biaya Transaksi Pembayaran", fee, 0]);
+    }
+    lines.push(["1100 Piutang Pasien", 0, applied]);
+  }
+
+  var tbody = document.getElementById("jurnalPreview");
+  tbody.innerHTML = "";
+
+  if (lines.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="muted small">Belum ada pembayaran.</td></tr>';
+    return;
+  }
+
+  lines.forEach(function (ln) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + ln[0] + "</td>"
+      + '<td style="text-align:right;">' + (ln[1] ? formatRupiah(ln[1]) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (ln[2] ? formatRupiah(ln[2]) : "-") + "</td>";
+    tbody.appendChild(tr);
+  });
+}
+
+function renderDoc(rows, subtotal, ppn) {
+  var tbody = document.getElementById("docItems");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  rows.forEach(function (r) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + r.desc + "</td>"
+      + '<td style="text-align:right;">' + r.qty + "</td>"
+      + '<td style="text-align:right;">' + formatRupiah(r.total) + "</td>";
+    tbody.appendChild(tr);
+  });
+  document.getElementById("docSubtotal").textContent = formatRupiah(subtotal);
+  document.getElementById("docPpn").textContent = formatRupiah(ppn);
+  document.getElementById("docGrand").textContent = formatRupiah(subtotal + ppn);
+}
+
+function tambahItem() {
+  var tbody = document.getElementById("itemBody");
+  var tr = document.createElement("tr");
+  tr.innerHTML = '<td></td>'
+    + '<td><span class="small muted">Manual</span></td>'
+    + '<td><input type="text" class="field" placeholder="Nama item dan kode katalog" style="width:100%;height:30px;"></td>'
+    + '<td><input type="number" class="field item-qty" value="1" min="1" style="width:100%;height:30px;" oninput="recalc()"></td>'
+    + '<td><input type="number" class="field item-price" value="0" step="500" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>'
+    + '<td><input type="number" class="field item-disc" value="0" step="1000" style="width:100%;height:30px;text-align:right;" oninput="recalc()"></td>'
+    + '<td><select class="field item-tax" style="width:100%;height:30px;" onchange="recalc()">'
+    + '<option value="PPN_DIBEBASKAN">PPN_DIBEBASKAN</option><option value="PPN_BKP">PPN_BKP</option><option value="NON_BKP">NON_BKP</option></select></td>'
+    + '<td class="right item-taxval">Rp 0</td>'
+    + '<td><select class="field item-payer" style="width:100%;height:30px;" onchange="recalc()">'
+    + '<option value="self">Mandiri</option><option value="bpjs">BPJS</option><option value="insurer">Asuransi</option><option value="corporate">Perusahaan</option></select></td>'
+    + '<td class="right item-total" style="font-weight:600;">Rp 0</td>'
+    + '<td style="text-align:center;"><button type="button" class="btn" style="padding:2px 7px;" onclick="hapusItem(this)">&times;</button></td>';
+  tbody.appendChild(tr);
+  renumber();
+  recalc();
+}
+
+function renumber() {
+  Array.from(document.querySelectorAll("#itemBody tr")).forEach(function (row, idx) {
+    row.cells[0].textContent = idx + 1;
+  });
+}
+
+function hapusItem(btn) {
+  var tbody = document.getElementById("itemBody");
+  if (tbody.rows.length <= 1) {
+    alert("Invoice minimal memiliki satu item layanan.");
+    return;
+  }
+  btn.closest("tr").remove();
+  renumber();
+  recalc();
+}
+
+function simpanPembayaran() {
+  var method = document.getElementById("metodeBayar").value;
+  var amount = numberOrZero(document.getElementById("nominalBayar"));
+  if (amount > due && method !== "cash") {
+    alert("Nominal melebihi saldo. Untuk pembayaran non-tunai, kelebihan harus dicatat sebagai deposit/kredit pasien terlebih dahulu.");
+    return;
+  }
+  if (amount <= 0) {
+    alert("Nominal pembayaran harus lebih besar dari nol.");
+    return;
+  }
+  savedApplied = Math.min(amount, due);
+  recalcPayment();
+  var box = document.getElementById("alertBilling");
+  box.style.display = "block";
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+document.querySelectorAll("#itemBody input, #itemBody select").forEach(function (el) {
+  el.addEventListener("input", recalc);
+  el.addEventListener("change", recalc);
+});
+recalc();
+</script>
+</body>
+</html>

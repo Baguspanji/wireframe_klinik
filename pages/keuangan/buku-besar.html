@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buku Besar &amp; Neraca Saldo - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.balance-box {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balance-ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.balance-warn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.dc-chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-left: 4px;
+}
+.dc-d { background: #e6f0fb; color: #1f5c99; }
+.dc-k { background: #fdeee6; color: #9c4a1a; }
+
+.sum-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px dashed #e6e8ea;
+}
+.sum-line:last-child { border-bottom: 0; }
+
+.t-account-mini {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px;
+  background: #fff;
+}
+.t-account-mini .t-head {
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.t-account-mini .t-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 2px 0;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group open" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="billing-kasir.html"><span>Form Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="jurnal-umum.html"><span>+ Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub active" href="buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Keuangan <span style="margin:0 8px">/</span> Accounting <span style="margin:0 8px">/</span> <b>Buku Besar &amp; Neraca Saldo</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Staf Akuntansi</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#accounting">Keuangan</a> <span>/</span> <a href="../../index.html#accounting">Accounting</a> <span>/</span> Buku Besar</div>
+        <h1>Buku Besar &amp; Neraca Saldo</h1>
+        <p>Mutasi per rekening dan saldo berjalan yang bersumber hanya dari jurnal berstatus posted. Draft dan jurnal yang dibatalkan tidak memengaruhi laporan.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="jurnal-umum.html">+ Input Jurnal</a>
+        <a class="btn" href="../../index.html#accounting">Kembali ke Accounting</a>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <h2>Identitas Buku Besar</h2>
+          </div>
+          <span class="status dark" style="background:#d4edda;color:#155724;">POSTED ONLY</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Periode:</b> November 2026</div>
+          <div><b>Status Periode:</b> <span style="color:#155724;font-weight:bold;">OPEN</span></div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Entitas:</b> PT Sehat Nusantara</div>
+          <div><b>Mata Uang:</b> IDR</div>
+          <div><b>Jurnal Posted:</b> 348</div>
+          <div><b>Draft Dikecualikan:</b> 12</div>
+          <div><b>Posting Terakhir:</b> 17 Nov 2026, 12:04 WIB</div>
+        </div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;line-height:1.6;">
+          <div style="color:#555;">
+            <b>Sumber data:</b> <span class="code-chip">general_ledger</span>
+            <span class="code-chip">journal_entries.status = posted</span>
+            <span class="code-chip">facility_id = FAC-KMG-01</span>
+          </div>
+          <div style="margin-top:6px;color:#555;">
+            Laporan keuangan tidak diagregasi langsung dari tabel transaksi operasional. Draft <b>JV-2026-0349</b>
+            belum masuk buku besar sampai diposting.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Mutasi Terakhir</h2>
+          </div>
+          <span class="muted small">Dari jurnal posted</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>JV-2026-0348 &middot; 17 Nov 2026</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Posted</span>
+          </div>
+          <div class="history-diag">Pengakuan pendapatan konsultasi Poli Umum</div>
+          <div class="history-notes">
+            Dr 1100 Piutang Pasien Rp 150.000 &middot; Cr 4000 Pendapatan Konsultasi Rp 150.000 &middot; billing / INV-00124
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>JV-2026-0347 &middot; 17 Nov 2026</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Posted</span>
+          </div>
+          <div class="history-diag">Penerimaan pembayaran kasir via QRIS</div>
+          <div class="history-notes">
+            Dr 1050 Dana Transit Rp 99.300 &middot; Dr 5500 Biaya Transaksi Rp 700 &middot; Cr 1100 Piutang Pasien Rp 100.000
+          </div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>JV-2026-0346 &middot; 16 Nov 2026</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Posted</span>
+          </div>
+          <div class="history-diag">Pembelian persediaan obat kredit dari PBF</div>
+          <div class="history-notes">
+            Dr 1200 Persediaan Obat Rp 1.000.000 &middot; Dr 1250 PPN Masukan Rp 110.000 &middot; Cr 2000 Utang Supplier Rp 1.110.000
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-akun" onclick="switchTab('tab-akun')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        1. Buku Besar per Akun
+      </button>
+      <button class="exam-top-tab" data-tab="tab-neraca" onclick="switchTab('tab-neraca')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="m5 7-3 6h6z"/><path d="m19 7-3 6h6z"/></svg>
+        2. Neraca Saldo
+      </button>
+      <button class="exam-top-tab" data-tab="tab-drill" onclick="switchTab('tab-drill')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        3. Drill-down Jurnal
+      </button>
+    </nav>
+
+    <!-- TAB 1: BUKU BESAR PER AKUN -->
+    <div class="tab-pane active" id="tab-akun">
+      <div class="card">
+        <div class="card-title">
+          <h2>Buku Besar per Rekening</h2>
+          <div style="display:flex;gap:8px;">
+            <select id="pilihAkun" class="field" style="width:280px;font-size:12px;" onchange="renderLedger()"></select>
+          </div>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <select id="filterCC" class="field" onchange="renderLedger()">
+            <option value="">Semua Cost Center</option>
+            <option>Umum</option>
+            <option>Poli Umum</option>
+            <option>Poli Gigi</option>
+            <option>Laboratorium</option>
+            <option>Farmasi</option>
+            <option>Rawat Inap</option>
+            <option>IGD</option>
+          </select>
+          <input type="date" id="dariTanggal" class="field" value="2026-11-01" onchange="renderLedger()">
+          <input type="date" id="sampaiTanggal" class="field" value="2026-11-30" onchange="renderLedger()">
+          <button class="btn" onclick="renderLedger()">Terapkan Filter</button>
+        </div>
+
+        <div class="grid grid-4" style="margin-bottom:14px;">
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">Saldo Awal</div>
+            <div class="metric-value" id="labelSaldoAwal" style="font-size:18px;">Rp 0</div>
+            <p class="small muted">Awal periode berjalan</p>
+          </div>
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">Total Debit</div>
+            <div class="metric-value" id="labelMutasiDebit" style="font-size:18px;">Rp 0</div>
+            <p class="small muted">Mutasi pada filter aktif</p>
+          </div>
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">Total Kredit</div>
+            <div class="metric-value" id="labelMutasiKredit" style="font-size:18px;">Rp 0</div>
+            <p class="small muted">Mutasi pada filter aktif</p>
+          </div>
+          <div class="card" style="padding:12px;">
+            <div class="metric-label">Saldo Akhir</div>
+            <div class="metric-value" id="labelSaldoAkhir" style="font-size:18px;">Rp 0</div>
+            <p class="small muted" id="labelSaldoSifat">Saldo normal</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:100px;">Tanggal</th>
+                <th style="width:135px;">No. Jurnal</th>
+                <th>Keterangan</th>
+                <th style="width:150px;">Sumber</th>
+                <th style="width:115px;">Cost Center</th>
+                <th style="width:120px;text-align:right;">Debit</th>
+                <th style="width:120px;text-align:right;">Kredit</th>
+                <th style="width:135px;text-align:right;">Saldo Berjalan</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          Saldo berjalan dihitung dari saldo awal ditambah mutasi debit dan dikurangi mutasi kredit untuk akun bersaldo normal debit,
+          atau sebaliknya untuk akun bersaldo normal kredit. Baris berasal dari <span class="code-chip">journal_entry_lines</span>
+          pada jurnal berstatus posted.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: NERACA SALDO -->
+    <div class="tab-pane" id="tab-neraca">
+      <div class="card">
+        <div class="card-title">
+          <h2>Neraca Saldo (Trial Balance)</h2>
+          <div style="display:flex;gap:8px;">
+            <button class="btn secondary" onclick="renderTrialBalance()">Hitung Ulang</button>
+            <button class="btn secondary" onclick="window.print()">Cetak</button>
+          </div>
+        </div>
+
+        <p class="small muted" style="margin-bottom:12px;">
+          Pemeriksaan keseimbangan total debit dan kredit sebelum tutup buku. Nilai bersumber dari jurnal posted
+          periode November 2026.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:100px;">Kode</th>
+                <th>Nama Akun</th>
+                <th style="width:125px;text-align:right;">Saldo Awal (D)</th>
+                <th style="width:125px;text-align:right;">Saldo Awal (K)</th>
+                <th style="width:120px;text-align:right;">Mutasi Debit</th>
+                <th style="width:120px;text-align:right;">Mutasi Kredit</th>
+                <th style="width:125px;text-align:right;">Saldo Akhir (D)</th>
+                <th style="width:125px;text-align:right;">Saldo Akhir (K)</th>
+              </tr>
+            </thead>
+            <tbody id="trialBody"></tbody>
+            <tfoot>
+              <tr style="background:#f7f7f8;font-weight:bold;">
+                <td colspan="2" style="text-align:right;">TOTAL</td>
+                <td style="text-align:right;" id="tbAwalDebit">Rp 0</td>
+                <td style="text-align:right;" id="tbAwalKredit">Rp 0</td>
+                <td style="text-align:right;" id="tbTotalDebit">Rp 0</td>
+                <td style="text-align:right;" id="tbTotalKredit">Rp 0</td>
+                <td style="text-align:right;" id="tbAkhirDebit">Rp 0</td>
+                <td style="text-align:right;" id="tbAkhirKredit">Rp 0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div id="boxTrial" class="balance-box balance-ok" style="margin-top:12px;">
+          <span>Kontrol Neraca Saldo:</span>
+          <span id="labelTrialStatus">BALANCE - total debit = total kredit</span>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Neraca saldo bukan laporan keuangan final. Penyesuaian akhir periode, penyusutan, dan akrual lain harus diposting
+          terlebih dahulu sebelum tutup buku.
+        </div>
+      </div>
+
+      <div class="grid grid-2 section">
+        <div class="t-account-mini">
+          <div class="t-head">IKHTISAR AKTIVA</div>
+          <div class="t-row"><span>Kas dan Bank</span><span id="miniKas">Rp 0</span></div>
+          <div class="t-row"><span>Piutang Pasien</span><span id="miniPiutang">Rp 0</span></div>
+          <div class="t-row"><span>Persediaan Obat</span><span id="miniPersediaan">Rp 0</span></div>
+          <div class="t-row"><span><b>Total Aktiva Lancar</b></span><span><b id="miniAktiva">Rp 0</b></span></div>
+        </div>
+        <div class="t-account-mini">
+          <div class="t-head">IKHTISAR LIABILITAS &amp; EKUITAS</div>
+          <div class="t-row"><span>Utang Supplier</span><span id="miniUtang">Rp 0</span></div>
+          <div class="t-row"><span>Uang Muka Pasien</span><span id="miniDeposit">Rp 0</span></div>
+          <div class="t-row"><span>Modal Pemilik</span><span id="miniModal">Rp 0</span></div>
+          <div class="t-row"><span>Laba (Rugi) Berjalan</span><span id="miniLaba">Rp 0</span></div>
+          <div class="t-row"><span><b>Total Liabilitas + Ekuitas</b></span><span><b id="miniPasiva">Rp 0</b></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: DRILL-DOWN -->
+    <div class="tab-pane" id="tab-drill">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">
+            <h2>Detail Jurnal</h2>
+            <select id="pilihJurnal" class="field" style="width:210px;font-size:12px;" onchange="renderDrill()"></select>
+          </div>
+
+          <div id="drillMeta" class="grid grid-2" style="font-size:12px;gap:10px;"></div>
+
+          <div class="table-wrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr><th>Akun</th><th>Keterangan</th><th>Cost Center</th><th style="text-align:right;">Debit</th><th style="text-align:right;">Kredit</th></tr>
+              </thead>
+              <tbody id="drillBody"></tbody>
+              <tfoot>
+                <tr style="background:#f7f7f8;font-weight:bold;">
+                  <td colspan="3" style="text-align:right;">TOTAL</td>
+                  <td style="text-align:right;" id="drillTotalDebit">Rp 0</td>
+                  <td style="text-align:right;" id="drillTotalKredit">Rp 0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div id="boxDrill" class="balance-box balance-ok" style="margin-top:12px;">
+            <span>Kontrol Jurnal:</span>
+            <span id="labelDrillStatus">DEBIT = KREDIT</span>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            Jurnal posted bersifat tetap: tidak dapat diedit atau dihapus. Koreksi hanya melalui jurnal pembalik
+            (<span class="code-chip">reversal_of_id</span>) atau jurnal penyesuaian, dengan jejak audit lengkap.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Daftar Jurnal Posted</h2><span class="muted small">8 jurnal terakhir ditampilkan</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>No. Jurnal</th><th>Tanggal</th><th>Deskripsi</th><th>Sumber</th><th>Status</th></tr></thead>
+              <tbody id="journalList"></tbody>
+            </table>
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;background:#fff8e6;border:1px solid #ffeeba;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <svg class="icon" viewBox="0 0 24 24" style="stroke:#856404;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+              <b>Draft belum memengaruhi buku besar</b>
+            </div>
+            <p class="small" style="margin:6px 0 0;color:#856404;">
+              JV-2026-0349 (jurnal manual jasa servis alat kesehatan) masih draft. Setelah diposting, mutasinya baru
+              muncul pada buku besar dan laporan keuangan.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var accounts = [
+  { code: "1000", name: "Kas dan Bank", type: "Aset", normal: "Debit", opening: 120000000 },
+  { code: "1050", name: "Dana Transit Pembayaran Digital", type: "Aset", normal: "Debit", opening: 0 },
+  { code: "1100", name: "Piutang Pasien", type: "Aset", normal: "Debit", opening: 18400000 },
+  { code: "1200", name: "Persediaan Obat", type: "Aset", normal: "Debit", opening: 42500000 },
+  { code: "1250", name: "PPN Masukan", type: "Aset", normal: "Debit", opening: 1250000 },
+  { code: "2000", name: "Utang Supplier", type: "Liabilitas", normal: "Kredit", opening: 22000000 },
+  { code: "2200", name: "Utang PPN (PPN Keluaran)", type: "Liabilitas", normal: "Kredit", opening: 2450000 },
+  { code: "2250", name: "Utang PPh 21", type: "Liabilitas", normal: "Kredit", opening: 0 },
+  { code: "2300", name: "Uang Muka Pasien (Deposit)", type: "Liabilitas", normal: "Kredit", opening: 5000000 },
+  { code: "3000", name: "Modal Pemilik", type: "Ekuitas", normal: "Kredit", opening: 152700000 },
+  { code: "4000", name: "Pendapatan Konsultasi", type: "Pendapatan", normal: "Kredit", opening: 0 },
+  { code: "5000", name: "Beban Pokok Penjualan", type: "Beban", normal: "Debit", opening: 0 },
+  { code: "5100", name: "Beban Gaji", type: "Beban", normal: "Debit", opening: 0 },
+  { code: "5500", name: "Beban Biaya Transaksi Pembayaran", type: "Beban", normal: "Debit", opening: 0 }
+];
+
+var journals = [
+  {
+    no: "JV-2026-0341", date: "2026-11-03", desc: "Pengakuan pendapatan konsultasi dan tindakan (akrual)",
+    sourceType: "billing", sourceId: "INV-00118", status: "Posted", postedAt: "03 Nov 2026 09:20", postedBy: "Hendra",
+    lines: [
+      { code: "1100", memo: "Piutang pasien atas layanan", cc: "Poli Umum", debit: 300000, credit: 0 },
+      { code: "4000", memo: "Pendapatan konsultasi dokter umum", cc: "Poli Umum", debit: 0, credit: 300000 }
+    ]
+  },
+  {
+    no: "JV-2026-0342", date: "2026-11-05", desc: "Pembelian persediaan obat kredit dari PBF",
+    sourceType: "purchasing", sourceId: "PO-2588", status: "Posted", postedAt: "05 Nov 2026 14:10", postedBy: "Hendra",
+    lines: [
+      { code: "1200", memo: "Persediaan obat diterima", cc: "Farmasi", debit: 1000000, credit: 0 },
+      { code: "1250", memo: "PPN masukan dapat dikreditkan", cc: "Farmasi", debit: 110000, credit: 0 },
+      { code: "2000", memo: "Utang supplier atas pembelian kredit", cc: "Farmasi", debit: 0, credit: 1110000 }
+    ]
+  },
+  {
+    no: "JV-2026-0343", date: "2026-11-07", desc: "Penerimaan pembayaran tunai kasir",
+    sourceType: "cashier", sourceId: "PAY-0440", status: "Posted", postedAt: "07 Nov 2026 16:45", postedBy: "Sistem",
+    lines: [
+      { code: "1000", memo: "Kas diterima dari pasien", cc: "Umum", debit: 250000, credit: 0 },
+      { code: "1100", memo: "Pelunasan piutang pasien", cc: "Umum", debit: 0, credit: 250000 }
+    ]
+  },
+  {
+    no: "JV-2026-0344", date: "2026-11-12", desc: "Pengakuan HPP obat terjual",
+    sourceType: "inventory", sourceId: "DO-0091", status: "Posted", postedAt: "12 Nov 2026 11:30", postedBy: "Sistem",
+    lines: [
+      { code: "5000", memo: "Beban pokok penjualan obat", cc: "Farmasi", debit: 30000, credit: 0 },
+      { code: "1200", memo: "Pengurangan persediaan obat", cc: "Farmasi", debit: 0, credit: 30000 }
+    ]
+  },
+  {
+    no: "JV-2026-0345", date: "2026-11-15", desc: "Posting payroll November 2026",
+    sourceType: "payroll", sourceId: "PR-2026-11", status: "Posted", postedAt: "15 Nov 2026 17:00", postedBy: "Hendra",
+    lines: [
+      { code: "5100", memo: "Beban gaji karyawan", cc: "Umum", debit: 12000000, credit: 0 },
+      { code: "2250", memo: "Potongan PPh 21", cc: "Umum", debit: 0, credit: 1200000 },
+      { code: "1000", memo: "Transfer gaji bersih", cc: "Umum", debit: 0, credit: 10800000 }
+    ]
+  },
+  {
+    no: "JV-2026-0346", date: "2026-11-16", desc: "Pembelian persediaan obat kredit dari PBF",
+    sourceType: "purchasing", sourceId: "PO-2601", status: "Posted", postedAt: "16 Nov 2026 10:05", postedBy: "Hendra",
+    lines: [
+      { code: "1200", memo: "Persediaan obat diterima", cc: "Farmasi", debit: 1000000, credit: 0 },
+      { code: "1250", memo: "PPN masukan dapat dikreditkan", cc: "Farmasi", debit: 110000, credit: 0 },
+      { code: "2000", memo: "Utang supplier atas pembelian kredit", cc: "Farmasi", debit: 0, credit: 1110000 }
+    ]
+  },
+  {
+    no: "JV-2026-0347", date: "2026-11-17", desc: "Penerimaan pembayaran kasir via QRIS (biaya 0,7%)",
+    sourceType: "cashier", sourceId: "PAY-0451", status: "Posted", postedAt: "17 Nov 2026 12:03", postedBy: "Sistem",
+    lines: [
+      { code: "1050", memo: "Dana transit QRIS belum settle", cc: "Umum", debit: 99300, credit: 0 },
+      { code: "5500", memo: "Biaya transaksi QRIS 0,7%", cc: "Umum", debit: 700, credit: 0 },
+      { code: "1100", memo: "Pelunasan piutang pasien", cc: "Umum", debit: 0, credit: 100000 }
+    ]
+  },
+  {
+    no: "JV-2026-0348", date: "2026-11-17", desc: "Pengakuan pendapatan konsultasi Poli Umum (akrual)",
+    sourceType: "billing", sourceId: "INV-00124", status: "Posted", postedAt: "17 Nov 2026 12:04", postedBy: "Sistem",
+    lines: [
+      { code: "1100", memo: "Piutang pasien atas layanan konsultasi", cc: "Poli Umum", debit: 150000, credit: 0 },
+      { code: "4000", memo: "Pendapatan konsultasi dokter umum", cc: "Poli Umum", debit: 0, credit: 150000 }
+    ]
+  }
+];
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function formatRupiah(n) {
+  return "Rp " + Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+}
+
+function formatTanggal(iso) {
+  var bulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  var p = iso.split("-");
+  return Number(p[2]) + " " + bulan[Number(p[1]) - 1] + " " + p[0];
+}
+
+function accountOf(code) {
+  return accounts.filter(function (a) { return a.code === code; })[0];
+}
+
+function mutationsOf(code) {
+  var out = [];
+  journals.forEach(function (j) {
+    j.lines.forEach(function (l) {
+      if (l.code === code) {
+        out.push({
+          date: j.date, no: j.no, memo: l.memo, cc: l.cc,
+          source: j.sourceType + " / " + j.sourceId,
+          debit: l.debit, credit: l.credit
+        });
+      }
+    });
+  });
+  return out.sort(function (a, b) { return a.date.localeCompare(b.date); });
+}
+
+function normalSigned(acc, debit, credit) {
+  return acc.normal === "Debit" ? debit - credit : credit - debit;
+}
+
+function renderAccountSelect() {
+  var sel = document.getElementById("pilihAkun");
+  sel.innerHTML = accounts.map(function (a) {
+    return '<option value="' + a.code + '"' + (a.code === "1100" ? " selected" : "") + ">" + a.code + " - " + a.name + "</option>";
+  }).join("");
+}
+
+function renderLedger() {
+  var code = document.getElementById("pilihAkun").value;
+  var acc = accountOf(code);
+  if (!acc) return;
+
+  var ccFilter = document.getElementById("filterCC").value;
+  var from = document.getElementById("dariTanggal").value;
+  var to = document.getElementById("sampaiTanggal").value;
+
+  var muts = mutationsOf(code).filter(function (m) {
+    if (ccFilter && m.cc !== ccFilter) return false;
+    if (from && m.date < from) return false;
+    if (to && m.date > to) return false;
+    return true;
+  });
+
+  var totalDebit = 0, totalKredit = 0;
+  var running = acc.opening;
+  var tbody = document.getElementById("ledgerBody");
+  tbody.innerHTML = "";
+
+  muts.forEach(function (m) {
+    totalDebit += m.debit;
+    totalKredit += m.credit;
+    running += normalSigned(acc, m.debit, m.credit);
+
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + formatTanggal(m.date) + "</td>"
+      + "<td>" + m.no + "</td>"
+      + "<td>" + m.memo + "</td>"
+      + '<td class="small muted">' + m.source + "</td>"
+      + "<td>" + m.cc + "</td>"
+      + '<td style="text-align:right;">' + (m.debit ? formatRupiah(m.debit) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (m.credit ? formatRupiah(m.credit) : "-") + "</td>"
+      + '<td style="text-align:right;font-weight:600;">' + formatRupiah(running) + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  if (muts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:18px;">Tidak ada mutasi pada filter ini.</td></tr>';
+  }
+
+  var ending = acc.opening + normalSigned(acc, totalDebit, totalKredit);
+
+  document.getElementById("labelSaldoAwal").textContent = formatRupiah(acc.opening);
+  document.getElementById("labelMutasiDebit").textContent = formatRupiah(totalDebit);
+  document.getElementById("labelMutasiKredit").textContent = formatRupiah(totalKredit);
+  document.getElementById("labelSaldoAkhir").textContent = formatRupiah(ending);
+  document.getElementById("labelSaldoSifat").textContent = "Saldo normal " + acc.normal.toLowerCase();
+}
+
+function buildTrial() {
+  return accounts.map(function (a) {
+    var muts = mutationsOf(a.code);
+    var debit = 0, credit = 0;
+    muts.forEach(function (m) { debit += m.debit; credit += m.credit; });
+    return {
+      acc: a,
+      opening: a.opening,
+      debit: debit,
+      credit: credit,
+      ending: a.opening + normalSigned(a, debit, credit)
+    };
+  });
+}
+
+function renderTrialBalance() {
+  var rows = buildTrial();
+  var tbody = document.getElementById("trialBody");
+  tbody.innerHTML = "";
+
+  var aD = 0, aK = 0, tDebit = 0, tKredit = 0, tAkhirD = 0, tAkhirK = 0;
+
+  rows.forEach(function (r) {
+    var openD = r.acc.normal === "Debit" ? r.opening : 0;
+    var openK = r.acc.normal === "Kredit" ? r.opening : 0;
+    aD += openD; aK += openK;
+    tDebit += r.debit;
+    tKredit += r.credit;
+
+    var endD = 0, endK = 0;
+    if (r.ending >= 0) {
+      if (r.acc.normal === "Debit") endD = r.ending; else endK = r.ending;
+    } else {
+      if (r.acc.normal === "Debit") endK = Math.abs(r.ending); else endD = Math.abs(r.ending);
+    }
+    tAkhirD += endD; tAkhirK += endK;
+
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + r.acc.code + "</b></td>"
+      + "<td>" + r.acc.name + "</td>"
+      + '<td style="text-align:right;">' + (openD ? formatRupiah(openD) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (openK ? formatRupiah(openK) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (r.debit ? formatRupiah(r.debit) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (r.credit ? formatRupiah(r.credit) : "-") + "</td>"
+      + '<td style="text-align:right;font-weight:600;">' + (endD ? formatRupiah(endD) : "-") + "</td>"
+      + '<td style="text-align:right;font-weight:600;">' + (endK ? formatRupiah(endK) : "-") + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("tbAwalDebit").textContent = formatRupiah(aD);
+  document.getElementById("tbAwalKredit").textContent = formatRupiah(aK);
+  document.getElementById("tbTotalDebit").textContent = formatRupiah(tDebit);
+  document.getElementById("tbTotalKredit").textContent = formatRupiah(tKredit);
+  document.getElementById("tbAkhirDebit").textContent = formatRupiah(tAkhirD);
+  document.getElementById("tbAkhirKredit").textContent = formatRupiah(tAkhirK);
+
+  var diff = Math.abs(tAkhirD - tAkhirK);
+  var box = document.getElementById("boxTrial");
+  var label = document.getElementById("labelTrialStatus");
+  if (diff < 0.5) {
+    box.className = "balance-box balance-ok";
+    label.textContent = "BALANCE - total debit = total kredit (" + formatRupiah(tAkhirD) + ")";
+  } else {
+    box.className = "balance-box balance-warn";
+    label.textContent = "TIDAK BALANCE - selisih " + formatRupiah(diff);
+  }
+
+  var laba = 0;
+  accounts.forEach(function (a) {
+    if (a.type === "Pendapatan") laba += endingOf(a.code);
+    if (a.type === "Kontra pendapatan" || a.type === "Beban") laba -= endingOf(a.code);
+  });
+
+  document.getElementById("miniKas").textContent = formatRupiah(endingOf("1000"));
+  document.getElementById("miniPiutang").textContent = formatRupiah(endingOf("1100"));
+  document.getElementById("miniPersediaan").textContent = formatRupiah(endingOf("1200"));
+  document.getElementById("miniAktiva").textContent = formatRupiah(
+    endingOf("1000") + endingOf("1050") + endingOf("1100") + endingOf("1200") + endingOf("1250")
+  );
+  document.getElementById("miniUtang").textContent = formatRupiah(endingOf("2000"));
+  document.getElementById("miniDeposit").textContent = formatRupiah(endingOf("2300"));
+  document.getElementById("miniModal").textContent = formatRupiah(endingOf("3000"));
+  document.getElementById("miniLaba").textContent = formatRupiah(laba);
+  document.getElementById("miniPasiva").textContent = formatRupiah(
+    endingOf("2000") + endingOf("2200") + endingOf("2250") + endingOf("2300") + endingOf("3000") + laba
+  );
+}
+
+function endingOf(code) {
+  var a = accountOf(code);
+  if (!a) return 0;
+  var debit = 0, credit = 0;
+  mutationsOf(code).forEach(function (m) { debit += m.debit; credit += m.credit; });
+  return a.opening + normalSigned(a, debit, credit);
+}
+
+function journalOf(no) {
+  return journals.filter(function (j) { return j.no === no; })[0];
+}
+
+function renderJournalSelect() {
+  var sel = document.getElementById("pilihJurnal");
+  sel.innerHTML = journals.map(function (j, i) {
+    return '<option value="' + j.no + '"' + (i === journals.length - 1 ? " selected" : "") + ">" + j.no + "</option>";
+  }).join("");
+}
+
+function renderDrill() {
+  var no = document.getElementById("pilihJurnal").value;
+  var j = journalOf(no);
+  if (!j) return;
+
+  document.getElementById("drillMeta").innerHTML =
+    "<div><b>Tanggal:</b> " + formatTanggal(j.date) + "</div>"
+    + "<div><b>Status:</b> <span class='status dark' style='background:#d4edda;color:#155724;'>Posted</span></div>"
+    + "<div><b>Sumber:</b> " + j.sourceType + " / " + j.sourceId + "</div>"
+    + "<div><b>Idempotency:</b> " + j.no + "</div>"
+    + "<div><b>Posted At:</b> " + j.postedAt + "</div>"
+    + "<div><b>Posted By:</b> " + j.postedBy + "</div>"
+    + "<div><b>Reversal Of:</b> -</div>"
+    + "<div><b>Fasilitas:</b> FAC-KMG-01</div>";
+
+  var tbody = document.getElementById("drillBody");
+  tbody.innerHTML = "";
+  var td = 0, tk = 0;
+
+  j.lines.forEach(function (l) {
+    var a = accountOf(l.code);
+    var name = a ? a.code + " - " + a.name : l.code;
+    td += l.debit; tk += l.credit;
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + name + "</td>"
+      + "<td>" + l.memo + "</td>"
+      + "<td>" + l.cc + "</td>"
+      + '<td style="text-align:right;">' + (l.debit ? formatRupiah(l.debit) : "-") + "</td>"
+      + '<td style="text-align:right;">' + (l.credit ? formatRupiah(l.credit) : "-") + "</td>";
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("drillTotalDebit").textContent = formatRupiah(td);
+  document.getElementById("drillTotalKredit").textContent = formatRupiah(tk);
+
+  var box = document.getElementById("boxDrill");
+  var label = document.getElementById("labelDrillStatus");
+  if (Math.abs(td - tk) < 0.5) {
+    box.className = "balance-box balance-ok";
+    label.textContent = "DEBIT = KREDIT (" + formatRupiah(td) + ")";
+  } else {
+    box.className = "balance-box balance-warn";
+    label.textContent = "TIDAK BALANCE - selisih " + formatRupiah(Math.abs(td - tk));
+  }
+}
+
+function renderJournalList() {
+  var tbody = document.getElementById("journalList");
+  tbody.innerHTML = "";
+  journals.slice().reverse().forEach(function (j) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + j.no + "</b></td>"
+      + "<td>" + formatTanggal(j.date) + "</td>"
+      + "<td>" + j.desc + "</td>"
+      + '<td class="small muted">' + j.sourceType + " / " + j.sourceId + "</td>"
+      + '<td><span class="status dark" style="background:#d4edda;color:#155724;">Posted</span></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+renderAccountSelect();
+renderLedger();
+renderTrialBalance();
+renderJournalSelect();
+renderJournalList();
+renderDrill();
+</script>
+</body>
+</html>

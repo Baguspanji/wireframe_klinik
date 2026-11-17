@@ -353,12 +353,22 @@ tr:last-child td { border-bottom: 0; }
       <a class="nav-item nav-sub" href="pages/operasional/detail-rekam-medis.html"><span>+ Berkas RME Pasien</span></a>
     </div>
   </div>
-  <button class="nav-item" data-page="billing"><i class="nav-icon"></i><span>Billing & Kasir</span></button>
-
   <div class="nav-label">KEUANGAN</div>
-  <button class="nav-item" data-page="accounting"><i class="nav-icon"></i><span>Accounting</span></button>
-  <a class="nav-item nav-sub" href="pages/keuangan/jurnal-umum.html"><span>+ Form Jurnal Umum</span></a>
-  <button class="nav-item" data-page="reports"><i class="nav-icon"></i><span>Laporan Keuangan</span></button>
+  <div class="nav-group" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <button class="nav-item nav-sub" data-page="accounting"><span>Overview Accounting</span></button>
+      <button class="nav-item nav-sub" data-page="billing"><span>Billing &amp; Kasir</span></button>
+      <a class="nav-item nav-sub" href="pages/keuangan/billing-kasir.html"><span>+ Form Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="pages/keuangan/jurnal-umum.html"><span>+ Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub" href="pages/keuangan/coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="pages/keuangan/buku-besar.html"><span>Buku Besar &amp; Neraca Saldo</span></a>
+      <button class="nav-item nav-sub" data-page="reports"><span>Laporan Keuangan</span></button>
+    </div>
+  </div>
 
   <div class="nav-label">MANAJEMEN</div>
   <button class="nav-item" data-page="management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></button>
@@ -719,8 +729,8 @@ tr:last-child td { border-bottom: 0; }
     <!-- BILLING -->
     <section class="page" id="billing">
       <div class="page-heading">
-        <div><div class="breadcrumb">Keuangan <span>/</span> Billing & Kasir</div><h1>Billing & Kasir</h1><p>Tagihan pelayanan, pembayaran pasien, dan piutang penjamin.</p></div>
-        <button class="btn primary">+ Input Pembayaran</button>
+        <div><div class="breadcrumb">Keuangan <span>/</span> Billing &amp; Kasir</div><h1>Billing &amp; Kasir</h1><p>Tagihan pelayanan, pembayaran pasien, dan piutang penjamin.</p></div>
+        <a class="btn primary" href="pages/keuangan/billing-kasir.html">+ Input Pembayaran</a>
       </div>
       <div class="grid grid-4">
         <div class="card"><div class="metric-label">Total Tagihan</div><div class="metric-value">Rp 185 jt</div></div>
@@ -741,9 +751,9 @@ tr:last-child td { border-bottom: 0; }
         <div class="table-wrap"><table>
           <thead><tr><th>No. Invoice</th><th>Pasien</th><th>Sumber</th><th>Tanggal</th><th class="right">Tagihan</th><th class="right">Dibayar</th><th class="right">Sisa</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>INV-00124</td><td>Andi Pratama</td><td>Poli Umum</td><td>17 Nov 2026</td><td class="right">150.000</td><td class="right">150.000</td><td class="right">0</td><td><span class="status dark">Lunas</span></td></tr>
-            <tr><td>INV-00123</td><td>Siti Aminah</td><td>Laboratorium</td><td>17 Nov 2026</td><td class="right">275.000</td><td class="right">100.000</td><td class="right">175.000</td><td><span class="status">Parsial</span></td></tr>
-            <tr><td>INV-00122</td><td>Budi Santoso</td><td>Farmasi</td><td>17 Nov 2026</td><td class="right">85.000</td><td class="right">0</td><td class="right">85.000</td><td><span class="status">Belum Lunas</span></td></tr>
+            <tr><td><a href="pages/keuangan/billing-kasir.html">INV-00124</a></td><td>Ny. Rina Kartika</td><td>Poli Umum</td><td>17 Nov 2026</td><td class="right">438.250</td><td class="right">0</td><td class="right">438.250</td><td><span class="status">Belum Dibayar</span></td></tr>
+            <tr><td><a href="pages/keuangan/billing-kasir.html">INV-00123</a></td><td>Tn. Bagas Pratama</td><td>Poli Gigi</td><td>17 Nov 2026</td><td class="right">350.000</td><td class="right">350.000</td><td class="right">0</td><td><span class="status dark">Lunas</span></td></tr>
+            <tr><td><a href="pages/keuangan/billing-kasir.html">INV-00122</a></td><td>Ny. Sari Wulandari</td><td>Rawat Inap</td><td>17 Nov 2026</td><td class="right">3.500.000</td><td class="right">200.000</td><td class="right">3.300.000</td><td><span class="status">Parsial</span></td></tr>
           </tbody>
         </table></div>
       </div>
@@ -761,7 +771,7 @@ tr:last-child td { border-bottom: 0; }
     <!-- ACCOUNTING -->
     <section class="page" id="accounting">
       <div class="page-heading">
-        <div><div class="breadcrumb">Keuangan <span>/</span> Accounting</div><h1>Accounting</h1><p>Pengelolaan akun, jurnal, buku besar, dan periode akuntansi.</p></div>
+        <div><div class="breadcrumb">Keuangan <span>/</span> Accounting</div><h1>Accounting</h1><p>Akuntansi berbasis akrual: bagan akun, jurnal, buku besar, dan periode akuntansi terkunci.</p></div>
         <a class="btn primary" href="pages/keuangan/jurnal-umum.html">+ Buat Jurnal</a>
       </div>
       <div class="grid grid-4">
@@ -784,19 +794,19 @@ tr:last-child td { border-bottom: 0; }
             <tbody>
               <tr>
                 <td><b>Chart of Accounts (COA)</b></td>
-                <td><span class="small muted">Daftar kode akun 5 digit (Aset, Liabilitas, Ekuitas, Pendapatan, Beban)</span></td>
-                <td><span class="status">142 Akun</span></td>
-                <td class="right"><button class="btn primary">Buka COA</button></td>
+                <td><span class="small muted">Kode akun berjenjang 1000–5900 (Aset, Liabilitas, Ekuitas, Pendapatan, Beban) dan dapat dikonfigurasi per entitas</span></td>
+                <td><span class="status">35 Akun Contoh</span></td>
+                <td class="right"><a class="btn primary" href="pages/keuangan/coa.html">Buka COA</a></td>
               </tr>
               <tr>
                 <td><b>Account Mapping</b></td>
-                <td><span class="small muted">Otomasi jurnal billing, farmasi, lab, kasir, &amp; inventori</span></td>
-                <td><span class="status dark">28 Mapping Aktif</span></td>
-                <td class="right"><button class="btn">Konfigurasi</button></td>
+                <td><span class="small muted">Aturan pemetaan akun ber-tanggal-berlaku untuk jurnal otomatis billing, farmasi, lab, kasir, dan inventori</span></td>
+                <td><span class="status dark">10 Mapping Contoh</span></td>
+                <td class="right"><a class="btn" href="pages/keuangan/coa.html">Konfigurasi</a></td>
               </tr>
               <tr>
                 <td><b>Journal Entries</b></td>
-                <td><span class="small muted">Pencatatan manual, approval, verifikasi, dan posting jurnal</span></td>
+                <td><span class="small muted">Jurnal manual, penyesuaian, dan pembalik. Jurnal posted bersifat tetap dan tidak dapat diedit atau dihapus</span></td>
                 <td><span class="status" style="background:#fff3cd;color:#856404;font-weight:bold;">12 Draft</span></td>
                 <td class="right"><a class="btn primary" href="pages/keuangan/jurnal-umum.html">Buat Jurnal</a></td>
               </tr>
@@ -804,13 +814,13 @@ tr:last-child td { border-bottom: 0; }
                 <td><b>General Ledger (Buku Besar)</b></td>
                 <td><span class="small muted">Mutasi transaksi detail per rekening dan saldo berjalan</span></td>
                 <td><span class="status dark">Terverifikasi</span></td>
-                <td class="right"><button class="btn">Buku Besar</button></td>
+                <td class="right"><a class="btn" href="pages/keuangan/buku-besar.html">Buku Besar</a></td>
               </tr>
               <tr>
                 <td><b>Trial Balance (Neraca Saldo)</b></td>
                 <td><span class="small muted">Pemeriksaan keseimbangan total debit dan kredit sebelum tutup buku</span></td>
                 <td><span class="status dark">Balance (Rp 0 Diff)</span></td>
-                <td class="right"><button class="btn">Cek Saldo</button></td>
+                <td class="right"><a class="btn" href="pages/keuangan/buku-besar.html">Cek Saldo</a></td>
               </tr>
               <tr>
                 <td><b>Accounting Period &amp; Closing</b></td>
@@ -878,13 +888,44 @@ tr:last-child td { border-bottom: 0; }
       <div class="card section">
         <div class="card-title"><h2>Jurnal Terbaru</h2><button class="btn">Lihat Semua</button></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>No. Jurnal</th><th>Tanggal</th><th>Deskripsi</th><th>Sumber</th><th class="right">Debit</th><th class="right">Kredit</th><th>Status</th></tr></thead>
+          <thead><tr><th>No. Jurnal</th><th>Tanggal</th><th>Deskripsi</th><th>Sumber Event</th><th>Baris Debit</th><th>Baris Kredit</th><th class="right">Nilai</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>JV-2026-0348</td><td>17 Nov 2026</td><td>Pendapatan pelayanan Poli Umum</td><td>Billing</td><td class="right">150.000</td><td class="right">150.000</td><td><span class="status dark">Posted</span></td></tr>
-            <tr><td>JV-2026-0347</td><td>17 Nov 2026</td><td>Pembelian persediaan obat</td><td>Purchasing</td><td class="right">2.500.000</td><td class="right">2.500.000</td><td><span class="status">Draft</span></td></tr>
-            <tr><td>JV-2026-0346</td><td>16 Nov 2026</td><td>Pembayaran biaya listrik</td><td>Expense</td><td class="right">850.000</td><td class="right">850.000</td><td><span class="status dark">Posted</span></td></tr>
+            <tr>
+              <td>JV-2026-0348</td>
+              <td>17 Nov 2026</td>
+              <td>Pengakuan pendapatan konsultasi Poli Umum (basis akrual)</td>
+              <td><span class="small muted">billing<br>INV-00124</span></td>
+              <td><span class="small">1100 Piutang Pasien</span></td>
+              <td><span class="small">4000 Pendapatan Konsultasi</span></td>
+              <td class="right">150.000</td>
+              <td><span class="status dark">Posted</span></td>
+            </tr>
+            <tr>
+              <td>JV-2026-0347</td>
+              <td>17 Nov 2026</td>
+              <td>Penerimaan pembayaran kasir via QRIS (biaya transaksi 0,7%)</td>
+              <td><span class="small muted">cashier<br>PAY-0451</span></td>
+              <td><span class="small">1050 Dana Transit Rp 99.300<br>5500 Biaya Transaksi Rp 700</span></td>
+              <td><span class="small">1100 Piutang Pasien</span></td>
+              <td class="right">100.000</td>
+              <td><span class="status">Draft</span></td>
+            </tr>
+            <tr>
+              <td>JV-2026-0346</td>
+              <td>16 Nov 2026</td>
+              <td>Pembelian persediaan obat kredit dari PBF (klinik berstatus PKP)</td>
+              <td><span class="small muted">purchasing<br>PO-2601</span></td>
+              <td><span class="small">1200 Persediaan Obat Rp 1.000.000<br>1250 PPN Masukan Rp 110.000</span></td>
+              <td><span class="small">2000 Utang Supplier</span></td>
+              <td class="right">1.110.000</td>
+              <td><span class="status dark">Posted</span></td>
+            </tr>
           </tbody>
         </table></div>
+        <p class="small muted" style="margin-top:10px;">
+          Setiap jurnal otomatis menyimpan <b>source_type</b>, <b>source_id</b>, dan <b>idempotency_key</b> agar pemrosesan ulang event tidak menghasilkan jurnal ganda.
+          Jurnal yang sudah posted dikoreksi melalui jurnal pembalik atau penyesuaian, bukan dengan mengubah entri lama.
+        </p>
       </div>
     </section>
 
@@ -1184,6 +1225,10 @@ function showPage(id) {
     const group = document.getElementById("nav-operasional");
     if (group) group.classList.add("open");
   }
+  if (id === "accounting" || id === "reports" || id === "billing") {
+    const group = document.getElementById("nav-keuangan");
+    if (group) group.classList.add("open");
+  }
   document.getElementById("currentPage").textContent = pageNames[id] || id;
 }
 
@@ -1198,6 +1243,10 @@ document.querySelectorAll("[data-toggle]").forEach(btn => {
     if (group) group.classList.toggle("open");
   });
 });
+
+// Dukung tautan langsung dari modul lain, mis. index.html#accounting
+const hashPage = (location.hash || "").replace("#", "");
+if (hashPage && document.getElementById(hashPage)) showPage(hashPage);
 
 document.querySelectorAll(".report-menu button[data-report]").forEach(btn => {
   btn.addEventListener("click", () => {

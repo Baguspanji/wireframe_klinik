@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chart of Accounts - Clinic ERP</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.history-item {
+  padding: 8px 10px;
+  border-left: 3px solid #6c757d;
+  background: #fafbfc;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+.history-item:hover { background: #f4f6f8; }
+.history-date { font-size: 11px; font-weight: bold; color: #333; display: flex; justify-content: space-between; }
+.history-diag { font-weight: 600; color: #111; margin-top: 2px; font-size: 12px; }
+.history-notes { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.exam-top-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.exam-top-tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-top-tab:hover { color: var(--text); }
+.exam-top-tab.active {
+  color: #111;
+  border-color: #111;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.note-band {
+  background: #f7f9fb;
+  border: 1px solid #e1e6eb;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.code-chip {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  background: #eef0f3;
+  border: 1px solid #dde1e6;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #333;
+}
+
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 12px;
+}
+.rule-row:last-child { border-bottom: 0; }
+.rule-mark { font-weight: bold; font-size: 13px; line-height: 1.2; }
+.rule-ok { color: #27ae60; }
+.rule-warn { color: #c0392b; }
+
+.segment-card {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfc;
+  font-size: 11px;
+}
+.segment-card b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+tr.inactive-account td { color: #9aa0a6; }
+tr.inactive-account td .account-name { text-decoration: line-through; }
+
+.map-tag {
+  display: inline-block;
+  font-size: 10px;
+  background: #eef4fb;
+  border: 1px solid #d3e2f2;
+  color: #2b5d8a;
+  border-radius: 10px;
+  padding: 1px 7px;
+  margin: 1px 2px 1px 0;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">C</div>
+    <div><strong>Clinic ERP</strong><small>Management System</small></div>
+  </div>
+
+  <div class="nav-label">GENERAL</div>
+  <a class="nav-item" href="../../index.html"><i class="nav-icon"></i><span>Dashboard</span></a>
+
+  <div class="nav-label">OPERASIONAL</div>
+  <div class="nav-group" id="nav-operasional">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-operasional">
+      <span class="nav-left"><i class="nav-icon"></i><span>Operasional Klinik</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../operasional/index.html"><span>Overview</span></a>
+      <a class="nav-item nav-sub" href="../operasional/pendaftaran.html"><span>Pendaftaran &amp; Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/daftar-antrean.html"><span>+ Form Daftar Antrean</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-umum.html"><span>Poli Umum</span></a>
+      <a class="nav-item nav-sub" href="../operasional/poli-gigi.html"><span>Poli Gigi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/kia.html"><span>KIA &amp; Kebidanan</span></a>
+      <a class="nav-item nav-sub" href="../operasional/igd.html"><span>IGD</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rawat-inap.html"><span>Rawat Inap</span></a>
+      <a class="nav-item nav-sub" href="../operasional/laboratorium.html"><span>Laboratorium</span></a>
+      <a class="nav-item nav-sub" href="../operasional/farmasi.html"><span>Farmasi</span></a>
+      <a class="nav-item nav-sub" href="../operasional/rekam-medis.html"><span>Rekam Medis</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">KEUANGAN</div>
+  <div class="nav-group open" id="nav-keuangan">
+    <button class="nav-item nav-group-toggle" data-toggle="nav-keuangan">
+      <span class="nav-left"><i class="nav-icon"></i><span>Keuangan</span></span>
+      <span class="nav-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+    <div class="nav-subitems">
+      <a class="nav-item nav-sub" href="../../index.html#accounting"><span>Overview Accounting</span></a>
+      <a class="nav-item nav-sub" href="billing-kasir.html"><span>Form Billing &amp; Kasir</span></a>
+      <a class="nav-item nav-sub" href="jurnal-umum.html"><span>+ Form Jurnal Umum</span></a>
+      <a class="nav-item nav-sub active" href="coa.html"><span>Chart of Accounts</span></a>
+      <a class="nav-item nav-sub" href="buku-besar.html"><span>Buku Besar</span></a>
+      <a class="nav-item nav-sub" href="../../index.html#reports"><span>Laporan Keuangan</span></a>
+    </div>
+  </div>
+
+  <div class="nav-label">MANAJEMEN</div>
+  <a class="nav-item" href="../../index.html#management"><i class="nav-icon"></i><span>Manajemen Bisnis</span></a>
+  <a class="nav-item" href="../../index.html#settings"><i class="nav-icon"></i><span>Pengaturan</span></a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">Clinic ERP <span style="margin:0 8px">/</span> Keuangan <span style="margin:0 8px">/</span> Accounting <span style="margin:0 8px">/</span> <b>Chart of Accounts</b></div>
+    <div class="topbar-right">
+      <span class="muted">17 November 2026</span>
+      <span class="avatar">K</span>
+      <span>Staf Akuntansi</span>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-heading">
+      <div>
+        <div class="breadcrumb"><a href="../../index.html#accounting">Keuangan</a> <span>/</span> <a href="../../index.html#accounting">Accounting</a> <span>/</span> Chart of Accounts</div>
+        <h1>Chart of Accounts</h1>
+        <p>Struktur akun berjenjang, tipe akun, saldo normal, dan aturan pemetaan jurnal otomatis. COA contoh ini bukan COA final dan harus dapat dikonfigurasi per entitas.</p>
+      </div>
+      <div>
+        <a class="btn secondary" href="../../index.html#accounting">Kembali ke Accounting</a>
+        <button class="btn primary" onclick="resetFormAkun();switchTab('tab-tambah')">+ Akun Baru</button>
+      </div>
+    </div>
+
+    <!-- 2 CARD ATAS -->
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            <h2>Profil COA &amp; Struktur Kode</h2>
+          </div>
+          <span class="status dark">v2026.11</span>
+        </div>
+
+        <div class="grid grid-2" style="font-size:12px;gap:10px;">
+          <div><b>Entitas Legal:</b> PT Sehat Nusantara (PKP)</div>
+          <div><b>Fasilitas:</b> Klinik Utama Kemang</div>
+          <div><b>Mata Uang:</b> IDR (Rupiah)</div>
+          <div><b>Berlaku Sejak:</b> 01 November 2026</div>
+          <div><b>Total Akun:</b> <span id="topTotalAkun">35 akun</span></div>
+          <div><b>Mapping Aktif:</b> <span id="topTotalMapping">10 aturan</span></div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px;">
+          <div class="segment-card"><b>1000–1999</b>Aset</div>
+          <div class="segment-card"><b>2000–2999</b>Liabilitas</div>
+          <div class="segment-card"><b>3000–3999</b>Ekuitas</div>
+          <div class="segment-card"><b>4000–4999</b>Pendapatan</div>
+          <div class="segment-card"><b>5000–5999</b>Beban</div>
+        </div>
+
+        <div class="note-band" style="margin-top:12px;">
+          Akun bertanda <span class="code-chip">is_active = false</span> tetap menyimpan histori jurnal lama.
+          Akun tidak dihapus fisik bila sudah dipakai mapping atau memiliki saldo.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>3 Perubahan COA Terakhir</h2>
+          </div>
+          <span class="muted small">Audit Perubahan</span>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>17 Nov 2026 &middot; 09:12 WIB</span>
+            <span class="status dark" style="background:#d4edda;color:#155724;">Aktif</span>
+          </div>
+          <div class="history-diag">Tambah akun 1170 Pendapatan Belum Ditagih</div>
+          <div class="history-notes">
+            Oleh Hendra (Staf Akuntansi) &middot; Alasan: rawat inap berjalan belum ditagihkan pada akhir periode
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-date">
+            <span>15 Nov 2026 &middot; 14:41 WIB</span>
+            <span class="status">Nonaktif</span>
+          </div>
+          <div class="history-diag">Nonaktifkan akun 4140 Pendapatan Tindakan Lama</div>
+          <div class="history-notes">
+            Oleh Manajer Keuangan &middot; Alasan: tidak lagi dipakai mapping; histori jurnal tetap tersimpan
+          </div>
+        </div>
+
+        <div class="history-item" style="margin-bottom:0;">
+          <div class="history-date">
+            <span>01 Nov 2026 &middot; 08:05 WIB</span>
+            <span class="status dark">Efektif</span>
+          </div>
+          <div class="history-diag">Ubah nama 5500 menjadi Beban Biaya Transaksi Pembayaran</div>
+          <div class="history-notes">
+            Oleh Hendra (Staf Akuntansi) &middot; Berlaku pada periode November 2026
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <nav class="exam-top-tabs">
+      <button class="exam-top-tab active" data-tab="tab-daftar" onclick="switchTab('tab-daftar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        1. Daftar Akun
+      </button>
+      <button class="exam-top-tab" data-tab="tab-tambah" onclick="switchTab('tab-tambah')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+        2. Tambah / Ubah Akun
+      </button>
+      <button class="exam-top-tab" data-tab="tab-mapping" onclick="switchTab('tab-mapping')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        3. Pemetaan Akun
+      </button>
+    </nav>
+
+    <!-- TAB 1: DAFTAR AKUN -->
+    <div class="tab-pane active" id="tab-daftar">
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="card"><div class="metric-label">Total Akun</div><div class="metric-value" id="mTotal">35</div><div class="metric-note">Termasuk akun nonaktif</div></div>
+        <div class="card"><div class="metric-label">Akun Aktif</div><div class="metric-value" id="mActive">35</div><div class="metric-note">Dapat dipakai mapping</div></div>
+        <div class="card"><div class="metric-label">Dipakai Mapping</div><div class="metric-value" id="mUsed">33</div><div class="metric-note">Tidak dapat dihapus</div></div>
+        <div class="card"><div class="metric-label">Aturan Mapping Aktif</div><div class="metric-value" id="mRules">10</div><div class="metric-note">Ber-tanggal-berlaku</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Daftar Akun (accounts)</h2>
+          <span class="muted small">Kode, tipe, saldo normal, dan status</span>
+        </div>
+
+        <div class="filters" style="margin-bottom:14px;">
+          <input type="text" id="cariAkun" class="field" placeholder="Cari kode atau nama akun" oninput="renderAccounts()" style="min-width:220px;">
+          <select id="filterTipe" class="field" onchange="renderAccounts()">
+            <option value="">Semua Tipe</option>
+            <option>Aset</option>
+            <option>Liabilitas</option>
+            <option>Ekuitas</option>
+            <option>Pendapatan</option>
+            <option>Kontra pendapatan</option>
+            <option>Beban</option>
+          </select>
+          <select id="filterStatus" class="field" onchange="renderAccounts()">
+            <option value="">Semua Status</option>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+          <button class="btn" onclick="resetFilter()">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:80px;">Kode</th>
+                <th>Nama Akun</th>
+                <th style="width:130px;">Tipe</th>
+                <th style="width:110px;">Saldo Normal</th>
+                <th style="width:80px;">Induk</th>
+                <th style="width:95px;">Mapping</th>
+                <th style="width:90px;">Status</th>
+                <th style="width:110px;text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="accountBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          <b>Aturan pengelolaan:</b> kode akun unik dan tidak berubah setelah dipakai jurnal. Akun dengan saldo atau mapping
+          aktif tidak boleh dihapus; gunakan status nonaktif agar histori jurnal tetap dapat diaudit.
+          Perubahan COA dicatat pada tabel histori beserta pengguna, waktu, nilai sebelum dan sesudah, dan alasannya.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TAMBAH / UBAH AKUN -->
+    <div class="tab-pane" id="tab-tambah">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title"><h2>Form Akun</h2><span class="status dark" id="modeAkun">Akun Baru</span></div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Kode Akun <span class="req">*</span></label>
+              <input type="text" id="akunKode" class="field" placeholder="4 digit, mis. 1170" maxlength="4">
+              <p class="small muted" style="margin-top:4px;">1000–1999 Aset, 2000–2999 Liabilitas, 3000–3999 Ekuitas, 4000–4999 Pendapatan, 5000–5999 Beban.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Akun <span class="req">*</span></label>
+              <input type="text" id="akunNama" class="field" placeholder="Contoh: Pendapatan Belum Ditagih">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipe Akun <span class="req">*</span></label>
+              <select id="akunTipe" class="field" onchange="syncNormal()">
+                <option>Aset</option>
+                <option>Liabilitas</option>
+                <option>Ekuitas</option>
+                <option>Pendapatan</option>
+                <option>Kontra pendapatan</option>
+                <option>Beban</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Saldo Normal</label>
+              <select id="akunNormal" class="field">
+                <option>Debit</option>
+                <option>Kredit</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Akun Induk (parent_id)</label>
+              <select id="akunInduk" class="field">
+                <option value="">Tidak ada induk</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="akunStatus" class="field">
+                <option value="aktif">Aktif</option>
+                <option value="nonaktif">Nonaktif</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Berlaku Dari</label>
+              <input type="date" id="akunEfektif" class="field" value="2026-11-01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori Arus Kas</label>
+              <select class="field">
+                <option>Operasi</option>
+                <option>Investasi</option>
+                <option>Pendanaan</option>
+                <option>Tidak berlaku</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Alasan / Catatan Perubahan <span class="req">*</span></label>
+            <textarea id="akunCatatan" class="field" rows="2" placeholder="Wajib diisi untuk audit trail perubahan COA"></textarea>
+          </div>
+
+          <div id="akunError" class="alert info" style="display:none;margin-bottom:10px;"></div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button type="button" class="btn" onclick="resetFormAkun()">Bersihkan Form</button>
+            <button type="button" class="btn primary" onclick="simpanAkun()">Simpan Akun</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Validasi &amp; Batasan</h2><span class="status dark">Kontrol COA</span></div>
+
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Kode akun unik dan terdiri dari 4 digit.</b><div class="small muted">Kode tidak boleh berubah setelah dipakai pada jurnal posted.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Saldo normal konsisten dengan tipe akun.</b><div class="small muted">Aset, kontra pendapatan, dan beban bersaldo normal debit; liabilitas, ekuitas, dan pendapatan bersaldo normal kredit.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Akun induk harus bertipe sama.</b><div class="small muted">Hierarki tidak boleh mencampur aset dengan pendapatan atau beban.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Akun dengan saldo atau mapping tidak dapat dihapus.</b><div class="small muted">Nonaktifkan akun; jurnal lama tetap merujuk ke akun yang sama.</div></div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-mark rule-ok">OK</span>
+            <div><b>Akun baru tidak mengubah jurnal lampau.</b><div class="small muted">Mapping akun memakai tanggal berlaku, sehingga perubahan hanya memengaruhi transaksi setelah tanggal efektif.</div></div>
+          </div>
+
+          <div class="note-band" style="margin-top:12px;">
+            <b>Contoh COA, bukan COA final.</b> Struktur harus dapat dikonfigurasi per badan usaha dan fasilitas.
+            Akun konsolidasi jaringan dapat memakai <span class="code-chip">organization_id</span> dan akun antar entitas 2400.
+          </div>
+
+          <div class="card" style="margin-top:12px;padding:12px;">
+            <div class="metric-label">Akun Terpilih</div>
+            <div class="metric-value" id="akunPreview" style="font-size:17px;">Belum ada akun</div>
+            <p class="small muted" id="akunPreviewNote" style="margin-top:4px;">Isi form untuk melihat ringkasan akun yang akan disimpan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PEMETAAN AKUN -->
+    <div class="tab-pane" id="tab-mapping">
+      <div class="card">
+        <div class="card-title">
+          <h2>Aturan Pemetaan Akun (account_mapping_rules)</h2>
+          <span class="status dark" id="mappingHeader">10 Aturan Aktif</span>
+        </div>
+
+        <p class="small muted" style="margin-bottom:12px;">
+          Setiap event otomatis dari Billing, Kasir, Persediaan, Payroll, dan Penyusutan dipetakan ke akun melalui aturan
+          ber-tanggal-berlaku dengan prioritas. Setiap transaksi wajib memakai mapping yang aktif dan valid pada tanggal transaksi.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">Prioritas</th>
+                <th>Jenis Transaksi</th>
+                <th>Kategori</th>
+                <th>Kondisi</th>
+                <th>Akun Debit</th>
+                <th>Akun Kredit</th>
+                <th style="width:105px;">Berlaku</th>
+                <th style="width:80px;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="mappingBody"></tbody>
+          </table>
+        </div>
+
+        <div class="note-band" style="margin-top:14px;">
+          Perubahan aturan mapping tidak mengubah jurnal yang sudah posted. Bila hasil mapping keliru, terbitkan jurnal
+          pembalik atau jurnal penyesuaian, lalu perbaiki aturan untuk transaksi berikutnya.
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="card-title"><h2>Tambah Aturan Mapping</h2><span class="muted small">Berlaku untuk transaksi baru</span></div>
+        <div class="grid grid-4">
+          <div class="form-group">
+            <label class="form-label">Jenis Transaksi</label>
+            <select id="mapType" class="field">
+              <option>billing.invoice.issued</option>
+              <option>cashier.payment.received</option>
+              <option>purchasing.goods_received</option>
+              <option>inventory.issued</option>
+              <option>payroll.run.posted</option>
+              <option>depreciation.posted</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategori</label>
+            <select id="mapCategory" class="field">
+              <option>medical_service</option>
+              <option>pharmacy</option>
+              <option>laboratory</option>
+              <option>room_charge</option>
+              <option>salary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Akun Debit</label>
+            <select id="mapDebit" class="field"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Akun Kredit</label>
+            <select id="mapKredit" class="field"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Berlaku Dari</label>
+            <input type="date" id="mapFrom" class="field" value="2026-11-01">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Berlaku Sampai</label>
+            <input type="date" id="mapTo" class="field" placeholder="Kosong = tanpa batas">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prioritas</label>
+            <input type="number" id="mapPrio" class="field" value="10">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button type="button" class="btn primary" style="width:100%;" onclick="simpanMapping()">Tambah Aturan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="../../js/main.js"></script>
+<script>
+var accounts = [
+  { code: "1000", name: "Kas dan Bank", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 3 },
+  { code: "1050", name: "Dana Transit Pembayaran Digital", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "1100", name: "Piutang Pasien", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 6 },
+  { code: "1150", name: "Piutang Asuransi/Perusahaan", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "1160", name: "Piutang BPJS Kesehatan", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "1170", name: "Pendapatan Belum Ditagih", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "1200", name: "Persediaan Obat", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 4 },
+  { code: "1210", name: "Persediaan BHP dan Alkes", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "1250", name: "PPN Masukan", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "1300", name: "Peralatan Medis", type: "Aset", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "2000", name: "Utang Supplier", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "2100", name: "Utang Jasa Medis", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 1 },
+  { code: "2200", name: "Utang PPN (PPN Keluaran)", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 3 },
+  { code: "2250", name: "Utang PPh 21", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 1 },
+  { code: "2300", name: "Uang Muka Pasien (Deposit)", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "2350", name: "Pendapatan Diterima di Muka", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 1 },
+  { code: "2400", name: "Utang Antar Entitas", type: "Liabilitas", normal: "Kredit", parent: "", active: true, mappings: 1 },
+  { code: "3000", name: "Modal Pemilik", type: "Ekuitas", normal: "Kredit", parent: "", active: true, mappings: 0 },
+  { code: "4000", name: "Pendapatan Konsultasi", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "4100", name: "Pendapatan Tindakan", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "4200", name: "Pendapatan Farmasi", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 3 },
+  { code: "4300", name: "Pendapatan Laboratorium", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "4400", name: "Pendapatan Kapitasi JKN", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 1 },
+  { code: "4500", name: "Pendapatan Klaim Non-Kapitasi JKN", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "4600", name: "Pendapatan Rawat Inap/Kamar", type: "Pendapatan", normal: "Kredit", parent: "", active: true, mappings: 2 },
+  { code: "4900", name: "Diskon dan Potongan Pendapatan", type: "Kontra pendapatan", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "5000", name: "Beban Pokok Penjualan", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "5050", name: "Beban Obat dan BHP Pelayanan Kapitasi", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "5100", name: "Beban Gaji", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "5150", name: "Beban Jasa Medis", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "5200", name: "Beban Operasional", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 3 },
+  { code: "5300", name: "Beban Utilitas", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 2 },
+  { code: "5400", name: "Beban Penyusutan", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 1 },
+  { code: "5500", name: "Beban Biaya Transaksi Pembayaran", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 3 },
+  { code: "5900", name: "Selisih Kas dan Pembulatan", type: "Beban", normal: "Debit", parent: "", active: true, mappings: 2 }
+];
+
+var mappings = [
+  { prio: 10, type: "billing.invoice.issued", category: "medical_service", cond: "coverage=self; tax=PPN_DIBEBASKAN", debit: "1100 Piutang Pasien", credit: "4000 Pendapatan Konsultasi", from: "2026-01-01", to: "", active: true },
+  { prio: 11, type: "billing.invoice.issued", category: "pharmacy", cond: "tax=PPN_BKP", debit: "1100 Piutang Pasien", credit: "4200 Pendapatan Farmasi; 2200 Utang PPN", from: "2026-01-01", to: "", active: true },
+  { prio: 12, type: "billing.invoice.issued", category: "laboratory", cond: "tax=PPN_DIBEBASKAN", debit: "1100 Piutang Pasien", credit: "4300 Pendapatan Laboratorium", from: "2026-01-01", to: "", active: true },
+  { prio: 10, type: "cashier.payment.received", category: "cash", cond: "method=cash", debit: "1000 Kas dan Bank", credit: "1100 Piutang Pasien", from: "2026-01-01", to: "", active: true },
+  { prio: 11, type: "cashier.payment.received", category: "qris", cond: "method=qris", debit: "1050 Dana Transit; 5500 Beban Biaya Transaksi", credit: "1100 Piutang Pasien", from: "2026-01-01", to: "", active: true },
+  { prio: 10, type: "purchasing.goods_received", category: "pharmacy", cond: "entity=PKP", debit: "1200 Persediaan Obat; 1250 PPN Masukan", credit: "2000 Utang Supplier", from: "2026-01-01", to: "", active: true },
+  { prio: 20, type: "inventory.issued", category: "pharmacy", cond: "hpp", debit: "5000 Beban Pokok Penjualan", credit: "1200 Persediaan Obat", from: "2026-01-01", to: "", active: true },
+  { prio: 10, type: "payroll.run.posted", category: "salary", cond: "period=monthly", debit: "5100 Beban Gaji", credit: "2250 Utang PPh 21; 1000 Kas dan Bank", from: "2026-01-01", to: "", active: true },
+  { prio: 10, type: "depreciation.posted", category: "asset", cond: "straight_line", debit: "5400 Beban Penyusutan", credit: "1300 Peralatan Medis", from: "2026-01-01", to: "", active: true },
+  { prio: 30, type: "cashier.session.closed", category: "variance", cond: "variance!=0", debit: "5900 Selisih Kas dan Pembulatan", credit: "1000 Kas dan Bank", from: "2026-01-01", to: "", active: true }
+];
+
+function switchTab(tabId) {
+  document.querySelectorAll(".exam-top-tab").forEach(function (tab) {
+    tab.classList.toggle("active", tab.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add("active");
+}
+
+function renderAccounts() {
+  var q = (document.getElementById("cariAkun").value || "").toLowerCase();
+  var tipe = document.getElementById("filterTipe").value;
+  var status = document.getElementById("filterStatus").value;
+  var tbody = document.getElementById("accountBody");
+  tbody.innerHTML = "";
+
+  var shown = 0;
+  accounts.forEach(function (a) {
+    if (q && a.code.indexOf(q) === -1 && a.name.toLowerCase().indexOf(q) === -1) return;
+    if (tipe && a.type !== tipe) return;
+    if (status === "aktif" && !a.active) return;
+    if (status === "nonaktif" && a.active) return;
+    shown++;
+
+    var tr = document.createElement("tr");
+    if (!a.active) tr.className = "inactive-account";
+    tr.innerHTML = "<td><b>" + a.code + "</b></td>"
+      + '<td><span class="account-name">' + a.name + "</span></td>"
+      + "<td>" + a.type + "</td>"
+      + "<td>" + a.normal + "</td>"
+      + "<td>" + (a.parent || "&mdash;") + "</td>"
+      + "<td>" + (a.mappings > 0 ? a.mappings + " aturan" : '<span class="muted">0</span>') + "</td>"
+      + '<td><span class="status ' + (a.active ? "dark" : "") + '">' + (a.active ? "Aktif" : "Nonaktif") + "</span></td>"
+      + '<td style="text-align:right;white-space:nowrap;">'
+      + '<button type="button" class="btn" style="padding:2px 7px;font-size:11px;" onclick="editAkun(\'' + a.code + '\')">Ubah</button> '
+      + '<button type="button" class="btn secondary" style="padding:2px 7px;font-size:11px;" onclick="toggleAkun(\'' + a.code + '\')">'
+      + (a.active ? "Nonaktif" : "Aktifkan") + "</button></td>";
+    tbody.appendChild(tr);
+  });
+
+  if (shown === 0) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td colspan="8" class="muted" style="text-align:center;padding:18px;">Tidak ada akun yang cocok dengan filter.</td>';
+    tbody.appendChild(tr);
+  }
+
+  updateCounters();
+}
+
+function updateCounters() {
+  var active = accounts.filter(function (a) { return a.active; }).length;
+  var used = accounts.filter(function (a) { return a.mappings > 0; }).length;
+  var activeRules = mappings.filter(function (m) { return m.active; }).length;
+
+  document.getElementById("mTotal").textContent = accounts.length;
+  document.getElementById("mActive").textContent = active;
+  document.getElementById("mUsed").textContent = used;
+  document.getElementById("mRules").textContent = activeRules;
+  document.getElementById("topTotalAkun").textContent = accounts.length + " akun";
+  document.getElementById("topTotalMapping").textContent = activeRules + " aturan";
+  var mh = document.getElementById("mappingHeader");
+  if (mh) mh.textContent = activeRules + " Aturan Aktif";
+}
+
+function resetFilter() {
+  document.getElementById("cariAkun").value = "";
+  document.getElementById("filterTipe").value = "";
+  document.getElementById("filterStatus").value = "";
+  renderAccounts();
+}
+
+function syncNormal() {
+  var type = document.getElementById("akunTipe").value;
+  var normal = "Debit";
+  if (type === "Liabilitas" || type === "Ekuitas" || type === "Pendapatan") normal = "Kredit";
+  document.getElementById("akunNormal").value = normal;
+  updatePreview();
+}
+
+function updatePreview() {
+  var kode = document.getElementById("akunKode").value || "____";
+  var nama = document.getElementById("akunNama").value || "Nama akun belum diisi";
+  var tipe = document.getElementById("akunTipe").value;
+  var normal = document.getElementById("akunNormal").value;
+  document.getElementById("akunPreview").textContent = kode + " - " + nama;
+  document.getElementById("akunPreviewNote").textContent = tipe + " · saldo normal " + normal;
+}
+
+function resetFormAkun() {
+  document.getElementById("akunKode").value = "";
+  document.getElementById("akunKode").removeAttribute("readonly");
+  document.getElementById("akunNama").value = "";
+  document.getElementById("akunCatatan").value = "";
+  document.getElementById("akunTipe").value = "Aset";
+  document.getElementById("akunNormal").value = "Debit";
+  document.getElementById("akunInduk").value = "";
+  document.getElementById("akunStatus").value = "aktif";
+  document.getElementById("modeAkun").textContent = "Akun Baru";
+  document.getElementById("akunError").style.display = "none";
+  updatePreview();
+}
+
+function editAkun(code) {
+  var a = accounts.filter(function (x) { return x.code === code; })[0];
+  if (!a) return;
+  switchTab("tab-tambah");
+  document.getElementById("modeAkun").textContent = "Ubah " + a.code;
+  document.getElementById("akunKode").value = a.code;
+  document.getElementById("akunKode").setAttribute("readonly", "readonly");
+  document.getElementById("akunNama").value = a.name;
+  document.getElementById("akunTipe").value = a.type;
+  document.getElementById("akunNormal").value = a.normal;
+  document.getElementById("akunInduk").value = a.parent || "";
+  document.getElementById("akunStatus").value = a.active ? "aktif" : "nonaktif";
+  document.getElementById("akunCatatan").value = "";
+  updatePreview();
+}
+
+function simpanAkun() {
+  var err = document.getElementById("akunError");
+  var kode = (document.getElementById("akunKode").value || "").trim();
+  var nama = (document.getElementById("akunNama").value || "").trim();
+  var tipe = document.getElementById("akunTipe").value;
+  var normal = document.getElementById("akunNormal").value;
+  var status = document.getElementById("akunStatus").value;
+  var catatan = (document.getElementById("akunCatatan").value || "").trim();
+  var induk = document.getElementById("akunInduk").value;
+  var mode = document.getElementById("modeAkun").textContent;
+
+  err.style.display = "none";
+
+  if (!/^\d{4}$/.test(kode)) {
+    return showAkunError("Kode akun harus tepat 4 digit angka.");
+  }
+  if (!nama) {
+    return showAkunError("Nama akun wajib diisi.");
+  }
+  if (!catatan) {
+    return showAkunError("Alasan atau catatan perubahan wajib diisi untuk audit trail.");
+  }
+  if (induk) {
+    var parentAcc = accounts.filter(function (a) { return a.code === induk; })[0];
+    if (!parentAcc) return showAkunError("Akun induk tidak ditemukan.");
+    if (parentAcc.code === kode) return showAkunError("Akun tidak boleh menjadi induk bagi dirinya sendiri.");
+    if (parentAcc.type !== tipe) return showAkunError("Akun induk harus bertipe sama (" + parentAcc.type + ").");
+  }
+
+  var existing = accounts.filter(function (a) { return a.code === kode; })[0];
+
+  if (mode === "Akun Baru") {
+    if (existing) {
+      return showAkunError("Kode akun " + kode + " sudah dipakai. Gunakan kode lain.");
+    }
+    accounts.push({ code: kode, name: nama, type: tipe, normal: normal, parent: induk, active: status === "aktif", mappings: 0 });
+    accounts.sort(function (a, b) { return a.code.localeCompare(b.code); });
+  } else if (existing) {
+    if (existing.active && status === "nonaktif" && existing.mappings > 0) {
+      return showAkunError("Akun " + kode + " dipakai oleh " + existing.mappings + " aturan mapping. Lepaskan mapping terlebih dahulu sebelum menonaktifkan.");
+    }
+    existing.name = nama;
+    existing.type = tipe;
+    existing.normal = normal;
+    existing.parent = induk;
+    existing.active = status === "aktif";
+  }
+
+  renderAccounts();
+  renderMappingSelects();
+  renderAkunInduk();
+  resetFormAkun();
+  switchTab("tab-daftar");
+}
+
+function showAkunError(msg) {
+  var err = document.getElementById("akunError");
+  err.textContent = msg;
+  err.style.display = "block";
+  err.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function toggleAkun(code) {
+  var a = accounts.filter(function (x) { return x.code === code; })[0];
+  if (!a) return;
+  if (a.active && a.mappings > 0) {
+    alert("Akun " + code + " masih dipakai oleh " + a.mappings + " aturan mapping. Nonaktifkan aturan mapping terlebih dahulu.");
+    return;
+  }
+  if (!confirm((a.active ? "Nonaktifkan" : "Aktifkan kembali") + " akun " + code + " - " + a.name + "?")) return;
+  a.active = !a.active;
+  renderAccounts();
+}
+
+function renderMappings() {
+  var tbody = document.getElementById("mappingBody");
+  tbody.innerHTML = "";
+  mappings.forEach(function (m) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><b>" + m.prio + "</b></td>"
+      + "<td><span class='code-chip'>" + m.type + "</span></td>"
+      + "<td>" + m.category + "</td>"
+      + "<td><span class='small muted'>" + m.cond + "</span></td>"
+      + "<td>" + m.debit + "</td>"
+      + "<td>" + m.credit + "</td>"
+      + "<td class='small'>" + m.from + (m.to ? " &rarr; " + m.to : " &rarr; seterusnya") + "</td>"
+      + "<td><span class='status " + (m.active ? "dark" : "") + "'>" + (m.active ? "Aktif" : "Nonaktif") + "</span></td>";
+    tbody.appendChild(tr);
+  });
+}
+
+function renderMappingSelects() {
+  var debit = document.getElementById("mapDebit");
+  var kredit = document.getElementById("mapKredit");
+  if (!debit || !kredit) return;
+  var opts = accounts.filter(function (a) { return a.active; }).map(function (a) {
+    return "<option>" + a.code + " " + a.name + "</option>";
+  }).join("");
+  debit.innerHTML = opts;
+  kredit.innerHTML = opts;
+}
+
+function renderAkunInduk() {
+  var sel = document.getElementById("akunInduk");
+  if (!sel) return;
+  var current = sel.value;
+  sel.innerHTML = '<option value="">Tidak ada induk</option>' + accounts.filter(function (a) {
+    return a.active;
+  }).map(function (a) {
+    return '<option value="' + a.code + '">' + a.code + " - " + a.name + "</option>";
+  }).join("");
+  if (current) sel.value = current;
+}
+
+function simpanMapping() {
+  var debit = document.getElementById("mapDebit").value;
+  var kredit = document.getElementById("mapKredit").value;
+  if (!debit || !kredit) {
+    alert("Akun debit dan kredit wajib dipilih.");
+    return;
+  }
+  if (debit === kredit) {
+    alert("Akun debit dan kredit tidak boleh sama.");
+    return;
+  }
+  mappings.push({
+    prio: Number(document.getElementById("mapPrio").value) || 10,
+    type: document.getElementById("mapType").value,
+    category: document.getElementById("mapCategory").value,
+    cond: "ditambahkan manual",
+    debit: debit,
+    credit: kredit,
+    from: document.getElementById("mapFrom").value || "2026-11-01",
+    to: document.getElementById("mapTo").value || "",
+    active: true
+  });
+  renderMappings();
+  updateCounters();
+  alert("Aturan mapping ditambahkan dan berlaku untuk transaksi setelah 01 November 2026. Jurnal lampau tidak berubah.");
+}
+
+document.getElementById("akunKode").addEventListener("input", updatePreview);
+document.getElementById("akunNama").addEventListener("input", updatePreview);
+
+renderAccounts();
+renderMappings();
+renderMappingSelects();
+renderAkunInduk();
+updatePreview();
+</script>
+</body>
+</html>
